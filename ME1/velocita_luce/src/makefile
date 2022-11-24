@@ -1,6 +1,14 @@
 PLOT_PATH = ../../../tools/plots
 DATA_PATH = ../data
 IMAGE_PATH = ../images
+PHYSIM_PATH = -I ../../../tools
+CXXFLAGS = -g -Wall --pedantic -fno-elide-constructors -std=c++20 -O3
+
+main: main.cpp
+	g++ $(CXXFLAGS) $(PHYSIM_PATH) $< -o $@
+
+execute: main
+	./main
 
 plot_CW:
 	python3 $(PLOT_PATH)/measurements_error_bars.py $(DATA_PATH)/CW.txt $(IMAGE_PATH)/CW.png \
