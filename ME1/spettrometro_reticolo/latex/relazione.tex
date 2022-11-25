@@ -5,6 +5,7 @@
 \usepackage[a4paper, total={15.3 cm, 21.3 cm}]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{gensymb}
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{caption}
@@ -14,10 +15,16 @@
 \usepackage{titlesec}
 \usepackage{titletoc}
 \usepackage{physics}
+\usepackage{siunitx}
 \usepackage[dvipsnames]{xcolor}
 
 \usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{calc}
+\usepackage{array}
 \usepackage{subfiles} % Best loaded last in the preamble
+\usepackage{etoolbox}
+\usepackage{xparse}
 
 \hypersetup{colorlinks=true,linkcolor=black}
 \renewcommand\thesection{\arabic{section}}
@@ -49,7 +56,7 @@
         \Large Lorenzo Liuzzo, Jiahao Miao, Riccardo Salto\par
         \vspace{1.5cm}
 
-        \Large October 26, 2022
+        \Large Novembre 23, 2022
 
     \end{center}
     \clearpage
@@ -60,8 +67,79 @@
     \pagenumbering{arabic}
 
     \section{Abstract}
+        L'obbiettivo dell'esperienza di laboratorio è di misurare, tramite uno spettrometro a reticolo, le lunghezze d'onda di alcune righe dello spettro di emissione di una sorgente di mercurio. \\
+        Innanzitutto, è stata utilizzata una sorgente di sodio per ortogonalizzare il reticolo al fascio collimato dalla fenditura. 
+        Infatti, note le due lunghezze d'onda del doppietto del sodio e nota la simmetria degli ordini di interferenza rispetto all'ordine centrale, 
+        l'ortogonalizzazione è stata effettuata attraverso la misura delle posizioni angolari relative al medesimo ordine di interferenza di una riga del doppietto del sodio a sinistra e a destra dell'ordine centrale.
+        Calcolando l'angolo di correzione, tramite la relazione \ref{eq:angolo di correzione}, riposizionando lo strumento e ripetendo la misura, è stato possibile ottenere un fattore di correzione di $3'$, inferiore alla precisione minima richiesta di $5'$. 
+        Successivamente, si è proceduto con la determinazione dei parametri caratteristici del reticolo: il passo, il potere dispersivo e il potere risolvente: 
+        $ d = 3.4 \pm 0.7 \, \mathrm{\mu m} $, $ D = (3.3 \pm 0.7) \cdot \num{e-5} \, \mathrm{\degree / m} $, $ R = VALUE $.
+
+        Infine, illuminando il reticolo con la lampada a mercurio abbiamo misurato le posizioni angolari dei diversi ordini di interferenza. 
+        Con tali valori, attraverso la relazione \ref{eq:lunghezza d'onda}, abbiamo determinato le lunghezze d'onda di emissione delle righe osservate. 
+        Riportiamo di seguito una tabella riassuntiva dei risultati ottenuti, con anche i valori nominali noti. \\  
+
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|}
+                \toprule 
+                colore & 
+                $ \lambda_{\mathrm{nom}} \, \mathrm{[m]} $ & 
+                $ \lambda_{\mathrm{mis}} \, \mathrm{[m]} $ & 
+                $ \sigma \lambda_{\mathrm{mis}} \, \mathrm{[m]}$ & 
+                $ \Delta \lambda \, \mathrm{[m]} $ \\
+
+                \midrule
+                $ \mathrm{viola_{int}} $        & 0 & 0 & 0 & 0 \\
+                $ \mathrm{viola_{est}} $        & 0 & 0 & 0 & 0 \\
+                indaco                          & 0 & 0 & 0 & 0 \\
+                verde $ \mathrm{acqua_{int}} $  & 0 & 0 & 0 & 0 \\  
+                verde $ \mathrm{acqua_{est}} $  & 0 & 0 & 0 & 0 \\
+                verde                           & 0 & 0 & 0 & 0 \\
+                $ \mathrm{giallo_{int}} $       & 0 & 0 & 0 & 0 \\
+                $ \mathrm{giallo_{est}} $       & 0 & 0 & 0 & 0 \\
+                $ \mathrm{rosso_{int}} $        & 0 & 0 & 0 & 0 \\
+                $ \mathrm{rosso_{est}} $        & 0 & 0 & 0 & 0 \\
+
+                \bottomrule
+            \end{tabular}
+        \end{table}
+
+        
+    \section{Ortogonalizzazione}
+
+
+    \section{Formule}
+
+        \begin{equation}
+            \label{eq:angolo di correzione}
+            \beta = \frac{\theta_2 - \theta_1}{2} \cdot \frac{\cos(\theta_{av})}{1 - \cos\theta_{av}}
+        \end{equation}
+
+        \begin{equation}
+            \label{eq:potere dispersivo}
+            D = \frac{\Delta \phi}{\Delta \lambda} = \frac{k}{d \cos{\phi}}
+        \end{equation}
+
+        \begin{equation}
+            \label{eq:potere risolutivo}
+            R = \frac{\lambda}{\Delta \lambda} = m \cdot k
+        \end{equation}
+
+        \begin{equation}
+            \label{eq:passo reticolo}
+            d = \frac{\lambda \cdot k}{\sin{\phi}} 
+        \end{equation} 
+
+
     \section{Metodi}
+
+
     \section{Analisi dati}
+
+
     \section{Considerazioni finali}
+
+
 
 \end{document}
