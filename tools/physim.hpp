@@ -6,7 +6,7 @@
  * 
  * @email:  lorenzoliuzzo@outlook.com
  * 
- * @updated: 22/11/2022
+ * @updated: 24/11/2022
  */
 
 
@@ -111,38 +111,6 @@ namespace math {
             return (val1 == val2) ? true : compare_round_equals(val1, val2); 
             
         } 
-
-
-        /**
-         * @brief Count the order of magnitude of a double
-         * 
-         * @param value: double
-         * 
-         * @return uint32_t
-         */
-        uint32_t order_of_magnitude_count(double value) noexcept {
-
-            uint32_t count;
-            for (count = 0; value > 1; ++count) value /= 10; 
-            return count;
-
-        }
-
-
-        /**
-         * @brief Count the number of digits of a double
-         * 
-         * @param value: double
-         * 
-         * @return uint32_t
-         */
-        uint32_t digit_count(double value) noexcept {
-
-            uint32_t count;
-            for (count = 0; value < 1; ++count) value *= 10; 
-            return count;
-
-        }
 
 
     } // namespace tools
@@ -326,6 +294,11 @@ namespace physics {
                                 }
                                 
                             }
+
+                        } else {
+
+                            metre_ = 0; second_ = 0; kilogram_ = 0; 
+                            ampere_ = 0; kelvin_ = 0; mole_ = 0; candela_ = 0;
 
                         }
 
@@ -1781,7 +1754,7 @@ namespace physics {
                 constexpr unit m_s(prefix::default_type, base::metre / base::second); 
                 constexpr unit km_s(prefix::kilo, base::metre / base::second); 
 
-
+                // composed units
                 constexpr unit hertz(s.inv());
                 constexpr unit Hz = hertz;
 
@@ -1855,20 +1828,6 @@ namespace physics {
                                                
                     value_{value}, 
                     units_{units} {}
-
-
-                // /**
-                //  * @brief Construct a new measurement object from a value and unit as std::string
-                //  * 
-                //  * @param value: double value of the measurement
-                //  * @param unit: std::string unit of measurement
-                //  * 
-                //  */
-                // explicit constexpr measurement(const double& value, 
-                //                                const std::string& units) noexcept : 
-                                               
-                //     value_{value}, 
-                //     units_{units} {}                
 
 
                 /**
@@ -2485,6 +2444,19 @@ namespace physics {
             // ============================================= 
 
                 /**
+                 * @brief Get the absolute measurement object
+                 * 
+                 * @return constexpr measurement
+                 * 
+                 */
+                friend constexpr measurement abs(const measurement& meas) noexcept { 
+                    
+                    return (meas.value_ < 0.0) ? -meas : meas; 
+                
+                }
+
+
+                /**
                  * @brief Invert the measurement
                  * 
                  * @return constexpr measurement 
@@ -2869,20 +2841,7 @@ namespace physics {
                     return *this; 
 
                 }
-                
-
-                /**
-                 * @brief Get the absolute measurement object
-                 * 
-                 * @return constexpr measurement
-                 * 
-                 */
-                constexpr measurement abs() const noexcept { 
-                    
-                    return (value_ < 0.0) ? measurement(std::abs(value_), units_) : *this; 
-                
-                }
-
+            
                 
                 /**
                  * @brief Convert the measurement to another units
@@ -2912,6 +2871,8 @@ namespace physics {
 
                 }
 
+            
+            private:
 
             // =============================================                                                                                         
             // class members
@@ -2923,6 +2884,10 @@ namespace physics {
                 /// @brief The units of the measurement
                 unit units_;
 
+
+                /// @brief Friend class to allow access to private members
+                friend class uncertain_measurement;
+                
 
         }; // class measurement
         static_assert(sizeof(measurement) == 20, "measurement is not the correct size");
@@ -2963,6 +2928,7 @@ namespace physics {
                     units_{unit} {
 
                         if (uncertainty_ < 0.0) throw std::invalid_argument("Uncertainty cannot be negative");
+                        if (uncertainty_ > std::fabs(value_)) throw std::invalid_argument("Uncertainty cannot be greater than the value");
 
                     }
 
@@ -2992,11 +2958,12 @@ namespace physics {
                 explicit constexpr uncertain_measurement(const measurement& other, 
                                                          const double& uncertainty_val) : 
 
-                    value_{other.value()}, 
+                    value_{other.value_}, 
                     uncertainty_{uncertainty_val}, 
-                    units_{other.units()} {
+                    units_{other.units_} {
 
                         if (uncertainty_ < 0.0) throw std::invalid_argument("Uncertainty cannot be negative");
+                        if (uncertainty_ > std::fabs(value_)) throw std::invalid_argument("Uncertainty cannot be greater than the value");
 
                     }
 
@@ -3012,13 +2979,15 @@ namespace physics {
                 explicit constexpr uncertain_measurement(const measurement& value, 
                                                          const measurement& uncertainty) : 
 
-                    value_{value.value()}, 
-                    uncertainty_{uncertainty.value_as(value.units())}, 
-                    units_{value.units()} {
+                    value_{value.value_}, 
+                    uncertainty_{uncertainty.value_as(value.units_)}, 
+                    units_{value.units_} {
 
                         if (uncertainty_ < 0.0) 
                             throw std::invalid_argument("Uncertainty cannot be negative");
-                        if (value.units().base() != uncertainty.units().base()) 
+                        if (uncertainty_ > std::fabs(value_)) 
+                            throw std::invalid_argument("Uncertainty cannot be greater than the value");
+                        if (value.units_.base() != uncertainty.units_.base()) 
                             throw std::invalid_argument("The units of the two measurements must have the same base_unit");
 
                     }
@@ -3176,7 +3145,7 @@ namespace physics {
                  */
                 constexpr uncertain_measurement operator*(const measurement& other) const noexcept {
                     
-                    return uncertain_measurement(value_ * other.value(), other.value() * uncertainty_, units_ * other.units());
+                    return uncertain_measurement(value_ * other.value_, other.value_ * uncertainty_, units_ * other.units_);
                 
                 }
 
@@ -3206,12 +3175,12 @@ namespace physics {
                  */
                 constexpr uncertain_measurement operator/(const uncertain_measurement& other) const {
                     
-                    if (other.value() == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+                    if (other.value_ == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
                     double tval1 = uncertainty_ / value_;
                     double tval2 = other.uncertainty_ / other.value_;
                     double ntol = std::sqrt(tval1 * tval1 + tval2 * tval2);
                     double nval = value_ / other.value_;
-                    return uncertain_measurement(nval, nval * ntol, units_ / other.units());
+                    return uncertain_measurement(nval, nval * ntol, units_ / other.units_);
                 
                 }
 
@@ -3226,10 +3195,10 @@ namespace physics {
                  */
                 constexpr uncertain_measurement simple_divide(const uncertain_measurement& other) const {
                     
-                    if (other.value() == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+                    if (other.value_ == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
                     double ntol = uncertainty_ / value_ + other.uncertainty_ / other.value_;
                     double nval = value_ / other.value_;
-                    return uncertain_measurement(nval, nval * ntol, units_ / other.units());
+                    return uncertain_measurement(nval, nval * ntol, units_ / other.units_);
                 
                 }
 
@@ -3244,8 +3213,8 @@ namespace physics {
                  */
                 constexpr uncertain_measurement operator/(const measurement& other) const {
                     
-                    if (other.value() == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
-                    return uncertain_measurement(value_ / other.value(), uncertainty_ / other.value(), units_ / other.units());
+                    if (other.value_ == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+                    return uncertain_measurement(value_ / other.value_, uncertainty_ / other.value_, units_ / other.units_);
                 
                 }
 
@@ -3312,7 +3281,7 @@ namespace physics {
                  */
                 constexpr uncertain_measurement operator+(const measurement& other) const {
                     
-                    if (units_.base() != other.units().base()) throw std::invalid_argument("Cannot add uncertain_measurement and measurement with different unit bases");
+                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot add uncertain_measurement and measurement with different unit bases");
                     return uncertain_measurement(value_ + other.value_as(units_), uncertainty_, units_);
                 
                 }
@@ -3377,7 +3346,7 @@ namespace physics {
                  */
                 constexpr uncertain_measurement operator-(const measurement& other) const {
 
-                    if (units_.base() != other.units().base()) throw std::invalid_argument("Cannot subtract uncertain_measurement and measurement with different unit bases");
+                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract uncertain_measurement and measurement with different unit bases");
                     return uncertain_measurement(value_ - other.value_as(units_), uncertainty_, units_);
                 
                 }
@@ -3853,137 +3822,55 @@ namespace physics {
                  */
                 friend std::ostream& operator<<(std::ostream& os, const uncertain_measurement& umeas) noexcept { 
 
-                    int32_t val_magnitude, unc_magnitude;  
-
-                    // check if scientific notation is needed
-                    if (std::fabs(umeas.value_) < 1.e-4 || std::fabs(umeas.value_) > 1.e4) { 
-                        
-                        os << std::scientific;
-                        os << umeas.value_; 
-                        os << std::setprecision(0); 
-                        os << " ± " << umeas.uncertainty_ << " " << umeas.units_;
+                    double abs_value = std::fabs(umeas.value_);
                     
+                    // first significative digit positions
+                    int32_t n_val = ((umeas.uncertainty_ >= 1) ? 
+                                        std::ceil(std::log10(abs_value)) : 
+                                        ((abs_value >= 1) ? 
+                                            std::ceil(std::log10(abs_value)) : 
+                                            std::floor(std::log10(abs_value)))); 
+
+                    int32_t n_unc = ((umeas.uncertainty_ >= 1) ? 
+                                        std::ceil(std::log10(umeas.uncertainty_)) : 
+                                        std::floor(std::log10(umeas.uncertainty_))); 
+
+                    // check if the uncertainty needs to be printed
+                    if (umeas.uncertainty_ == 0.0) os << umeas.as_measurement(); 
+                    else if (umeas.uncertainty_ >= 1) { 
+                        
+                        // check for scientific notation
+                        if (abs_value > 1.e4 || umeas.uncertainty_ > 1.e4) {
+
+                            os << std::scientific << std::setprecision(1 + n_val - n_unc) << umeas.value_; 
+
+                        } else {
+
+                            os << std::setprecision(2 + n_val - n_unc) << umeas.value_; 
+                            os << std::fixed;
+
+                        } 
+
+                        os << std::setprecision(0) << " ± " << umeas.uncertainty_;
+                        
                     } else {
-
-                        val_magnitude = (std::fabs(umeas.value_) < 1) ? std::ceil(-std::log10(umeas.uncertainty_)) : std::floor(-std::log10(umeas.uncertainty_));
-                        unc_magnitude = (umeas.uncertainty_ < 1) ? std::ceil(-std::log10(umeas.uncertainty_)) : std::ceil(-std::log10(umeas.uncertainty_)) + 1;
-                        os << std::setprecision(std::fabs(val_magnitude + unc_magnitude)); 
-                        os << umeas.value_; 
-
-                        os << std::setprecision(unc_magnitude); 
-                        os << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-
-                        // else os << std::setprecision(); 
-                    
-                        // if (std::fabs(umeas.value_ > 1)) {
-
-                        //     if (umeas.uncertainty_ < 1) os << std::setprecision(std::ceil(-std::log10(umeas.uncertainty_)));
-                        //     else os << std::setprecision(std::ceil(-std::log10(umeas.uncertainty_)));
-
-                        // }
-                                
-                        // if (umeas.uncertainty_ < 1) os << std::setprecision(std::ceil(std::log10(umeas.uncertainty_)) + 1); 
-                        // else os << std::setprecision(std::ceil(std::log10(umeas.uncertainty_)));
-    
-                    }                
-
-
-
-                    // int32_t val_magnitude{((std::fabs(umeas.value_) < 1) ? 
-                    //     static_cast<int32_t>(1 - std::log10(std::fabs(umeas.value_))) :
-                    //      static_cast<int32_t>(-std::log10(std::fabs(umeas.value_))))}; 
-                         
-                    // int32_t unc_magnitude{((umeas.uncertainty_ < 1) ? 
-                    //     static_cast<int32_t>(1 - std::log10(umeas.uncertainty_)) :
-                    //      static_cast<int32_t>(-std::log10(umeas.uncertainty_)))}; 
-
                         
-                    //     os << std::fixed; 
+                        // check for scientific notation
+                        if (abs_value < 1.e-4 || umeas.uncertainty_ < 1.e-4 || abs_value > 1.e4) {
 
-                    //     // print the value 
-                    //     os << umeas.value_;
+                            os << std::scientific << std::setprecision(1 + std::fabs(n_val) + n_unc) << umeas.value_; 
+                            os << std::setprecision(0); 
+                            
+                        } else os << std::fixed << std::setprecision(std::fabs(n_unc)) << umeas.value_; 
 
-                    //     // print the uncertainty                        
-                    //     if (unc_magnitude > 0) os << std::setprecision(1 + std::fabs(unc_magnitude)); 
-                    //     else os << std::setprecision(unc_magnitude);
+                        os << " ± " << umeas.uncertainty_;
 
-                    //     os << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-                    
-                    // }
+                    }
 
+                    // printing the units 
+                    os << " " << umeas.units_; 
 
-                    // if (std::fabs(umeas.value_) > 1.e-4 && std::fabs(umeas.value_) < 1.e4) {
-
-                    //     if (umeas.uncertainty_ > 1.e-4 && umeas.uncertainty_ < 1.e4) {
-
-                    //         os << std::fixed; 
-                    //         os << std::setprecision(std::fabs(val_magnitude + unc_magnitude)) << umeas.value_;
-                    //         os << std::setprecision(std::fabs(unc_magnitude)) << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-
-                    //     } else {
-
-                    //         os << std::scientific; 
-                    //         os << std::setprecision(std::fabs(val_magnitude + unc_magnitude)) << umeas.value_;
-                    //         os << std::setprecision(0) << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-
-                    //     }
-
-                    // } else {
-                        
-                    //     if (std::fabs(umeas.value_) <= 1.e-4) {
-
-                    //         os << std::scientific;
-                    //         if (umeas.uncertainty_ <= 1.e-4) os << std::setprecision(std::fabs(unc_magnitude + 1)); 
-                    //         else if (umeas.uncertainty_ >= 1.e4) os << std::setprecision(); 
-                    //         else os << std::setprecision(); 
-
-
-
-                    //         }
-
-
-                    //     } else if (std::fabs(umeas.value_) >= 1.e4) {
-
-
-                    //     }
-
-                    //     os << std::setprecision(0) << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-
-                    // }
-
-                        
-                    // if (val_magnitude > unc_magnitude) {
-                        
-                    //     os << std::setprecision(val_magnitude + 1); 
-                    //     os << umeas.value_ << " +/- " << umeas.uncertainty_ << " " << umeas.units_;
-                    
-                    // } else {
-                        
-                    //     os << std::setprecision(unc_magnitude + 1); 
-                    //     os << umeas.value_ << " +/- " << umeas.uncertainty_ << " " << umeas.units_;
-                    
-                    // }
-
-                    //     if (val_magnitude == 1) os << " 1 " << std::setprecision(unc_magnitude - 1); 
-                    //     else os << " 2 " << std::setprecision(unc_magnitude + val_magnitude + 1);
-                    //     os << umeas.value_; 
-                    //     os << std::setprecision(0) << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-
-                    // } else {
-                        
-                    //     os << "fixed";
-                    //     os << std::fixed;
-                    //     if (val_magnitude == 1) os << " 1 " << std::setprecision(unc_magnitude + 1); 
-                    //     else os << " 2 " << std::setprecision(unc_magnitude + val_magnitude + 1);
-                    //     os << umeas.value_; 
-                    //     if (unc_magnitude < 1) os << " 1bis " << std::setprecision(unc_magnitude + 1); 
-                    //     else os << " 2bis " << std::setprecision(unc_magnitude + 1);
-
-                    //     os << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-
-                    // }
-
-                    os << std::defaultfloat;
+                    os << std::defaultfloat << std::setprecision(6);
                     return os; 
                     
                 }
@@ -4000,18 +3887,55 @@ namespace physics {
                  */
                 friend std::ofstream& operator<<(std::ofstream& file, const uncertain_measurement& umeas) noexcept { 
 
-                    int32_t precision{(int32_t)-std::log10(umeas.uncertainty_) + 1};
+                    double abs_value = std::fabs(umeas.value_);
+                    
+                    // first significative digit positions
+                    int32_t n_val = ((umeas.uncertainty_ >= 1) ? 
+                                        std::ceil(std::log10(abs_value)) : 
+                                        ((abs_value >= 1) ? 
+                                            std::ceil(std::log10(abs_value)) : 
+                                            std::floor(std::log10(abs_value)))); 
 
-                    if (std::fabs(precision) >= 4) 
-                        file << std::scientific << std::setprecision(precision + 1) << umeas.value_ << " ± " << std::setprecision(0) << umeas.uncertainty_ << " " << umeas.units_;
-                    else {
-                        file << std::fixed << ((int32_t)-std::log10(umeas.value_) == 1) ? std::setprecision(precision + 1) : std::setprecision(precision + (int32_t)-std::log10(umeas.value_) + 1); 
-                        file << umeas.value_ << " ± " << umeas.uncertainty_ << " " << umeas.units_;
+                    int32_t n_unc = ((umeas.uncertainty_ >= 1) ? 
+                                        std::ceil(std::log10(umeas.uncertainty_)) : 
+                                        std::floor(std::log10(umeas.uncertainty_))); 
+
+                    // check if the uncertainty needs to be printed
+                    if (umeas.uncertainty_ == 0.0) file << umeas.as_measurement(); 
+                    else if (umeas.uncertainty_ >= 1) { 
+                        
+                        // check for scientific notation
+                        if (abs_value > 1.e4 || umeas.uncertainty_ > 1.e4) {
+
+                            file << std::scientific << std::setprecision(1 + n_val - n_unc) << umeas.value_; 
+
+                        } else {
+
+                            file << std::setprecision(2 + n_val - n_unc) << umeas.value_; 
+                            file << std::fixed;
+
+                        } 
+
+                        file << std::setprecision(0) << " ± " << umeas.uncertainty_;
+                        
+                    } else {
+                        
+                        // check for scientific notation
+                        if (abs_value < 1.e-4 || umeas.uncertainty_ < 1.e-4 || abs_value > 1.e4) {
+
+                            file << std::scientific << std::setprecision(1 + std::fabs(n_val) + n_unc) << umeas.value_; 
+                            file << std::setprecision(0); 
+                            
+                        } else file << std::fixed << std::setprecision(std::fabs(n_unc)) << umeas.value_; 
+
+                        file << " ± " << umeas.uncertainty_;
+
                     }
-                                // << std::setprecision(precision) << umeas.value_ << " ± " << umeas.uncertainty_ << " " << umeas.units_;
-                    file << std::setprecision(precision) << umeas.value_ << " ± " << umeas.uncertainty_ << " " << umeas.units_;
 
-                    file << std::defaultfloat << std::setprecision(6);
+                    // printing the units 
+                    file << " " << umeas.units_; 
+
+                    file << std::defaultfloat;
                     return file; 
                     
                     
@@ -4132,7 +4056,7 @@ namespace physics {
                     
                     if (meas.units() != rad) 
                         throw std::runtime_error("Cannot take the sine of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::sin(meas.value_), -std::cos(meas.uncertainty_), unitless); 
+                    else return uncertain_measurement(std::sin(meas.value_), std::fabs(std::cos(meas.value_)) * meas.uncertainty_, unitless); 
                 
                 }
 
@@ -4358,6 +4282,19 @@ namespace physics {
 
 
                 /**
+                 * @brief Cast to a measurement
+                 * 
+                 * @return measurement 
+                 * 
+                 */
+                constexpr measurement as_measurement() const noexcept { 
+                    
+                    return measurement(value_, units_); 
+                    
+                }
+
+
+                /**
                  * @brief Get the uncertainty of the measurement
                  * 
                  * @return constexpr const double
@@ -4393,6 +4330,43 @@ namespace physics {
                 constexpr double uncertainty_as(const unit& desired_units) const { 
                     
                     return (units_ == desired_units) ? uncertainty_ : units_.convert(uncertainty_, desired_units); 
+                
+                }
+
+
+                /**
+                 * @brief Get the relative uncertainty of the measurement
+                 * 
+                 * @return constexpr double
+                 */
+                constexpr double relative_uncertainty() const noexcept { 
+                    
+                    return uncertainty_ / value_;
+
+                }
+
+
+                /**
+                 * @brief Get the weight of the measurement
+                 * 
+                 * @return constexpr measurement 
+                 */
+                constexpr measurement weight() const {
+                        
+                    return this->uncertainty_as_measurement().inv().square();
+    
+                }
+
+
+                /**
+                 * @brief Get the uncertainty as a separate measurement
+                 * 
+                 * @return constexpr measurement 
+                 * 
+                 */
+                constexpr measurement uncertainty_as_measurement() const noexcept { 
+                    
+                    return measurement(uncertainty_, units_); 
                 
                 }
 
@@ -4450,44 +4424,6 @@ namespace physics {
                 
 
                 /**
-                 * @brief Cast to a measurement
-                 * 
-                 * @return measurement 
-                 * 
-                 */
-                constexpr measurement as_measurement() const noexcept { 
-                    
-                    return measurement(value_, units_); 
-                    
-                }
-
-
-                /**
-                 * @brief Get the uncertainty as a separate measurement
-                 * 
-                 * @return constexpr measurement 
-                 * 
-                 */
-                constexpr measurement uncertainty_as_measurement() const noexcept { 
-                    
-                    return measurement(uncertainty_, units_); 
-                
-                }
-
-
-                /**
-                 * @brief Get the weight of the measurement
-                 * 
-                 * @return constexpr measurement 
-                 */
-                constexpr measurement weight() const {
-                        
-                    return this->uncertainty_as_measurement().inv().square();
-    
-                }
-
-
-                /**
                  * @brief Convert the uncertain_measurement to another units
                  * 
                  * @param desired_units: desired unit of measurement 
@@ -4511,7 +4447,7 @@ namespace physics {
                  * @return void
                  * 
                  */
-                void print(const bool& newline = true) const { 
+                void print(const bool& newline = true) const noexcept { 
 
                     std::cout << *this; 
                     if (newline) std::cout << "\n";
@@ -8249,12 +8185,12 @@ namespace math {
             uncertain_measurement mean(const std::vector<measurement>& vec) {
 
                 if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
-
+                
                 measurement average = std::accumulate(vec.begin(), vec.end(), measurement(0., vec[0].units())) / vec.size();
-                measurement sigma = measurement(0., vec[0].units().square()); 
-                for (auto x : vec) sigma += (x - average).square(); 
+                measurement sigma_sq = measurement(0., vec[0].units().square()); 
+                for (auto x : vec) sigma_sq += (x - average).square(); 
 
-                return uncertain_measurement(average, sigma.sqrt() / vec.size());                 
+                return uncertain_measurement(average, sigma_sq.sqrt() / vec.size());                 
 
             }
 
@@ -8269,10 +8205,10 @@ namespace math {
             measurement median(const std::vector<measurement>& v) {
 
                 if (v.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
-                std::vector<measurement> appo{v}; 
-                if (std::is_sorted(appo.begin(), appo.end()) == false) std::sort(appo.begin(), appo.end());
-                if (v.size() % 2 != 0) return appo[v.size() / 2];
-                else return (appo[v.size() / 2] + appo[(v.size() / 2) - 1]) / 2; 
+                std::vector<measurement> copy{v}; 
+                if (std::is_sorted(copy.begin(), copy.end()) == false) std::sort(copy.begin(), copy.end());
+                if (v.size() % 2 != 0) return copy[v.size() / 2];
+                else return (copy[v.size() / 2] + copy[(v.size() / 2) - 1]) / 2; 
 
             }
 
@@ -8287,9 +8223,9 @@ namespace math {
             measurement variance(const std::vector<measurement>& vec) {
 
                 measurement average = mean(vec).as_measurement();
-                measurement accu = measurement(0., vec[0].units().square()); 
-                for (auto x : vec) accu += (x - average).square(); 
-                return accu / vec.size();
+                measurement sigma_sq = measurement(0., vec[0].units().square()); 
+                for (auto x : vec) sigma_sq += (x - average).square(); 
+                return sigma_sq / vec.size();
 
             }
 
@@ -8329,7 +8265,7 @@ namespace math {
              * 
              * @return uncertain_measurement 
              */
-            uncertain_measurement weighted_mean(const std::vector<uncertain_measurement>& vec) {
+            uncertain_measurement wmean(const std::vector<uncertain_measurement>& vec) {
 
                 if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
                 
@@ -8352,7 +8288,7 @@ namespace math {
              * 
              * @return measurement 
              */
-            measurement weighted_variance(const std::vector<uncertain_measurement>& vec) {
+            measurement wvariance(const std::vector<uncertain_measurement>& vec) {
 
                 if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
                 measurement weights = measurement(0., vec[0].units().inv().square());
@@ -8369,9 +8305,9 @@ namespace math {
              * 
              * @return measurement 
              */
-            inline measurement weighted_sd(const std::vector<uncertain_measurement>& vec) {
+            inline measurement wsd(const std::vector<uncertain_measurement>& vec) {
 
-                return weighted_variance(vec).sqrt();
+                return wvariance(vec).sqrt();
             
             }
 
@@ -8547,148 +8483,6 @@ namespace math {
         } // namespace descriptive_statistics 
 
 
-        // class data_analysis {
-
-            
-        //     protected: 
-
-        //         // =============================================
-        //         // class members
-        //         // =============================================
-
-        //         uint size_{}; 
-
-        //         uint gdl_{}; 
-
-        //         measurement mean_; 
-
-        //         measurement median_; 
-
-        //         measurement variance_; 
-
-        //         measurement chi_; 
-
-
-        //     public: 
-
-        //         // =============================================
-        //         // constructor and destructor
-        //         // =============================================
-
-        //         constexpr data_analysis() noexcept {}
-                
-
-        //         ~data_analysis() = default; 
-
-
-        //         // =============================================
-        //         // set and get and print methods
-        //         // =============================================
-
-        //         constexpr void gdl(const uint32_t& gdl) { 
-                    
-        //             gdl_ = gdl; 
-                    
-        //         }
-
-
-        //         constexpr measurement mean() const { 
-                    
-        //             return mean_; 
-                    
-        //         }
-
-
-        //         constexpr measurement median() const { 
-                    
-        //             return median_; 
-                    
-        //         }
-
-
-        //         constexpr measurement variance() const { 
-                    
-        //             return variance_; 
-                    
-        //         }
-
-
-        //         constexpr measurement standard_dev() const { 
-                    
-        //             return variance_.sqrt(); 
-                    
-        //         }
-
-
-        //         constexpr measurement sdom() const { 
-                    
-        //             return variance_.sqrt() / std::sqrt(size_); 
-                    
-        //         }
-
-
-        //         constexpr measurement chi() const { 
-                    
-        //             return chi_; 
-                    
-        //         }
-
-
-        //         constexpr measurement chi_r() const { 
-                    
-        //             return chi_ / gdl_; 
-                    
-        //         }
-
-
-        //         void analyse(const std::vector<measurement>& data) {
-
-        //             if (data.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic analysis on an empty vector of data"); 
-        //             size_ = static_cast<uint>(data.size()); 
-        //             mean_ = descriptive_statistics::mean(data); 
-        //             median_ = descriptive_statistics::median(data); 
-        //             variance_ = descriptive_statistics::variance(data); 
-
-        //         } 
-
-
-        //         void analyse(const std::vector<measurement>& data, 
-        //                      const std::vector<measurement>& expected, 
-        //                      const uint& gdl = 1) {
-
-        //             if (data.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic analysis on an empty vector of data"); 
-        //             size_ = static_cast<uint>(data.size()); 
-        //             mean_ = descriptive_statistics::mean(data); 
-        //             median_ = descriptive_statistics::median(data); 
-        //             variance_ = descriptive_statistics::variance(data); 
-        //             chi_ = descriptive_statistics::chi_sq(data, expected); 
-        //             gdl_ = gdl; 
-
-        //         } 
-
-
-        //         void print_analysis() const {
-
-        //             std::cout << "data analysis results:\n"; 
-        //             std::cout << "mean = "; 
-        //             mean_.print();                     
-        //             std::cout << "median = "; 
-        //             median_.print();                     
-        //             std::cout << "variance = "; 
-        //             variance_.print();                     
-        //             std::cout << "standard deviation = "; 
-        //             variance_.sqrt().print(); 
-        //             if (gdl_ != 0) {
-        //                 std::cout << "chi = "; 
-        //                 chi_.print();   
-        //             }
-
-        //         }
-
-
-        // }; // class data analysis
-
-
         // class random_generator for generating pseudo-casual numbers
         class random_generator {
 
@@ -8712,13 +8506,17 @@ namespace math {
                 // constructor & destructor
                 // =============================================
 
-                constexpr random_generator() noexcept { 
+                constexpr random_generator() { 
                     
-                    set_up(); 
+                    this->set_up(); 
                     
                 }
 
-                ~random_generator() {}
+                ~random_generator() {
+
+                    this->save_seed(); 
+
+                }
 
 
                 // =============================================
@@ -8730,10 +8528,10 @@ namespace math {
                     m2 = 1521;
                     m3 = 4071;
                     m4 = 2107;
-                    l1 = s[0] % 4096;
-                    l2 = s[1] % 4096;
-                    l3 = s[2] % 4096;
-                    l4 = s[3] % 4096;
+                    l1 = s[0];
+                    l2 = s[1];
+                    l3 = s[2];
+                    l4 = s[3];
                     l4 = 2 * (l4 / 2) + 1;
                     n1 = 0;
                     n2 = 0;
@@ -8746,20 +8544,26 @@ namespace math {
 
                     uint32_t seed[4];
                     uint32_t p1, p2;
-                    std::ifstream file_in("../random/primes");
-                    if (file_in.is_open()) { file_in >> p1 >> p2 ; } 
-                    else std::cerr << "PROBLEM: Unable to open Primes\n";
+
+                    std::ifstream file_in("../random/primes.in");
+                    if (file_in.is_open()) file_in >> p1 >> p2 ;
+                    else throw std::runtime_error("Unable to open file '../random/primes.in'");
                     file_in.close();
 
                     file_in.open("../random/seed.in");
                     std::string property;
                     if (file_in.is_open()) {
+
                         while (!file_in.eof()) {
+                            
                             file_in >> property;
                             if (property == "RANDOMSEED") {
+
                                 file_in >> seed[0] >> seed[1] >> seed[2] >> seed[3];
-                                set_seed(seed, p1, p2);
+                                this->set_seed(seed, p1, p2);
+
                             }
+
                         }
                         file_in.close();
                     } else std::cerr << "PROBLEM: Unable to open seed.in\n";
@@ -8769,8 +8573,8 @@ namespace math {
 
                 void save_seed() const {  
 
-                    std::ofstream file_out("random/seed.out");
-                    if (file_out.is_open()) file_out << l1 << " " << l2 << " " << l3 << " " << l4 << "\n";
+                    std::ofstream file_out("../random/seed.out");
+                    if (file_out.is_open()) file_out << l1 << "\t" << l2 << "\t" << l3 << "\t" << l4 << "\n";
                     else std::cerr << "PROBLEM: Unable to open seed.out\n";
                     file_out.close();
 
