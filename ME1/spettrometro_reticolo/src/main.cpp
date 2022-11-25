@@ -18,11 +18,38 @@ uncertain_measurement calculate_lambda(const uncertain_measurement& d,
                                        const int32_t& k) 
 {
 
-    assert(d.units().base() == base::metre);
+    assert(d.units().base() == base::metre && d.value() > 0.0);
     assert(delta_theta.units() == rad);
     assert(k > 0);
 
-    return d * sin(delta_theta) / k;
+    return d * sin(delta_theta) / k; 
+
+}
+
+
+uncertain_measurement get_lambda_from_data(const std::string& data_file, 
+                                           const uncertain_measurement& passo_reticolo, 
+                                           const uncertain_measurement& theta0) 
+{
+
+    std::vector<uncertain_measurement> lambda_data; 
+    uncertain_measurement delta; 
+    int32_t gradi, primi, k;
+    std::ifstream data_flow(data_file);
+
+    if (!data_flow.is_open()) 
+        throw std::runtime_error("Cannot open file: '" + data_file + "'"); 
+    
+    while (!data_flow.eof()) {
+        
+        data_flow >> gradi >> primi >> k;
+        delta = uncertain_measurement(radians(gradi + primi / 60.0), radians(1. / 60.), rad) - theta0;
+        if (delta.value() < 0.0) delta.value() *= -1.0; 
+        lambda_data.emplace_back(calculate_lambda(passo_reticolo, delta, k));
+
+    }
+
+    return wmean(lambda_data);
 
 }
 
@@ -35,38 +62,32 @@ int main() {
     // posizione angolare del primo minimo
     uncertain_measurement theta0(radians(56 + 5. / 60.), radians(1. / 60.), rad); 
 
-    // lettura dati 
-    std::ifstream data_flow;
-    std::vector<uncertain_measurement> theta_viola_int; 
-    std::vector<int32_t> k_viola_int;
-    int32_t gradi, primi, k;
+    // spettro del mercurio
+    std::vector<std::string> colors = { "viola_int", 
+                                        "viola_est", 
+                                        "indaco", 
+                                        "verde_acqua_int", 
+                                        "verde_acqua_est", 
+                                        "verde", 
+                                        "giallo_int", 
+                                        "giallo_est", 
+                                        "rosso_int", 
+                                        "rosso_est" };
 
-    data_flow.open("../data/mercurio/viola_int.dat");
-    if (!data_flow.is_open()) throw std::runtime_error("Cannot open file!, line: " + std::to_string(__LINE__));
-    while (!data_flow.eof()) {
+    std::vector<uncertain_measurement> lambda_data;
+    lambda_data.reserve(colors.size());
 
-        data_flow >> gradi >> primi >> k;
+    for (const auto& color : colors) {
 
-        theta_viola_int.emplace_back(uncertain_measurement(radians(gradi + primi / 60.), radians(1. / 60.), rad));
-        k_viola_int.emplace_back(k);
+        lambda_data.emplace_back(get_lambda_from_data("../data/mercurio/" + color + ".dat", d, theta0));
 
     }
-    std::cout << "Viola int data: " << theta_viola_int.size() << "\n";
 
-    // calcolo lambda
-    uncertain_measurement delta;
-    std::vector<uncertain_measurement> lambda_viola_int; 
-    lambda_viola_int.reserve(theta_viola_int.size());
-    for (size_t i = 0; i < theta_viola_int.size(); i++) {
-        delta = theta_viola_int[i] - theta0;
-        if (delta.value() < 0) delta.value() *= -1; 
-        lambda_viola_int.emplace_back(calculate_lambda(d, delta, k_viola_int[i]));
-        std::cout << lambda_viola_int[i] << "\n";
+    for (size_t i = 0; i < colors.size(); i++) {
+
+        std::cout << "\t" << colors[i] << "\t\t" << lambda_data[i] << "\n";
+
     }
-
-    // calcolo media
-    uncertain_measurement lambda_mean = wmean(lambda_viola_int);
-    std::cout << "lambda viola (I/II) = " << lambda_mean << "\n";
 
 
     return 0;

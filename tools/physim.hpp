@@ -4048,15 +4048,15 @@ namespace physics {
                 /**
                  * @brief Take the sine of a measurement
                  * 
-                 * @param meas: measurement 
+                 * @param umeas: measurement 
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement sin(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement sin(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != rad) 
+                    if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the sine of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::sin(meas.value_), std::fabs(std::cos(meas.value_)) * meas.uncertainty_, unitless); 
+                    else return uncertain_measurement(std::sin(umeas.value_), std::fabs(std::cos(umeas.value_)) * umeas.uncertainty_, unitless); 
                 
                 }
 
@@ -4064,15 +4064,15 @@ namespace physics {
                 /**
                  * @brief Take the cosine of a measurement
                  * 
-                 * @param meas: measurement 
+                 * @param umeas: measurement 
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement cos(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement cos(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != rad) 
+                    if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the cosine of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::cos(meas.value_), -std::sin(meas.uncertainty_), unitless); 
+                    else return uncertain_measurement(std::cos(umeas.value_), -std::sin(umeas.value_) * umeas.uncertainty_, unitless); 
                 
                 }
 
