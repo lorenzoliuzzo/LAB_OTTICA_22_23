@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  25 NOV 2022 15:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  25 NOV 2022 15:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex
-(/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex
+**/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex
+(/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -392,55 +392,46 @@ Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
 \c@LT@tables=\count312
 \c@LT@chunks=\count313
 \LT@p@ftn=\toks29
-) (/usr/share/texlive/texmf-dist/tex/latex/tools/tabularx.sty
-Package: tabularx 2020/01/15 v2.11c `tabularx' package (DPC)
-\TX@col@width=\dimen197
-\TX@old@table=\dimen198
-\TX@old@col=\dimen199
-\TX@target=\dimen256
-\TX@delta=\dimen257
-\TX@cols=\count314
-\TX@ftn=\toks30
 ) (/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count315
-\calc@Bcount=\count316
-\calc@Adimen=\dimen258
-\calc@Bdimen=\dimen259
+\calc@Acount=\count314
+\calc@Bcount=\count315
+\calc@Adimen=\dimen197
+\calc@Bdimen=\dimen198
 \calc@Askip=\skip66
 \calc@Bskip=\skip67
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count317
+\calc@Ccount=\count316
 \calc@Cskip=\skip68
 ) (/usr/share/texlive/texmf-dist/tex/latex/subfiles/subfiles.sty
 Package: subfiles 2020/11/14 v2.2 Multi-file projects (package)
  (/usr/share/texlive/texmf-dist/tex/latex/import/import.sty
 Package: import 2020/04/01  v 6.2
 ))
-Package hyperref Info: Option `colorlinks' set `true' on input line 29.
-Package translations Info: No language package found. I am going to use `english' as default language. on input line 42.
+Package hyperref Info: Option `colorlinks' set `true' on input line 27.
+Package translations Info: No language package found. I am going to use `english' as default language. on input line 40.
  (./relazione.aux)
 \openout1 = `relazione.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -476,17 +467,17 @@ LaTeX Font Info:    ... okay on input line 42.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Redefining \celsius on input line 42.
-Package gensymb Info: Faking symbols for \degree and \celsius on input line 42.
+LaTeX Info: Redefining \celsius on input line 40.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 40.
 
 Package gensymb Warning: Not defining \perthousand.
 
-LaTeX Info: Redefining \ohm on input line 42.
-Package gensymb Info: Using \Omega for \ohm on input line 42.
+LaTeX Info: Redefining \ohm on input line 40.
+Package gensymb Info: Using \Omega for \ohm on input line 40.
 
 Package gensymb Warning: Not defining \micro.
 
-Package hyperref Info: Link coloring ON on input line 42.
+Package hyperref Info: Link coloring ON on input line 40.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -494,11 +485,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count318
+\c@section@level=\count317
 )
-LaTeX Info: Redefining \ref on input line 42.
-LaTeX Info: Redefining \pageref on input line 42.
-LaTeX Info: Redefining \nameref on input line 42.
+LaTeX Info: Redefining \ref on input line 40.
+LaTeX Info: Redefining \pageref on input line 40.
+LaTeX Info: Redefining \nameref on input line 40.
  (./relazione.out) (./relazione.out)
 \@outlinefile=\write3
 \openout3 = `relazione.out'.
@@ -513,17 +504,17 @@ Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
 Package caption Info: End \AtBeginDocument code.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count319
-\scratchdimen=\dimen260
+\scratchcounter=\count318
+\scratchdimen=\dimen199
 \scratchbox=\box70
-\nofMPsegments=\count320
-\nofMParguments=\count321
-\everyMPshowfont=\toks31
-\MPscratchCnt=\count322
-\MPscratchDim=\dimen261
-\MPnumerator=\count323
-\makeMPintoPDFobject=\count324
-\everyMPtoPDFconversion=\toks32
+\nofMPsegments=\count319
+\nofMParguments=\count320
+\everyMPshowfont=\toks30
+\MPscratchCnt=\count321
+\MPscratchDim=\dimen256
+\MPnumerator=\count322
+\makeMPintoPDFobject=\count323
+\everyMPtoPDFconversion=\toks31
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -532,59 +523,94 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 )) (/usr/share/texlive/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
-Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 42.
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 40.
 <../../../tools/images/logo.jpg, id=28, 355.5684pt x 113.7048pt>
 File: ../../../tools/images/logo.jpg Graphic file (type jpg)
 <use ../../../tools/images/logo.jpg>
-Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 49.
+Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 47.
 (pdftex.def)             Requested size: 435.32724pt x 139.21065pt.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/images/logo.jpg>] (./relazione.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/images/logo.jpg>] (./relazione.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+))
 \tf@toc=\write4
 \openout4 = `relazione.toc'.
 
  [2
 
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 74.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 74.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-LaTeX Warning: Reference `eq:lunghezza d'onda' on page 1 undefined on input line 79.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 78--81
+Underfull \hbox (badness 10000) in paragraph at lines 68--72
 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
+
+ []
+
+<../images/camera.png, id=51, 491.58656pt x 310.91156pt>
+File: ../images/camera.png Graphic file (type png)
+<use ../images/camera.png>
+Package pdftex.def Info: ../images/camera.png  used on input line 84.
+(pdftex.def)             Requested size: 435.32724pt x 275.33934pt.
 [1
 
-] [2] (./relazione.aux)
+]
+Underfull \hbox (badness 10000) in paragraph at lines 89--110
 
-LaTeX Warning: There were undefined references.
+ []
 
+[2 <../images/camera.png>] (./table.tex [3]) [4]
+<../images/Least_Deviation_Squared.png, id=79, 700.6175pt x 477.785pt>
+File: ../images/Least_Deviation_Squared.png Graphic file (type png)
+<use ../images/Least_Deviation_Squared.png>
+Package pdftex.def Info: ../images/Least_Deviation_Squared.png  used on input line 136.
+(pdftex.def)             Requested size: 199.16928pt x 135.82019pt.
+<../images/100_distribution.png, id=80, 700.6175pt x 477.785pt>
+File: ../images/100_distribution.png Graphic file (type png)
+<use ../images/100_distribution.png>
+Package pdftex.def Info: ../images/100_distribution.png  used on input line 138.
+(pdftex.def)             Requested size: 199.16928pt x 135.82019pt.
+<../images/Best_charge_value.png, id=81, 700.6175pt x 477.785pt>
+File: ../images/Best_charge_value.png Graphic file (type png)
+<use ../images/Best_charge_value.png>
+Package pdftex.def Info: ../images/Best_charge_value.png  used on input line 145.
+(pdftex.def)             Requested size: 199.16928pt x 135.82019pt.
+<../images/Charge_distribution.png, id=82, 700.6175pt x 477.785pt>
+File: ../images/Charge_distribution.png Graphic file (type png)
+<use ../images/Charge_distribution.png>
+Package pdftex.def Info: ../images/Charge_distribution.png  used on input line 147.
+(pdftex.def)             Requested size: 199.16928pt x 135.82019pt.
+ [5 <../images/Least_Deviation_Squared.png> <../images/100_distribution.png>] [6 <../images/Best_charge_value.png> <../images/Charge_distribution.png>]
+<../images/Scarti.png, id=103, 700.6175pt x 477.785pt>
+File: ../images/Scarti.png Graphic file (type png)
+<use ../images/Scarti.png>
+Package pdftex.def Info: ../images/Scarti.png  used on input line 174.
+(pdftex.def)             Requested size: 304.72774pt x 207.81293pt.
+ [7 <../images/Scarti.png>] (./relazione.aux)
 Package rerunfilecheck Info: File `relazione.out' has not changed.
-(rerunfilecheck)             Checksum: EF14993209E5C794F10D0699183DD352;624.
+(rerunfilecheck)             Checksum: 2E3CDDA79DED23904DE89E539D71A048;665.
  ) 
 Here is how much of TeX's memory you used:
- 17149 strings out of 480171
- 317915 string characters out of 5894488
- 594039 words of memory out of 5000000
- 34879 multiletter control sequences out of 15000+600000
- 471871 words of font info for 39 fonts, out of 8000000 for 9000
+ 17167 strings out of 480171
+ 318648 string characters out of 5894488
+ 626068 words of memory out of 5000000
+ 34877 multiletter control sequences out of 15000+600000
+ 472775 words of font info for 42 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 68i,11n,77p,429b,752s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on relazione.pdf (4 pages, 262352 bytes).
+ 68i,10n,77p,1279b,916s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
+Output written on relazione.pdf (9 pages, 474894 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
- 85 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
- 54 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 174 PDF objects out of 1000 (max. 8388607)
+ 123 compressed objects within 2 object streams
+ 28 named destinations out of 1000 (max. 500000)
+ 84 words of extra memory for PDF output out of 10000 (max. 10000000)
 
