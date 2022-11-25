@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  25 NOV 2022 11:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  25 NOV 2022 11:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/velocita_luce/latex/relazione.tex
-(/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/velocita_luce/latex/relazione.tex
+**/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex
+(/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -351,12 +351,7 @@ Package: subfiles 2020/11/14 v2.2 Multi-file projects (package)
 Package: import 2020/04/01  v 6.2
 ))
 Package hyperref Info: Option `colorlinks' set `true' on input line 22.
-
-
-LaTeX Warning: Unused global option(s):
-    [openright].
-
-(./relazione.aux)
+ (./relazione.aux)
 \openout1 = `relazione.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
@@ -456,166 +451,38 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-<../../../tools/images/logo.jpg, id=40, 355.5684pt x 113.7048pt>
+<../../../tools/images/logo.jpg, id=20, 355.5684pt x 113.7048pt>
 File: ../../../tools/images/logo.jpg Graphic file (type jpg)
 <use ../../../tools/images/logo.jpg>
 Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 42.
 (pdftex.def)             Requested size: 435.32724pt x 139.21065pt.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/images/logo.jpg>] (./relazione.toc
-LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-))
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/images/logo.jpg>] (./relazione.toc)
 \tf@toc=\write4
 \openout4 = `relazione.toc'.
 
  [2
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 78--79
+] [1
 
- []
-
-[1
-
-]
-<../images/apparato.png, id=74, 1019.30812pt x 581.17125pt>
-File: ../images/apparato.png Graphic file (type png)
-<use ../images/apparato.png>
-Package pdftex.def Info: ../images/apparato.png  used on input line 84.
-(pdftex.def)             Requested size: 284.52756pt x 162.23022pt.
-
-Overfull \hbox (23.32857pt too wide) in paragraph at lines 84--85
- [][] 
- []
-
-
-Overfull \hbox (2.2222pt too wide) in paragraph at lines 82--103
-[]$[]$ $[]$ 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--156
-
- []
-
-[2 <../images/apparato.png>]
-
-Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 189.
-See the caption package documentation for explanation.
-
-<../images/CW.png, id=83, 230.68584pt x 175.18248pt>
-File: ../images/CW.png Graphic file (type png)
-<use ../images/CW.png>
-Package pdftex.def Info: ../images/CW.png  used on input line 193.
-(pdftex.def)             Requested size: 284.52756pt x 216.09598pt.
-
-Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 194.
-See the caption package documentation for explanation.
-
-
-Overfull \hbox (1.56752pt too wide) in paragraph at lines 193--194
- [][] 
- []
-
-
-Overfull \hbox (2.2222pt too wide) in paragraph at lines 160--197
-[][] [] 
- []
-
-
-Overfull \hbox (15.0pt too wide) in paragraph at lines 159--198
-[]$[]$ 
- []
-
-[3 <../images/CW.png>]
-<../images/CCW.png, id=94, 238.491pt x 175.18248pt>
-File: ../images/CCW.png Graphic file (type png)
-<use ../images/CCW.png>
-Package pdftex.def Info: ../images/CCW.png  used on input line 264.
-(pdftex.def)             Requested size: 284.52756pt x 209.01503pt.
-
-Overfull \hbox (1.56752pt too wide) in paragraph at lines 264--265
- [][] 
- []
-
-
-Overfull \hbox (2.2222pt too wide) in paragraph at lines 236--268
-[]$[]$ $[]$ 
- []
-
-[4]
-<../images/CW_CCW.png, id=100, 238.491pt x 175.18248pt>
-File: ../images/CW_CCW.png Graphic file (type png)
-<use ../images/CW_CCW.png>
-Package pdftex.def Info: ../images/CW_CCW.png  used on input line 320.
-(pdftex.def)             Requested size: 284.52756pt x 209.01503pt.
-
-Overfull \hbox (23.32857pt too wide) in paragraph at lines 320--321
- [][] 
- []
-
-[5 <../images/CCW.png>] [6 <../images/CW_CCW.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 329--330
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 331--333
-
- []
-
-<../images/results.png, id=118, 238.491pt x 175.18248pt>
-File: ../images/results.png Graphic file (type png)
-<use ../images/results.png>
-Package pdftex.def Info: ../images/results.png  used on input line 338.
-(pdftex.def)             Requested size: 284.52756pt x 209.01503pt.
-[7 <../images/results.png>]
-<../images/omega_delta_focus.png, id=126, 1465.475pt x 778.91pt>
-File: ../images/omega_delta_focus.png Graphic file (type png)
-<use ../images/omega_delta_focus.png>
-Package pdftex.def Info: ../images/omega_delta_focus.png  used on input line 353.
-(pdftex.def)             Requested size: 468.96158pt x 249.25629pt.
-
-Overfull \hbox (33.63434pt too wide) in paragraph at lines 353--354
- [][] 
- []
-
-<../images/omega_delta.png, id=128, 1465.475pt x 778.91pt>
-File: ../images/omega_delta.png Graphic file (type png)
-<use ../images/omega_delta.png>
-Package pdftex.def Info: ../images/omega_delta.png  used on input line 369.
-(pdftex.def)             Requested size: 468.96158pt x 249.25629pt.
-
-Overfull \hbox (33.63434pt too wide) in paragraph at lines 369--370
- [][] 
- []
-
-[8 <../images/omega_delta_focus.png>] [9 <../images/omega_delta.png>] (./relazione.aux)
+] (./relazione.aux)
 Package rerunfilecheck Info: File `relazione.out' has not changed.
-(rerunfilecheck)             Checksum: A7356E69C6F5C0902BF191DB43E1D7AD;1155.
+(rerunfilecheck)             Checksum: DF581559B38AC42EC6F26E1FBBD74DC6;413.
  ) 
 Here is how much of TeX's memory you used:
- 13332 strings out of 480171
- 209007 string characters out of 5894488
- 521789 words of memory out of 5000000
- 31070 multiletter control sequences out of 15000+600000
- 472168 words of font info for 40 fonts, out of 8000000 for 9000
+ 13194 strings out of 480171
+ 206543 string characters out of 5894488
+ 499436 words of memory out of 5000000
+ 30978 multiletter control sequences out of 15000+600000
+ 469864 words of font info for 30 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 68i,11n,77p,1559b,387s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on relazione.pdf (11 pages, 467779 bytes).
+ 68i,5n,77p,429b,328s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
+Output written on relazione.pdf (3 pages, 194845 bytes).
 PDF statistics:
- 196 PDF objects out of 1000 (max. 8388607)
- 142 compressed objects within 2 object streams
- 32 named destinations out of 1000 (max. 500000)
- 113 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 64 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
+ 8 named destinations out of 1000 (max. 500000)
+ 38 words of extra memory for PDF output out of 10000 (max. 10000000)
 

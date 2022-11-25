@@ -2,17 +2,24 @@
 \documentclass[openright]{article}
 
 \usepackage[utf8]{inputenc}
+\usepackage[a4paper, total={15.3 cm, 21.3 cm}]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage{hyperref}
 \usepackage{caption}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{subfig}
 \usepackage{titlesec}
 \usepackage{titletoc}
-\usepackage{hyperref}
+\usepackage{physics}
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{longtable}
+\usepackage{subfiles} % Best loaded last in the preamble
+
 \hypersetup{colorlinks=true,linkcolor=black}
-\usepackage[a4paper, total={15.3 cm, 21.3 cm}]{geometry}
 \renewcommand\thesection{\arabic{section}}
 \titlecontents{chapter}[1.05em]{\bigskip}
 {\contentslabel[\MakeUppercase{\romannumeral\thecontentslabel}]{1em}\enspace\textsc}
@@ -22,34 +29,38 @@
 {\thecontentslabel.\enspace}
 {}
 {\titlerule*[1pc]{.}\contentspage}
-
 \setcounter{tocdepth}{2}
 
+
 \begin{document}
-% !TEX root = velocita_luce/latex/relazione.tex
 
-\pagenumbering{roman}
-\thispagestyle{empty}
-\begin{center}
-\includegraphics[width=1.\linewidth]{../../../images/logo.jpg}
-\centering
-\vspace{3cm}
+    \pagenumbering{roman}
+    \thispagestyle{empty}
 
-{\uppercase{\Large Lab Report:\\ misura della velocità della luce\par}}
-\vspace{3cm}
+    \begin{center}
 
-{\Large Lorenzo Liuzzo, Jiahao Miao, Riccardo Salto\par}
-\vspace{1.5cm}
+        \includegraphics[width=1.\linewidth]{../../../tools/images/logo.jpg}
+        \centering
+        \vspace{3cm}
 
-{\Large October 26, 2022}
-\end{center}
-\clearpage
-\tableofcontents
-\clearpage
-\pagenumbering{arabic}
+        \uppercase{\Large Relazione di laboratorio:\\ misura della velocità della luce\par}
+        \vspace{3cm}
 
-\section{Abstract}
-L'obbiettivo dell'esperimento è la misura della velocità della luce in aria. Riproducendo l'esperimento di Focault, è stato ricavato indirettamente il seguente risultato: \[c = (2.94 \pm 0.22)\cdot10^8 \qq {m/s}\]
+        \Large Lorenzo Liuzzo, Jiahao Miao, Riccardo Salto\par
+        \vspace{1.5cm}
+
+        \Large October 26, 2022
+
+    \end{center}
+    \clearpage
+
+    \tableofcontents
+    \clearpage
+
+    \pagenumbering{arabic}
+
+    \section{Abstract}
+    L'obbiettivo dell'esperimento è la misura della velocità della luce in aria. Riproducendo l'esperimento di Focault, è stato ricavato indirettamente il seguente risultato: \[c = (2.94 \pm 0.22)\cdot10^8 \qq {m/s}\]
 
 compatibile entro 0.3 $\sigma$ dal valore noto.
 
