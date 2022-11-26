@@ -2926,7 +2926,7 @@ namespace physics {
                     value_{val}, 
                     uncertainty_{uncertainty_val}, 
                     units_{unit} {
-
+                        
                         if (uncertainty_ < 0.0) throw std::invalid_argument("Uncertainty cannot be negative");
                         if (uncertainty_ > std::fabs(value_)) throw std::invalid_argument("Uncertainty cannot be greater than the value");
 
@@ -3946,6 +3946,21 @@ namespace physics {
             // operations
             // ============================================= 
 
+                /**
+                 * @brief Get the absolute uncertain measurement object
+                 * 
+                 * @param umeas: uncertain_measurement
+                 * 
+                 * @return constexpr uncertain_measurement
+                 * 
+                 */
+                friend constexpr uncertain_measurement abs(const uncertain_measurement& umeas) noexcept { 
+                    
+                    return (umeas.value_ < 0.0) ? -umeas : umeas; 
+                
+                }
+
+
                 /**                  
                  * @brief Invert the uncertain_measurement
                  * 
@@ -4046,193 +4061,193 @@ namespace physics {
 
 
                 /**
-                 * @brief Take the sine of a measurement
+                 * @brief Take the sine of an uncertain_measurement
                  * 
-                 * @param umeas: measurement 
+                 * @param umeas: uncertain_measurement 
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr uncertain_measurement sin(const uncertain_measurement& umeas) { 
                     
                     if (umeas.units() != rad) 
-                        throw std::runtime_error("Cannot take the sine of a measurement that is not in radians"); 
+                        throw std::runtime_error("Cannot take the sine of an uncertain_measurement that is not in radians"); 
                     else return uncertain_measurement(std::sin(umeas.value_), std::fabs(std::cos(umeas.value_)) * umeas.uncertainty_, unitless); 
                 
                 }
 
 
                 /**
-                 * @brief Take the cosine of a measurement
+                 * @brief Take the cosine of an uncertain_measurement
                  * 
-                 * @param umeas: measurement 
+                 * @param umeas: uncertain_measurement 
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr uncertain_measurement cos(const uncertain_measurement& umeas) { 
                     
                     if (umeas.units() != rad) 
-                        throw std::runtime_error("Cannot take the cosine of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::cos(umeas.value_), -std::sin(umeas.value_) * umeas.uncertainty_, unitless); 
+                        throw std::runtime_error("Cannot take the cosine of an uncertain_measurement that is not in radians"); 
+                    else return uncertain_measurement(std::cos(umeas.value_), std::fabs(-std::sin(umeas.value_)) * umeas.uncertainty_, unitless); 
                 
                 }
 
 
                 /**
-                 * @brief Take the tangent of a measurement
+                 * @brief Take the tangent of an uncertain_measurement
                  * 
-                 * @param meas: measurement 
+                 * @param umeas: uncertain_measurement 
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr uncertain_measurement tan(const uncertain_measurement& meas) { 
                     
                     if (meas.units() != rad) 
-                        throw std::runtime_error("Cannot take the tangent of a measurement that is not in radians"); 
+                        throw std::runtime_error("Cannot take the tangent of an uncertain_measurement that is not in radians"); 
                     else return uncertain_measurement(std::tan(meas.value_), 1 + std::pow(meas.uncertainty_, 2), unitless);
 
                 }
 
 
                 /**
-                 * @brief Take the arcsine of a measurement
+                 * @brief Take the arcsine of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement asin(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement asin(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != unitless) 
-                        throw std::runtime_error("Cannot take the arcsine of a measurement that is not unitless"); 
-                    else return uncertain_measurement(std::asin(meas.value_), 1. / std::sqrt(1 - std::pow(meas.uncertainty_, 2)), rad);
+                    if (umeas.units() != unitless) 
+                        throw std::runtime_error("Cannot take the arcsine of an uncertain_measurement that is not unitless"); 
+                    else return uncertain_measurement(std::asin(umeas.value_), umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
 
                 }
 
 
                 /**
-                 * @brief Take the arccosine of a measurement
+                 * @brief Take the arccosine of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement acos(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement acos(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != unitless) 
-                        throw std::runtime_error("Cannot take the arccosine of a measurement that is not unitless"); 
-                    else return uncertain_measurement(std::acos(meas.value_), - 1. / std::sqrt(1 - std::pow(meas.uncertainty_, 2)), rad);
+                    if (umeas.units() != unitless) 
+                        throw std::runtime_error("Cannot take the arccosine of an uncertain_measurement that is not unitless"); 
+                    else return uncertain_measurement(std::acos(umeas.value_), - umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
 
                 }
 
 
                 /**
-                 * @brief Take the arctangent of a measurement
+                 * @brief Take the arctangent of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement atan(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement atan(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != unitless) 
-                        throw std::runtime_error("Cannot take the arctangent of a measurement that is not unitless"); 
-                    else return uncertain_measurement(std::atan(meas.value_), 1. / (1 + std::pow(meas.uncertainty_, 2)), rad);
+                    if (umeas.units() != unitless) 
+                        throw std::runtime_error("Cannot take the arctangent of an uncertain_measurement that is not unitless"); 
+                    else return uncertain_measurement(std::atan(umeas.value_), umeas.uncertainty_ / (1 + std::pow(umeas.value_, 2)), rad);
 
                 }
 
 
                 /**
-                 * @brief Take the hyperbolic sine of a measurement
+                 * @brief Take the hyperbolic sine of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement sinh(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement sinh(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != rad) 
-                        throw std::runtime_error("Cannot take the hyperbolic sine of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::sinh(meas.value_), std::cosh(meas.uncertainty_), unitless);
+                    if (umeas.units() != rad) 
+                        throw std::runtime_error("Cannot take the hyperbolic sine of an uncertain_measurement that is not in radians"); 
+                    else return uncertain_measurement(std::sinh(umeas.value_), std::cosh(umeas.value_) * umeas.uncertainty_, unitless);
 
                 }
 
 
                 /**
-                 * @brief Take the hyperbolic cosine of a measurement
+                 * @brief Take the hyperbolic cosine of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement cosh(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement cosh(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != rad) 
-                        throw std::runtime_error("Cannot take the hyperbolic cosine of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::cosh(meas.value_), std::sinh(meas.uncertainty_), unitless);
+                    if (umeas.units() != rad) 
+                        throw std::runtime_error("Cannot take the hyperbolic cosine of an uncertain_measurement that is not in radians"); 
+                    else return uncertain_measurement(std::cosh(umeas.value_), std::sinh(umeas.value_) * umeas.uncertainty_, unitless);
                 
                 }
 
 
                 /**
-                 * @brief Take the hyperbolic tangent of a measurement
+                 * @brief Take the hyperbolic tangent of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement tanh(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement tanh(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != rad) 
-                        throw std::runtime_error("Cannot take the hyperbolic tangent of a measurement that is not in radians"); 
-                    else return uncertain_measurement(std::tanh(meas.value_), 1 - std::pow(meas.uncertainty_, 2), unitless);
+                    if (umeas.units() != rad) 
+                        throw std::runtime_error("Cannot take the hyperbolic tangent of an uncertain_measurement that is not in radians"); 
+                    else return uncertain_measurement(std::tanh(umeas.value_), (1 - std::pow(umeas.value_, 2)) * umeas.uncertainty_, unitless);
 
                 }
 
 
                 /**
-                 * @brief Take the hyperbolic arcsine of a measurement
+                 * @brief Take the hyperbolic arcsine of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement asinh(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement asinh(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != unitless) 
-                        throw std::runtime_error("Cannot take the hyperbolic arcsine of a measurement that is not unitless"); 
-                    else return uncertain_measurement(std::asinh(meas.value_), 1. / std::sqrt(std::pow(meas.uncertainty_, 2) + 1), rad);
+                    if (umeas.units() != unitless) 
+                        throw std::runtime_error("Cannot take the hyperbolic arcsine of an uncertain_measurement that is not unitless"); 
+                    else return uncertain_measurement(std::asinh(umeas.value_), umeas.uncertainty_ / std::sqrt(std::pow(umeas.value_, 2) + 1), rad);
 
                 }
 
 
                 /**
-                 * @brief Take the hyperbolic arccosine of a measurement
+                 * @brief Take the hyperbolic arccosine of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement acosh(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement acosh(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != unitless) 
-                        throw std::runtime_error("Cannot take the hyperbolic arccosine of a measurement that is not unitless"); 
-                    else return uncertain_measurement(std::acosh(meas.value_), 1. / std::sqrt(std::pow(meas.uncertainty_, 2) - 1), rad);
+                    if (umeas.units() != unitless) 
+                        throw std::runtime_error("Cannot take the hyperbolic arccosine of an uncertain_measurement that is not unitless"); 
+                    else return uncertain_measurement(std::acosh(umeas.value_), umeas.uncertainty_ / std::sqrt(std::pow(umeas.value_, 2) - 1), rad);
                 
                 }
 
 
                 /**
-                 * @brief Take the hyperbolic arctangent of a measurement
+                 * @brief Take the hyperbolic arctangent of an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr measurement
                  */
-                friend constexpr uncertain_measurement atanh(const uncertain_measurement& meas) { 
+                friend constexpr uncertain_measurement atanh(const uncertain_measurement& umeas) { 
                     
-                    if (meas.units() != unitless) 
-                        throw std::runtime_error("Cannot take the hyperbolic arctangent of a measurement that is not unitless"); 
-                    else return uncertain_measurement(std::atanh(meas.value_), 1. / std::sqrt(1 - std::pow(meas.uncertainty_, 2)), rad);
+                    if (umeas.units() != unitless) 
+                        throw std::runtime_error("Cannot take the hyperbolic arctangent of an uncertain_measurement that is not unitless"); 
+                    else return uncertain_measurement(std::atanh(umeas.value_), umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
 
                 }
 
@@ -8186,8 +8201,8 @@ namespace math {
 
                 if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
                 
-                measurement average = std::accumulate(vec.begin(), vec.end(), measurement(0., vec[0].units())) / vec.size();
-                measurement sigma_sq = measurement(0., vec[0].units().square()); 
+                measurement average = std::accumulate(vec.begin(), vec.end(), measurement(0., vec.front().units())) / vec.size();
+                measurement sigma_sq = measurement(0., vec.front().units().square()); 
                 for (auto x : vec) sigma_sq += (x - average).square(); 
 
                 return uncertain_measurement(average, sigma_sq.sqrt() / vec.size());                 
@@ -8524,6 +8539,7 @@ namespace math {
                 // =============================================
 
                 constexpr void set_seed(const uint32_t * s, const uint32_t& p1, const uint32_t& p2) {
+
                     m1 = 502;
                     m2 = 1521;
                     m3 = 4071;
@@ -8537,6 +8553,7 @@ namespace math {
                     n2 = 0;
                     n3 = p1;
                     n4 = p2;
+
                 }
 
 
@@ -8587,7 +8604,7 @@ namespace math {
 
                 constexpr double rannyu() {
 
-                    const double twom12{0.000244140625};
+                    constexpr double twom12{0.000244140625};
                     int i1{}, i2{}, i3{}, i4{};
                     i1 = l1 * m4 + l2 * m3 + l3 * m2 + l4 * m1 + n1;
                     i2 = l2 * m4 + l3 * m3 + l4 * m2 + n2;
@@ -8627,7 +8644,7 @@ namespace math {
                 }
 
 
-                constexpr double gauss_box_muller(const double& mean, 
+                constexpr double gauss(const double& mean, 
                                                   const double& sigma) {
 
                     return mean + sigma * std::sqrt(-2 * std::log(rannyu())) * std::cos(2 * constants::pi * rannyu());
