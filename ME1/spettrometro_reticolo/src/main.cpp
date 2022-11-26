@@ -13,9 +13,23 @@ constexpr double radians(double degrees)
 }
 
 
+uncertain_measurement calculate_theta(int32_t gradi,
+                                      int32_t primi, 
+                                      const measurement& beta) 
+{
+
+    double theta = radians(gradi + primi / 60.0);
+    double theta_uncertainty = radians(1. / 60);
+    double sigma_horto = beta.value() * (1 - std::cos(theta)) / std::cos(theta);
+    double sigma = std::sqrt(std::pow(sigma_horto, 2) + 2 * std::pow(theta_uncertainty, 2));
+    return uncertain_measurement(theta, sigma, rad);
+    
+}
+
+
 uncertain_measurement calculate_d(const measurement& lambda,
-                                     const uncertain_measurement& delta_theta,
-                                     const int32_t& k) 
+                                  const uncertain_measurement& delta_theta,
+                                  const int32_t& k) 
 {
 
     assert(lambda >= 0.0 * m);
@@ -78,7 +92,8 @@ uncertain_measurement calculate_lambda(const uncertain_measurement& d,
 }
 
 
-uncertain_measurement get_theta0_from_data(const std::string& data_file) 
+uncertain_measurement get_theta0_from_data(const std::string& data_file, 
+                                           const measurement& beta) 
 {
 
     std::ifstream data_flow(data_file);
@@ -91,18 +106,19 @@ uncertain_measurement get_theta0_from_data(const std::string& data_file)
     while (!data_flow.eof()) {
         
         data_flow >> gradi >> primi;
-        theta0_data.emplace_back(gradi + primi / 60.0, rad);
+        theta0_data.emplace_back(radians(gradi + primi / 60.), rad);
     
     }
 
-    return uncertain_measurement(radians(mean(theta0_data).value()), 1. / 60., rad);    
+    return uncertain_measurement(mean(theta0_data).value(), radians(1. / 60.), rad);    
 
 }
 
 
 uncertain_measurement get_lambda_from_data(const std::string& data_file, 
                                            const uncertain_measurement& passo_reticolo, 
-                                           const uncertain_measurement& theta0) 
+                                           const uncertain_measurement& theta0,
+                                           const measurement& beta) 
 {
 
     std::vector<uncertain_measurement> lambda_data; 
@@ -116,7 +132,7 @@ uncertain_measurement get_lambda_from_data(const std::string& data_file,
     while (!data_flow.eof()) {
         
         data_flow >> gradi >> primi >> k;
-        delta = uncertain_measurement(radians(gradi + primi / 60.0), radians(1. / 60.), rad) - theta0;
+        delta = calculate_theta(gradi, primi, beta) - theta0;
         lambda_data.emplace_back(calculate_lambda(passo_reticolo, abs(delta), k));
 
     }
@@ -133,6 +149,7 @@ int main() {
     uncertain_measurement lunghezza_reticolo(0.025, 0.001, m); // lunghezza reticolo
 
     uncertain_measurement theta0; // posizione angolare del primo ordine
+    measurement beta(radians(0.22), rad); // fattore di correzione inclinazione del reticolo
     uncertain_measurement d; // passo reticolo
     uncertain_measurement D; // potere dispersivo
     uncertain_measurement N; // numero di fenditure
@@ -158,7 +175,7 @@ int main() {
 
 
     // misura posizione angolare del primo minimo
-    theta0 = get_theta0_from_data("../data/sodio/theta0.dat"); 
+    theta0 = get_theta0_from_data("../data/sodio/theta0.dat", beta); 
 
 
     // misura passo del reticolo, numero di fenditure, potere dispersivo e potere risolutivo
@@ -172,7 +189,7 @@ int main() {
     while (!data_flow.eof()) {
         
         data_flow >> gradi >> primi >> k;
-        delta_theta = uncertain_measurement(radians(gradi + primi / 60.0), radians(1. / 60.), rad) - theta0;
+        delta_theta = abs(calculate_theta(gradi, primi, beta)) - theta0;
         d_data.emplace_back(calculate_d(lambda1_sodio, abs(delta_theta), k));
         N_data.emplace_back(calculate_N(lunghezza_reticolo, d_data.back()));
         D_data.emplace_back(calculate_D(d_data.back(), abs(delta_theta), k));
@@ -191,12 +208,13 @@ int main() {
     lambda_data.reserve(colors.size());
     for (const auto& color : colors) {
 
-        lambda_data.emplace_back(get_lambda_from_data("../data/mercurio/" + color + ".dat", d, theta0));
+        lambda_data.emplace_back(get_lambda_from_data("../data/mercurio/" + color + ".dat", d, theta0, beta));
 
     }
 
 
     // stampa risultati
+
     std::cout << "Lunghezza reticolo: " << lunghezza_reticolo << "\n";
     std::cout << "Posizione angolare primo minimo: " << theta0 << " rad\n";
     std::cout << "Passo del reticolo: " << d << "\n";
