@@ -1,14 +1,14 @@
 # Fdb version 3
-["pdflatex"] 1669387270 "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex" "relazione.pdf" "relazione" 1669387274
+["pdflatex"] 1669981843 "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex" "relazione.pdf" "relazione" 1669981847
   "../../../tools/images/logo.jpg" 1669298064 152030 4d422880613ec11a4138d0ec17b4efca ""
   "../images/100_distribution.png" 1669386704 10525 3c0db5924a95027915514808efd84508 ""
-  "../images/Best_charge_value.png" 1669386671 9046 3a02d0f617ea0e6fa3b71d0a97e5ad73 ""
   "../images/Charge_distribution.png" 1669386686 10254 2ef44b7fbe77475f2b9cdbeec7378f58 ""
   "../images/Least_Deviation_Squared.png" 1669386696 11818 b3ab064fd7e1f4ccf97bcacc12bd2120 ""
   "../images/Scarti.png" 1669386655 9916 a169a0666166d34b2243823e563fd600 ""
+  "../images/best_charges_value.png" 1669386671 9046 3a02d0f617ea0e6fa3b71d0a97e5ad73 ""
   "../images/camera.png" 1669386716 148647 a5245c8c8e5051e5c8d02f2147bfa349 ""
   "/etc/texmf/web2c/texmf.cnf" 1664214697 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex" 1669387262 13119 53fe2c5222194824d25d93246dffc2f3 ""
+  "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex" 1669981594 14433 2ce3eceb1c9196de4f4edb2685c14d69 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -118,10 +118,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1669371209 362444 d082a522277925383c40fd9e80e279fd ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1669371221 1435941 1eb0993a5d3951ca68670ac0b3bc7edf ""
-  "relazione.aux" 1669387273 3063 dd23f21c0efc9782c4eb5f184356daf1 "pdflatex"
-  "relazione.out" 1669387273 665 2e3cdda79ded23904de89e539d71a048 "pdflatex"
-  "relazione.tex" 1669387262 13119 53fe2c5222194824d25d93246dffc2f3 ""
-  "relazione.toc" 1669387273 447 7eb9dcff221a8b34637980075c6c8bed "pdflatex"
+  "relazione.aux" 1669981846 3534 2282e09e0a92ad538f873df40ea56605 "pdflatex"
+  "relazione.out" 1669981846 665 2e3cdda79ded23904de89e539d71a048 "pdflatex"
+  "relazione.tex" 1669981594 14433 2ce3eceb1c9196de4f4edb2685c14d69 ""
+  "relazione.toc" 1669981846 447 1487f93f880657881bc6f1b7a3717702 "pdflatex"
   "table.tex" 1669387249 5084 13631c9e806a217130c07ca7de2b6d5a ""
   (generated)
   "relazione.aux"

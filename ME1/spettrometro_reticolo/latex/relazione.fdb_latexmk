@@ -1,8 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1669388823 "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex" "relazione.pdf" "relazione" 1669388825
+["pdflatex"] 1669980077 "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex" "relazione.pdf" "relazione" 1669980080
   "../../../tools/images/logo.jpg" 1669298064 152030 4d422880613ec11a4138d0ec17b4efca ""
   "/etc/texmf/web2c/texmf.cnf" 1664214697 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex" 1669388822 5267 24f6fa6a4687387651288b8bc6d2a147 ""
+  "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/spettrometro_reticolo/latex/relazione.tex" 1669980076 7944 7ba16a10272ba3c2dcddb58242e73068 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -11,10 +11,8 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm" 1246382020 908 2921f8a10601f252058503cc6570e581 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm5.tfm" 1246382020 940 75ac932a52f80982a9f8ea75d03a34cf ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1246382020 940 228d6584342e91276bf566bcf9716b83 ""
-  "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1136768653 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1136768653 1288 655e228510b4c2a1abe905c368440826 ""
-  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1248133631 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1248133631 36281 c355509802a035cadc5f15869451dcee ""
@@ -108,10 +106,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1669371209 362444 d082a522277925383c40fd9e80e279fd ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1669371221 1435941 1eb0993a5d3951ca68670ac0b3bc7edf ""
-  "relazione.aux" 1669388825 1615 fdb8eb9e54a9be6f49056241e861b6ad "pdflatex"
-  "relazione.out" 1669388825 624 ef14993209e5c794f10d0699183dd352 "pdflatex"
-  "relazione.tex" 1669388822 5267 24f6fa6a4687387651288b8bc6d2a147 ""
-  "relazione.toc" 1669388825 425 71f95d1ad2deff8c13d586e332476d43 "pdflatex"
+  "relazione.aux" 1669980079 1567 454fab4e98158d884878621424831bc6 "pdflatex"
+  "relazione.out" 1669980079 491 51f665cbbd42d46389393daf60616125 "pdflatex"
+  "relazione.tex" 1669980076 7944 7ba16a10272ba3c2dcddb58242e73068 ""
+  "relazione.toc" 1669980079 351 a14bb580d306a4e3ab2a461cf7676281 "pdflatex"
   (generated)
   "relazione.aux"
   "relazione.log"

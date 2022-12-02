@@ -67,46 +67,56 @@
     \pagenumbering{arabic}
 
     \section{Abstract}
-        L'obbiettivo dell'esperienza di laboratorio è di misurare, tramite uno spettrometro a reticolo, le lunghezze d'onda di alcune righe dello spettro di emissione di una sorgente di mercurio. \\
-        Innanzitutto, è stata utilizzata una sorgente di sodio per ortogonalizzare il reticolo al fascio collimato dalla fenditura. 
-        Infatti, note le due lunghezze d'onda del doppietto del sodio e nota la simmetria degli ordini di interferenza rispetto all'ordine centrale, 
-        l'ortogonalizzazione è stata effettuata attraverso la misura delle posizioni angolari relative al medesimo ordine di interferenza di una riga del doppietto del sodio a sinistra e a destra dell'ordine centrale.
-        Calcolando l'angolo di correzione, tramite la relazione \ref{eq:angolo di correzione}, riposizionando lo strumento e ripetendo la misura, è stato possibile ottenere un fattore di correzione di $3'$, inferiore alla precisione minima richiesta di $5'$. 
-        Successivamente, si è proceduto con la determinazione dei parametri caratteristici del reticolo: il passo, il potere dispersivo e il potere risolvente: 
-        $ d = 3.4 \pm 0.7 \, \mathrm{\mu m} $, $ D = (3.3 \pm 0.7) \cdot \num{e-5} \, \mathrm{\degree / m} $, $ R = VALUE $.
+    
+        L'obbiettivo dell'esperienza di laboratorio è di misurare, tramite uno spettrometro a reticolo, 
+        le lunghezze d'onda di alcune righe dello spettro di emissione di una sorgente di mercurio. \\
 
-        Infine, illuminando il reticolo con la lampada a mercurio abbiamo misurato le posizioni angolari dei diversi ordini di interferenza. 
-        Con tali valori, attraverso la relazione \ref{eq:lunghezza d'onda}, abbiamo determinato le lunghezze d'onda di emissione delle righe osservate. 
-        Riportiamo di seguito una tabella riassuntiva dei risultati ottenuti, con anche i valori nominali noti. \\  
+        Innanzitutto si è proceduto con la messa a fuoco dell'apparato e una prima ortogonalizzazione puntando il cannocchiale 
+        su un obbiettivo sufficientemente lontano affinchè la luce entrasse ortogonale rispetto alla lente. 
+        Dunque, è utilizzata una sorgente di sodio per ortogonalizzare il reticolo al fascio collimato attraverso la fenditura del collimatore, 
+        la quale è stata regolata per massimizzare la luminosità del fascio. 
+        Note le due lunghezze d'onda del doppietto del sodio e nota la simmetria degli ordini di interferenza rispetto all'ordine centrale, 
+        l'ortogonalizzazione è stata effettuata attraverso la misura delle posizioni angolari 
+        relative al medesimo ordine di interferenza di una riga del doppietto del sodio a sinistra e a destra dell'ordine centrale.
+        Calcolando l'angolo di correzione, tramite la relazione \ref{eq:angolo di correzione},
+        riposizionando lo strumento e ripetendo la misura, è stato possibile ottenere un fattore di correzione di $4'$, 
+        inferiore alla precisione minima richiesta di $5'$. \\
+
+        Successivamente, si è proceduto con la determinazione dei parametri caratteristici del reticolo: 
+        la lunghezza $ L = 25 \pm 1 \, \mathrm{mm} $,
+        il passo (formula \ref{eq:passo reticolo}) $ d = 3.4 \pm 0.7 \, \mathrm{\mu m} $, 
+        il numero di fenditure (\ref{eq:numero di fenditure}) $ m = (75 \pm 1) \cdot \num{e2} $, 
+        il potere dispersivo (\ref{eq:potere dispersivo}) $ D = (5.454 \pm 0.005) \cdot \num{e5} \, \mathrm{rad / m} $ e 
+        il potere risolvente (\ref{eq:potere risolvente}) $ R = VALUE $. \\
+
+        Infine, illuminando il reticolo con la lampada a mercurio si è proceduto con la misura delle posizioni angolari dei diversi ordini di interferenza
+        e la misura indiretta delle lunghezze d'onda delle righe osservate. 
+        Si riporta di seguito una tabella riassuntiva con i valori nominali noti e i risultati ottenuti. \\  
 
         \begin{table}[H]
             \centering
-            \begin{tabular}{|c|c|c|c|c|}
+            \begin{tabular}{|c|c|c|c|}
                 \toprule 
                 colore & 
-                $ \lambda_{\mathrm{nom}} \, \mathrm{[\AA]} $ & 
-                $ \lambda_{\mathrm{mis}} \, \mathrm{[\AA]} $ & 
-                $ \sigma \lambda_{\mathrm{mis}} \, \mathrm{[\AA]}$ & 
-                $ \Delta \lambda \, \mathrm{[\AA]} $ \\
+                $ \lambda_{\mathrm{nom}} \, \mathrm{[nm]} $ & 
+                $ \lambda_{\mathrm{mis}} \, \mathrm{[nm]} $ & 
+                $ \sigma \lambda_{\mathrm{mis}} \, \mathrm{[nm]}$ \\
 
                 \midrule
-                $ \mathrm{viola_{int}} $        & 4047 & 0 & 0 & 0 \\
-                $ \mathrm{viola_{est}} $        & 4077 & 0 & 0 & 0 \\
-                indaco                          & 4358 & 0 & 0 & 0 \\
-                verde $ \mathrm{acqua_{int}} $  & 0 & 0 & 0 & 0 \\  
-                verde $ \mathrm{acqua_{est}} $  & 0 & 0 & 0 & 0 \\
-                verde                           & 5461 & 0 & 0 & 0 \\
-                $ \mathrm{giallo_{int}} $       & 5770 & 0 & 0 & 0 \\
-                $ \mathrm{giallo_{est}} $       & 5790 & 0 & 0 & 0 \\
-                $ \mathrm{rosso_{int}} $        & 0 & 0 & 0 & 0 \\
-                $ \mathrm{rosso_{est}} $        & 0 & 0 & 0 & 0 \\
+                $ \mathrm{viola_{int}} $        & 404.7 & 404.0 & 0.4 \\
+                $ \mathrm{viola_{est}} $        & 407.7 & 406.8 & 0.4 \\
+                indaco                          & 435.8 & 434.8 & 0.4 \\
+                verde $ \mathrm{acqua_{int}} $  & - & 490.9 & 0.5 \\  
+                verde $ \mathrm{acqua_{est}} $  & - & 496.9 & 0.5 \\
+                verde                           & 546.1 & 545.6 & 0.5 \\
+                $ \mathrm{giallo_{int}} $       & 577.0 & 575.2 & 0.6 \\
+                $ \mathrm{giallo_{est}} $       & 579.0 & 578.1 & 0.6 \\
+                $ \mathrm{rosso_{int}} $        & - & 616 & 1 \\
+                $ \mathrm{rosso_{est}} $        & - & 618 & 1 \\
 
                 \bottomrule
             \end{tabular}
         \end{table}
-
-        
-    \section{Ortogonalizzazione}
 
 
     \section{Formule}
@@ -122,7 +132,7 @@
         \end{equation}
 
         \begin{equation}
-            \label{eq:potere risolutivo}
+            \label{eq:potere risolvente}
             R = \frac{\lambda}{\Delta \lambda} = m \cdot k
         \end{equation}
 
@@ -131,15 +141,40 @@
             d = \frac{\lambda \cdot k}{\sin{\phi}} 
         \end{equation} 
 
+        \begin{equation}
+            \label{eq:numero di fenditure}
+            m = \frac{L}{d}
+        \end{equation}
+
 
     \section{Metodi}
+
+        Tutte le misurazioni delle posizioni angolari dei massimi di interferenza sono state effettuate su un nonio con accuratezza di 1'. 
+        Successivamente le misure sono state convertite in radianti. \\
+
+        La prima misurazione effettuata è stata la misura della posizione angolare dell'ordine centrale, $\theta_0 = 0.9786	\pm 0.0003 \, \mathrm{rad}$. 
+        L'incertezza sulla misura di $\theta_0$ è la precisione del nonio. \\
+
+        In seguito, sono state misurate le posizioni angolari dei due primi massimi di interferenza di una riga del doppietto del sodio. 
+        Sottraendo i due angoli misurati con $\theta_0$, calcolandone la media aritmetica e la discrepanza, si è calcolato il fattore di correzione $\beta$ 
+        attraverso la relazione \ref{eq:angolo di correzione}. La procedura è stata ripetuta fino ad ottenere un valore di $beta = 4'$, sufficientemente piccolo
+        per garantire un'ortogonalizzazione del reticolo al fascio collimato. \\ 
+
+        Si è dunque proceduto con la misura della lunghezza del reticolo e delle posizioni angolari dei massimi di interferenza di tutte 
+        le righe del doppietto del sodio e la determinazione dei parametri del reticolo. 
+        Infatti, noto il passo del reticolo e misurate le posizioni angolari e i numeri di ordine di interferenza, invertendo la relazione \ref{eq:passo reticolo} è 
+        possibile determinare le lunghezze d'onda $ \lambda $ di una differente sorgente luminosità. 
+        In particolare, si è proceduto con la misura indiretta delle lunghezze d'onda delle righe osservate con la lampada a mercurio, il cui spettro presenta
+        le seguenti lunghezze d'onda: viola int, viola est, indaco, verde acqua int, verde acqua est, verde, giallo int, giallo est, rosso int, rosso est. \\
 
 
     \section{Analisi dati}
 
+        Per la determinazione della lunghezza d'onda è stata effettuata una media pesata sul set di dati raccolto per ogni colore, 
+        mentre l'incertezza è stata calcolata in somma in quadratura con l'errore pesato e l'incertezza sulla misura del passo del reticolo. \\
+
 
     \section{Considerazioni finali}
-
 
 
 \end{document}

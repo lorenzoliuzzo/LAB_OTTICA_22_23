@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  25 NOV 2022 16:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  2 DEC 2022 12:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -533,7 +533,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 42.
-<../../../tools/images/logo.jpg, id=28, 355.5684pt x 113.7048pt>
+<../../../tools/images/logo.jpg, id=24, 355.5684pt x 113.7048pt>
 File: ../../../tools/images/logo.jpg Graphic file (type jpg)
 <use ../../../tools/images/logo.jpg>
 Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 49.
@@ -547,56 +547,76 @@ Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 49.
  [2
 
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 74.
- (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+Underfull \hbox (badness 10000) in paragraph at lines 71--73
+
+ []
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 82.
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 74.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 82.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-LaTeX Warning: Reference `eq:lunghezza d'onda' on page 1 undefined on input line 79.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 78--81
+Underfull \hbox (badness 10000) in paragraph at lines 74--84
 
  []
 
 
-LaTeX Warning: Command \r invalid in math mode on input line 87.
+Underfull \hbox (badness 10000) in paragraph at lines 85--91
+
+ []
 
 
-LaTeX Warning: Command \r invalid in math mode on input line 88.
+Underfull \hbox (badness 10000) in paragraph at lines 92--95
 
-
-LaTeX Warning: Command \r invalid in math mode on input line 89.
-
-
-LaTeX Warning: Command \r invalid in math mode on input line 90.
+ []
 
 [1
 
-] [2] (./relazione.aux)
+]
+Underfull \hbox (badness 10000) in paragraph at lines 152--154
 
-LaTeX Warning: There were undefined references.
+ []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 155--157
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--162
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 163--169
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 173--175
+
+ []
+
+[2] (./relazione.aux)
 Package rerunfilecheck Info: File `relazione.out' has not changed.
-(rerunfilecheck)             Checksum: EF14993209E5C794F10D0699183DD352;624.
+(rerunfilecheck)             Checksum: 51F665CBBD42D46389393DAF60616125;491.
  ) 
 Here is how much of TeX's memory you used:
- 17149 strings out of 480171
- 317915 string characters out of 5894488
- 594039 words of memory out of 5000000
- 34879 multiletter control sequences out of 15000+600000
- 471871 words of font info for 39 fonts, out of 8000000 for 9000
+ 17147 strings out of 480171
+ 317897 string characters out of 5894488
+ 594072 words of memory out of 5000000
+ 34878 multiletter control sequences out of 15000+600000
+ 471563 words of font info for 38 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 68i,12n,77p,429b,752s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on relazione.pdf (4 pages, 262493 bytes).
+ 68i,11n,77p,418b,760s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
+Output written on relazione.pdf (4 pages, 255512 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
- 85 compressed objects within 1 object stream
+ 113 PDF objects out of 1000 (max. 8388607)
+ 84 compressed objects within 1 object stream
  16 named destinations out of 1000 (max. 500000)
- 54 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

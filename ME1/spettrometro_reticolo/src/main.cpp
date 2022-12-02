@@ -11,18 +11,20 @@ constexpr double radians(double degrees)
     return degrees * math::constants::pi / 180.0;
 
 }
-
+    
 
 uncertain_measurement calculate_theta(int32_t gradi,
                                       int32_t primi, 
                                       const measurement& beta) 
 {
 
-    double theta = radians(gradi + primi / 60.0);
-    double theta_uncertainty = radians(1. / 60);
-    double sigma_horto = beta.value() * (1 - std::cos(theta)) / std::cos(theta);
-    double sigma = std::sqrt(std::pow(sigma_horto, 2) + 2 * std::pow(theta_uncertainty, 2));
-    return uncertain_measurement(theta, sigma, rad);
+    double theta = radians(gradi + primi / 60.);
+    double theta_uncertainty = radians(1. / 60.);
+    double sigma_ortho = beta.value() * (1 - std::cos(theta)) / std::cos(theta);
+
+    uncertain_measurement theta_meas(theta, theta_uncertainty, rad);
+    theta_meas.add_uncertainty(std::fabs(sigma_ortho));
+    return theta_meas;
     
 }
 
@@ -145,7 +147,7 @@ uncertain_measurement get_lambda_from_data(const std::string& data_file,
 int main() {
     
 
-    measurement lambda1_sodio(5.890e-7, m); // prima lunghezza d'onda sodio
+    measurement lambda1_sodio(589.0e-9, m); // prima lunghezza d'onda sodio
     uncertain_measurement lunghezza_reticolo(0.025, 0.001, m); // lunghezza reticolo
 
     uncertain_measurement theta0; // posizione angolare del primo ordine
@@ -198,7 +200,8 @@ int main() {
     }
     data_flow.close();
 
-    d = wmean(d_data);
+    // d = wmean(d_data);
+    d = uncertain_measurement(3.37E-06,	2.4E-09, m);
     N = wmean(N_data);
     D = wmean(D_data);
     R = wmean(R_data);
@@ -224,7 +227,7 @@ int main() {
     std::cout << "Lunghezze d'onda: " << "\n";
     for (size_t i = 0; i < colors.size(); i++) {
 
-        std::cout << colors[i] << "\t\t" << lambda_data[i] << "\t\t" << lambda_data[i] / R << "\n";
+        std::cout << colors[i] << "\t\t" << lambda_data[i].convert_to(nm) << "\n";
 
     }
 

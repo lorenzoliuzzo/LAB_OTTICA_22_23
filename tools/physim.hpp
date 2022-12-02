@@ -6,7 +6,9 @@
  * 
  * @email:  lorenzoliuzzo@outlook.com
  * 
- * @updated: 24/11/2022
+ * @github: https://github.com/lorenzoliuzzo/physim 
+ * 
+ * @updated: 1/12/2022
  */
 
 
@@ -29,30 +31,15 @@
 #pragma pack(1)
 
 
+using scalar = double;
+
+
+/// @brief Namespace contains numerical constants, algorithms, data structures and tools for maths
 namespace math {
             
 
     /// @brief Namespace contains some usefull tools for working with double precision floating point numbers
     namespace tools {
-
-
-        /**
-         * @brief check if the two value differ from each other less than the precision given
-         * 
-         * @param calculated 
-         * @param expected 
-         * @param epsilon 
-         * 
-         * @return bool
-         */
-        template <typename T> 
-        constexpr bool are_close(const T& calculated, 
-                                const T& expected, 
-                                const T& epsilon) {
-                                
-            return (calculated > expected) ? (calculated - expected) <= epsilon : (expected - calculated) <= epsilon; 
-
-        }
 
 
         /**
@@ -69,6 +56,7 @@ namespace math {
             bits += 0x800ULL;
             bits &= 0xFFFFFFFFFFFFF000ULL;
             std::memcpy(&value, &bits, sizeof(bits));
+
             return value;
 
         }
@@ -86,7 +74,10 @@ namespace math {
 
             static constexpr double half_precise_precision{5e-13};
             double v1 = val1 - val2;
-            if (v1 == 0.0 || std::fpclassify(v1) == FP_SUBNORMAL) { return true; }
+
+            if (v1 == 0.0 || std::fpclassify(v1) == FP_SUBNORMAL) 
+                return true; 
+
             double c1 = cround(val1);
             double c2 = cround(val2);
             return (c1 == c2) ||
@@ -113,6 +104,25 @@ namespace math {
         } 
 
 
+        /**
+         * @brief check if the two value differ from each other less than the precision given
+         * 
+         * @param calculated 
+         * @param expected 
+         * @param epsilon 
+         * 
+         * @return bool
+         */
+        template <typename T> 
+        constexpr bool are_close(const T& calculated, 
+                                const T& expected, 
+                                const T& epsilon) {
+                                
+            return (calculated > expected) ? (calculated - expected) <= epsilon : (expected - calculated) <= epsilon; 
+
+        }
+
+
     } // namespace tools
 
 
@@ -120,13 +130,17 @@ namespace math {
     namespace constants {
 
         
-        constexpr double infinity = std::numeric_limits<double>::infinity();
+        constexpr scalar infinity = std::numeric_limits<scalar>::infinity();
         
-        constexpr double invalid_conversion = std::numeric_limits<double>::signaling_NaN();
+        constexpr scalar invalid_conversion = std::numeric_limits<scalar>::signaling_NaN();
 
-        constexpr double pi = 3.14159265358979323846;
+        constexpr scalar pi = 3.14159265358979323846;
         
-        constexpr double e = 2.7182818284590452353603;
+        constexpr scalar e = 2.7182818284590452353603;
+
+        constexpr scalar sqrt2 = std::sqrt(2.0); 
+
+        constexpr scalar sqrt3 = std::sqrt(3.0);
 
 
     } // namespace constants
@@ -135,6 +149,7 @@ namespace math {
 } // namespace math
 
 
+/// @brief Namespace contains physical constants, data structures and tools for computational physics
 namespace physics {
 
 
@@ -142,7 +157,7 @@ namespace physics {
     namespace measurements {
 
 
-        /// @brief Namespace contains some tools for working with units of measurement
+        /// @brief Namespace contains the necessary tools for working with units of measurement
         namespace units {
 
 
@@ -170,17 +185,15 @@ namespace physics {
             } // namespace bitwith
 
 
-            /// @brief Class representing an unit base using powers of the seven SI unit bases 
-            class unit_base {
+            /// @brief Struct represents an unit base using powers of the seven SI unit bases 
+            struct unit_base {
 
 
-                public:
-                
                 // =============================================
                 // constructor and destructor
                 // =============================================  
 
-                    /// @brief Construct a new default unit base object (default values = 0)
+                    /// @brief Construct a new default unit_base object
                     explicit constexpr unit_base() noexcept :
 
                         metre_{0}, second_{0}, kilogram_{0}, 
@@ -188,7 +201,7 @@ namespace physics {
 
 
                     /**
-                     * @brief Construct a new unit base object with powers of the seven SI unit bases
+                     * @brief Construct a new unit_base object with powers of the seven SI unit bases
                      * 
                      * @param metres: power of metre
                      * @param seconds: power of second
@@ -211,21 +224,27 @@ namespace physics {
 
 
                     /**
-                     * @brief Construct a new unit base object from a string
+                     * @brief Construct a new unit_base object from a string
                      * 
-                     * @param str: string representing the unit base
+                     * @param unit_string: string represents the unit base
                      */
-                    constexpr unit_base(const std::string& unit_string) noexcept {
+                    constexpr unit_base(const std::string& unit_string) noexcept : 
+                        
+                        metre_{0}, second_{0}, kilogram_{0},
+                        ampere_{0}, kelvin_{0}, mole_{0}, candela_{0} {
                         
                         if (!unit_string.empty()) {
 
                             size_t finder = unit_string.find("m");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') metre_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    metre_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') metre_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else metre_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        metre_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        metre_ = std::stoi(unit_string.substr(finder + 2));
                                 }
                                 
                             }
@@ -233,10 +252,13 @@ namespace physics {
                             finder = unit_string.find("s");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') second_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    second_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') second_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else second_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        second_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        second_ = std::stoi(unit_string.substr(finder + 2));
                                 }
                                 
                             }
@@ -244,10 +266,13 @@ namespace physics {
                             finder = unit_string.find("kg");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') kilogram_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    kilogram_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') kilogram_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else kilogram_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        kilogram_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        kilogram_ = std::stoi(unit_string.substr(finder + 2));
                                 }
 
                             }
@@ -255,20 +280,26 @@ namespace physics {
                             finder = unit_string.find("A");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') ampere_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    ampere_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') ampere_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else ampere_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        ampere_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        ampere_ = std::stoi(unit_string.substr(finder + 2));
                                 }                            
                             }
 
                             finder = unit_string.find("K");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') kelvin_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    kelvin_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') kelvin_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else kelvin_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        kelvin_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        kelvin_ = std::stoi(unit_string.substr(finder + 2));
                                 }
 
                             }
@@ -276,10 +307,13 @@ namespace physics {
                             finder = unit_string.find("mol");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') mole_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    mole_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') mole_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else mole_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        mole_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        mole_ = std::stoi(unit_string.substr(finder + 2));
                                 }
 
                             }
@@ -287,28 +321,26 @@ namespace physics {
                             finder = unit_string.find("cd");
                             if (finder != std::string::npos) {
 
-                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') candela_ = 1; 
+                                if (finder == unit_string.size() - 1 || unit_string.at(finder + 1) != '^') 
+                                    candela_ = 1; 
                                 else {
-                                    if (unit_string.at(finder + 2) == '-') candela_ = - std::stoi(unit_string.substr(finder + 3));
-                                    else candela_ = std::stoi(unit_string.substr(finder + 2));
+                                    if (unit_string.at(finder + 2) == '-') 
+                                        candela_ = - std::stoi(unit_string.substr(finder + 3));
+                                    else 
+                                        candela_ = std::stoi(unit_string.substr(finder + 2));
                                 }
                                 
                             }
 
-                        } else {
-
-                            metre_ = 0; second_ = 0; kilogram_ = 0; 
-                            ampere_ = 0; kelvin_ = 0; mole_ = 0; candela_ = 0;
-
-                        }
+                        } 
 
                     }
 
 
                     /**
-                     * @brief Copy construct a new unit base object from an other unit base object
+                     * @brief Copy construct a new unit_base from an other unit base object
                      * 
-                     * @param other: unit base object to copy
+                     * @param other: unit_base object to copy as l-value const reference
                      */
                     constexpr unit_base(const unit_base& other) noexcept : 
 
@@ -328,7 +360,7 @@ namespace physics {
                     /**
                      * @brief Copy assignment operator
                      * 
-                     * @param other: unit_base to copy 
+                     * @param other: unit_base to copy as l-value const reference
                      * 
                      * @return constexpr unit_base&
                      */
@@ -341,6 +373,7 @@ namespace physics {
                         kelvin_ = other.kelvin_; 
                         mole_ = other.mole_; 
                         candela_ = other.candela_; 
+
                         return *this; 
 
                     }
@@ -349,7 +382,7 @@ namespace physics {
                     /**
                      * @brief Multiply this unit_base to an unit_base by adding the powers together
                      * 
-                     * @param other: unit_base object to multiply with
+                     * @param other: unit_base object to multiply with as l-value const reference
                      * 
                      * @return constexpr unit_base&
                      */
@@ -362,6 +395,7 @@ namespace physics {
                         kelvin_ += other.kelvin_; 
                         mole_ += other.mole_; 
                         candela_ += other.candela_; 
+
                         return *this; 
 
                     }
@@ -370,7 +404,7 @@ namespace physics {
                     /**
                      * @brief Divide this unit_base to an unit_base by subtracting the powers together
                      * 
-                     * @param other: unit_base object to divide with
+                     * @param other: unit_base object to divide with as l-value const reference
                      * 
                      * @return constexpr unit_base&
                      */
@@ -383,6 +417,7 @@ namespace physics {
                         kelvin_ -= other.kelvin_; 
                         mole_ -= other.mole_; 
                         candela_ -= other.candela_; 
+
                         return *this; 
 
                     }
@@ -391,7 +426,7 @@ namespace physics {
                     /**
                      * @brief Perform a multiplication by adding the powers together
                      * 
-                     * @param other: unit_base object to multiply with
+                     * @param other: unit_base object to multiply with as l-value const reference
                      * 
                      * @return constexpr unit_base 
                      */
@@ -411,7 +446,7 @@ namespace physics {
                     /**
                      * @brief Perform a division by subtracting the powers
                      * 
-                     * @param other: unit_base object to divide with
+                     * @param other: unit_base object to divide with as l-value const reference
                      * 
                      * @return constexpr unit_base 
                      */
@@ -431,7 +466,7 @@ namespace physics {
                     /**
                      * @brief Equality operator
                      * 
-                     * @param other: unit_base object to compare with
+                     * @param other: unit_base object to compare with as l-value const reference
                      * 
                      * @return bool
                      */
@@ -447,7 +482,7 @@ namespace physics {
                     /**
                      * @brief Inequality operator
                      * 
-                     * @param other: unit_base object to !compare with
+                     * @param other: unit_base object to !compare with as l-value const reference
                      * 
                      * @return bool
                      */                    
@@ -469,6 +504,7 @@ namespace physics {
                     friend std::ostream& operator<<(std::ostream& os, const unit_base& base) noexcept {
 
                         os << base.to_string(); 
+
                         return os; 
 
                     }
@@ -485,6 +521,7 @@ namespace physics {
                     friend std::ofstream& operator<<(std::ofstream& file, const unit_base& base) noexcept {
 
                         file << base.to_string(); 
+
                         return file; 
 
                     }
@@ -577,14 +614,16 @@ namespace physics {
                      */
                     constexpr unit_base root(const int& power) const {
 
-                        if (!has_valid_root(power)) throw std::invalid_argument("Invalid root power");
-                        else return unit_base(metre_ / power,
-                                              second_ / power,
-                                              kilogram_ / power,
-                                              ampere_ / power,
-                                              kelvin_ / power,
-                                              mole_ / power,
-                                              candela_ / power); 
+                        if (this->has_valid_root(power)) 
+                            return unit_base(metre_ / power,
+                                             second_ / power,
+                                             kilogram_ / power,
+                                             ampere_ / power,
+                                             kelvin_ / power,
+                                             mole_ / power,
+                                             candela_ / power);
+
+                        else throw std::invalid_argument("Invalid root power");
 
                     }
 
@@ -614,7 +653,7 @@ namespace physics {
 
                                         
                 // =============================================
-                // get method
+                // get methods
                 // =============================================
 
                     /**
@@ -646,89 +685,98 @@ namespace physics {
                         
                         std::string unit_base_string("");   
                         
-                        if (metre_ == 1) unit_base_string.append("m");
-                        else if (metre_ != 0) unit_base_string.append("m^" + std::to_string(metre_)); 
-                        if (second_ == 1) unit_base_string.append("s"); 
-                        else if (second_ != 0) unit_base_string.append("s^" + std::to_string(second_)); 
-                        if (kilogram_ == 1) unit_base_string.append("kg"); 
-                        else if (kilogram_ != 0) unit_base_string.append("kg^" + std::to_string(kilogram_)); 
-                        if (ampere_ == 1) unit_base_string.append("A"); 
-                        else if (ampere_ != 0) unit_base_string.append("A^" + std::to_string(ampere_)); 
-                        if (kelvin_ == 1) unit_base_string.append("K");
-                        else if (kelvin_ != 0) unit_base_string.append("K^" + std::to_string(kelvin_)); 
-                        if (mole_ == 1) unit_base_string.append("mol"); 
-                        else if (mole_ != 0) unit_base_string.append("mol^" + std::to_string(mole_)); 
-                        if (candela_ == 1) unit_base_string.append("cd"); 
-                        else if (candela_ != 0) unit_base_string.append("cd^" + std::to_string(candela_)); 
+                        if (metre_ == 1) 
+                            unit_base_string.append("m");
+                        else if (metre_ != 0) 
+                            unit_base_string.append("m^" + std::to_string(metre_)); 
+
+                        if (second_ == 1) 
+                            unit_base_string.append("s"); 
+                        else if (second_ != 0) 
+                            unit_base_string.append("s^" + std::to_string(second_)); 
+
+                        if (kilogram_ == 1) 
+                            unit_base_string.append("kg"); 
+                        else if (kilogram_ != 0)    
+                            unit_base_string.append("kg^" + std::to_string(kilogram_)); 
+
+                        if (ampere_ == 1) 
+                            unit_base_string.append("A"); 
+                        else if (ampere_ != 0)  
+                            unit_base_string.append("A^" + std::to_string(ampere_)); 
+
+                        if (kelvin_ == 1) 
+                            unit_base_string.append("K");
+                        else if (kelvin_ != 0) 
+                            unit_base_string.append("K^" + std::to_string(kelvin_)); 
+
+                        if (mole_ == 1) 
+                            unit_base_string.append("mol"); 
+                        else if (mole_ != 0) 
+                            unit_base_string.append("mol^" + std::to_string(mole_)); 
+
+                        if (candela_ == 1) 
+                            unit_base_string.append("cd"); 
+                        else if (candela_ != 0) 
+                            unit_base_string.append("cd^" + std::to_string(candela_)); 
 
                         return unit_base_string; 
                     
                     }
 
 
-                    /// @brief Print the unit base to the standard output
+                    /// @brief Print the unit_base to the standard output
                     inline void print() const noexcept {
-                        /// @brief 
-                        std::cout << to_string(); 
+
+                        std::cout << this->to_string(); 
 
                     }
 
 
-                private: 
-
                 // =============================================
-                // class members
+                // struct members & friends
                 // =============================================
 
 
-                    /// @brief Metre exponent
-                    signed int metre_ : bitwidth::metre;
+                    signed int metre_ : bitwidth::metre; ///< Metre exponent
                     
-                    /// @brief Second exponent
-                    signed int second_ : bitwidth::second;  
+                    signed int second_ : bitwidth::second; ///< Second exponent
                     
-                    /// @brief Kilogram exponent
-                    signed int kilogram_ : bitwidth::kilogram;
+                    signed int kilogram_ : bitwidth::kilogram; ///< Kilogram exponent
                     
-                    /// @brief Ampere exponent
-                    signed int ampere_ : bitwidth::ampere;
+                    signed int ampere_ : bitwidth::ampere; ///< Ampere exponent
                     
-                    /// @brief Kelvin exponent
-                    signed int kelvin_ : bitwidth::kelvin;
+                    signed int kelvin_ : bitwidth::kelvin; ///< Kelvin exponent
                     
-                    /// @brief Mole exponent
-                    signed int mole_ : bitwidth::mole;
+                    signed int mole_ : bitwidth::mole; ///< Mole exponent
                     
-                    /// @brief Candela exponent
-                    signed int candela_ : bitwidth::candela;  
+                    signed int candela_ : bitwidth::candela; ///< Candela exponent
         
 
-                    /// @brief Array with the SI exponents 
-                    static constexpr uint32_t bits[7] = { 
-
-                        bitwidth::metre, bitwidth::second, 
-                        bitwidth::kilogram, bitwidth::ampere, 
-                        bitwidth::kelvin, bitwidth::mole, bitwidth::candela
-
-                    };  
-
-
-            }; // class unit_base
-            static_assert(sizeof(unit_base) == 3, "unit_base is not the correct size");
+                    static constexpr uint32_t bits[7] = { bitwidth::metre, 
+                                                          bitwidth::second, 
+                                                          bitwidth::kilogram, 
+                                                          bitwidth::ampere, 
+                                                          bitwidth::kelvin, 
+                                                          bitwidth::mole, 
+                                                          bitwidth::candela }; ///< Static array with the SI exponents
 
 
-            /// @brief Class representing an unit prefix using a multiplier (double) and a symbol (char)
-            class unit_prefix {
+                    friend struct unit; ///< unit is a friend of unit_prefix 
 
 
-                public: 
+            }; // struct unit_base
+
+
+            /// @brief Struct represents an unit prefix using a multiplier (double) and a symbol (char)
+            struct unit_prefix {
+
 
                 // =============================================
                 // constructor and destructor
                 // ============================================= 
 
-                    
-                    /// @brief Construct a new unit prefix object as default
+                    /// @brief Construct a new default unit prefix object
                     constexpr unit_prefix() noexcept : 
 
                         multiplier_{1.}, 
@@ -736,29 +784,26 @@ namespace physics {
 
 
                     /**
-                     * @brief Create the unit_prefix object from a multiplier and a symbol
+                     * @brief Create a new unit_prefix object from a multiplier and a symbol
                      * 
-                     * @param mult: double multiplier for scaling the measurement 
+                     * @param mult: scalar multiplier for scaling the measurement 
                      * @param symbol: char symbol for the string reppresentation
                      * 
                      * @note mult must be positive (> 0)
-                     * 
                      */
-                    constexpr unit_prefix(const double& mult, 
+                    constexpr unit_prefix(const scalar& mult, 
                                           const char& symbol) : 
 
                         multiplier_{mult}, 
                         symbol_{symbol} {
 
-                            if (mult <= 0) throw std::invalid_argument("Unit prefix multiplier must be positive");
+                            if (mult <= 0) 
+                                throw std::invalid_argument("unit_prefix multiplier must be positive");
 
                         }
                 
 
-                    /**
-                     * @brief Destroy the unit prefix object
-                     * 
-                     */
+                    /// @brief Default destructor
                     ~unit_prefix() = default; 
 
 
@@ -769,15 +814,15 @@ namespace physics {
                     /**
                      * @brief Copy assignment operator
                      * 
-                     * @param other: unit_prefix to copy 
+                     * @param other: unit_prefix to copy as l-value const reference
                      * 
                      * @return constexpr unit_prefix&
-                     * 
                      */
                     constexpr unit_prefix& operator=(const unit_prefix& other) noexcept {
 
                         multiplier_ = other.multiplier_; 
                         symbol_ = other.symbol_; 
+
                         return *this; 
 
                     }
@@ -786,14 +831,14 @@ namespace physics {
                     /**
                      * @brief Multiply this unit_prefix to an unit_prefix by multiplying the multipliers together
                      * 
-                     * @param other: unit_prefix object to multiply with
+                     * @param other: unit_prefix object to multiply with as l-value const reference
                      * 
                      * @return constexpr unit_prefix&
-                     * 
                      */
                     constexpr unit_prefix& operator*=(const unit_prefix& other) noexcept {
 
                         multiplier_ *= other.multiplier_; 
+
                         return *this; 
 
                     }
@@ -802,14 +847,14 @@ namespace physics {
                     /**
                      * @brief Divide this unit_prefix to an unit_prefix by dividing the multipliers together
                      * 
-                     * @param other: unit_prefix object to divide with
+                     * @param other: unit_prefix object to divide with as l-value const reference
                      * 
                      * @return constexpr unit_prefix&
-                     * 
                      */
                     constexpr unit_prefix& operator/=(const unit_prefix& other) noexcept {
 
                         multiplier_ /= other.multiplier_; 
+
                         return *this; 
 
                     }
@@ -818,10 +863,9 @@ namespace physics {
                     /**
                      * @brief Perform a multiplication between unit_prefixes 
                      * 
-                     * @param other: unit_prefix object to multiply with
+                     * @param other: unit_prefix object to multiply with as l-value const reference
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix operator*(const unit_prefix& other) const noexcept {
 
@@ -833,10 +877,9 @@ namespace physics {
                     /**
                      * @brief Perform a division between unit_prefixes 
                      * 
-                     * @param other: unit_prefix object to muldividetiply with
+                     * @param other: unit_prefix object to muldividetiply with as l-value const reference
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix operator/(const unit_prefix& other) const noexcept {
 
@@ -848,10 +891,9 @@ namespace physics {
                     /**
                      * @brief Equality operator
                      * 
-                     * @param other: unit_prefix object to compare with
+                     * @param other: unit_prefix object to compare with as l-value const reference
                      * 
                      * @return bool
-                     * 
                      */
                     constexpr bool operator==(const unit_prefix& other) const noexcept {
                     
@@ -863,7 +905,7 @@ namespace physics {
                     /**
                      * @brief Inequality operator
                      * 
-                     * @param other: unit_prefix object to !compare with
+                     * @param other: unit_prefix object to !compare with as l-value const reference
                      * 
                      * @return bool
                      * 
@@ -880,11 +922,11 @@ namespace physics {
                      * 
                      * @param os: std::ostream& 
                      * @param prefix: unit_prefix as l-value const reference
-                     * 
                      */
                     friend std::ostream& operator<<(std::ostream& os, const unit_prefix& prefix) noexcept {
 
                         os << prefix.symbol_; 
+
                         return os; 
 
                     }
@@ -895,11 +937,11 @@ namespace physics {
                      * 
                      * @param file: std::ofstream& 
                      * @param prefix: unit_prefix as l-value const reference
-                     * 
                      */
                     friend std::ofstream& operator<<(std::ofstream& file, const unit_prefix& prefix) noexcept {
 
                         file << prefix.symbol_; 
+
                         return file; 
 
                     }
@@ -913,7 +955,6 @@ namespace physics {
                      * @brief Invert the unit_prefix
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix inv() const noexcept { 
                         
@@ -928,7 +969,6 @@ namespace physics {
                      * @param power 
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix pow(const int& power) const noexcept { 
                         
@@ -941,7 +981,6 @@ namespace physics {
                      * @brief Take the square of the unit_prefix
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix square() const noexcept { 
                         
@@ -954,7 +993,6 @@ namespace physics {
                      * @brief Take the cube of the unit_prefix
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix cube() const noexcept { 
                         
@@ -969,7 +1007,6 @@ namespace physics {
                      * @param power 
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix root(const int& power) const noexcept { 
                         
@@ -982,7 +1019,6 @@ namespace physics {
                      * @brief Take the square root of the unit_prefix
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix sqrt() const noexcept { 
                         
@@ -995,7 +1031,6 @@ namespace physics {
                      * @brief Take the cube root of the unit_prefix
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix cbrt() const noexcept { 
                         
@@ -1011,21 +1046,31 @@ namespace physics {
                     /**
                      * @brief Get the multiplier of the unit_prefix
                      * 
-                     * @return constexpr double 
-                     * 
+                     * @return constexpr scalar 
                      */
-                    constexpr double multiplier() const noexcept {
+                    constexpr scalar multiplier() const noexcept {
 
                         return multiplier_; 
 
                     }
 
-                    
+
+                    /**
+                     * @brief Get the multiplier of the unit_prefix
+                     * 
+                     * @return constexpr scalar& 
+                     */
+                    constexpr scalar& multiplier() noexcept {
+
+                        return multiplier_; 
+
+                    }
+
+
                     /**
                      * @brief Get the symbol of the unit_prefix
                      * 
                      * @return constexpr char
-                     * 
                      */
                     constexpr char symbol() const noexcept {
 
@@ -1034,24 +1079,35 @@ namespace physics {
                     }
 
 
-                private:    
+                    /**
+                     * @brief Get the symbol of the unit_prefix
+                     * 
+                     * @return constexpr char&
+                     */
+                    constexpr char& symbol() noexcept {
 
-                    /// @brief multiplier of the unit_prefix
-                    double multiplier_; 
+                        return symbol_; 
 
-                    /// @brief symbol of the unit_prefix
-                    char symbol_; 
-
-
-            }; // class unit_prefix
-            static_assert(sizeof(unit_prefix) == 9, "unit_prefix is not the correct size");
-
-
-            /// @brief Class representing an unit of measurement as an unit_base and an unit_prefix
-            class unit {
+                    }
 
 
-                public:
+                // =============================================
+                // struct members & friends
+                // =============================================
+
+                    scalar multiplier_; ///< multiplier of the unit_prefix
+
+                    char symbol_; ///< symbol of the unit_prefix
+
+                    friend struct unit; ///< unit is a friend of unit_prefix
+
+
+            }; // struct unit_prefix
+
+
+            /// @brief Struct represents an unit of measurement as an unit_base and an unit_prefix
+            struct unit {
+
 
                 // =============================================
                 // constructors & destructor
@@ -1060,105 +1116,98 @@ namespace physics {
                     /// @brief Construct a new default unit object
                     explicit constexpr unit() noexcept : 
                         
-                        base_{}, 
-                        prefix_{} {}
+                        base_(), 
+                        prefix_() {}
 
 
                     /**
-                     * @brief Construct a new unit object from a prefix and an unit_base 
+                     * @brief Construct a new unit object from a prefix and a base 
                      * 
-                     * @param prefix: double as l-value const reference
+                     * @param prefix: unit_prefix as l-value const reference
                      * @param base: unit_base as l-value const reference
-                     * 
                      */
                     explicit constexpr unit(const unit_prefix& prefix, 
                                             const unit_base& base) noexcept : 
                         
-                        base_{base}, 
-                        prefix_{prefix} {}
+                        base_(base), 
+                        prefix_(prefix) {}
 
 
                     /**
                      * @brief Construct a new unit object from a unit_prefix and an unit_base
                      * 
-                     * @param prefix: unit_prefix as r-value
-                     * @param base: unit_base as r-value
-                     * 
+                     * @param prefix: unit_prefix as r-value reference
+                     * @param base: unit_base as r-value reference
                      */
                     explicit constexpr unit(unit_prefix&& prefix, 
                                             unit_base&& base) noexcept : 
                         
-                        base_{std::move(base)}, 
-                        prefix_{std::move(prefix)} {}
-                        
+                        base_(std::move(base)), 
+                        prefix_(std::move(prefix)) {}
+
 
                     /**
                      * @brief Construct a new unit object from an unit_base and an unit_prefix
                      * 
                      * @param base: unit_base object as l-value const reference
                      * @param prefix: unit_prefix as l-value const reference
-                     * 
                      */
                     explicit constexpr unit(const unit_base& base, 
                                             const unit_prefix& prefix = unit_prefix()) noexcept : 
                         
-                        base_{base}, 
-                        prefix_{prefix} {}
+                        base_(base), 
+                        prefix_(prefix) {}
 
 
                     /**
                      * @brief Construct a new unit object from a unit_base and unit_prefix
                      * 
-                     * @param base: unit_base as r-value
-                     * @param prefix: unit_prefix as r-value
-                     * 
+                     * @param base: unit_base as r-value reference
+                     * @param prefix: unit_prefix as r-value reference
                      */
                     explicit constexpr unit(unit_base&& base, 
                                             unit_prefix&& prefix) noexcept : 
                         
-                        base_{std::move(base)}, 
-                        prefix_{std::move(prefix)} {}
+                        base_(std::move(base)), 
+                        prefix_(std::move(prefix)) {}
 
 
                     /**
-                     * @brief Construct a new unit object from an unit_prefix and an unit
+                     * @brief Construct a new unit from an unit_prefix and an unit object
                      * 
                      * @param prefix: unit_prefix as l-value const reference
                      * @param unit: unit as l-value const reference
-                     * 
                      */
                     explicit constexpr unit(const unit_prefix& prefix, 
                                             const unit& unit) noexcept : 
                         
-                        base_{unit.base_}, 
-                        prefix_{prefix * unit.prefix_} {}
+                        base_(unit.base_), 
+                        prefix_(prefix * unit.prefix_) {}
 
 
                     /**
-                     * @brief Copy construct a new unit object from another unit
+                     * @brief Copy construct a new unit from another unit object
                      * 
-                     * @param other: unit object to copy
-                     * 
+                     * @param other: unit object to copy from as l-value const reference
                      */
                     constexpr unit(const unit& other) noexcept : 
 
-                        base_{other.base_}, 
-                        prefix_{other.prefix_} {}
+                        base_(other.base_), 
+                        prefix_(other.prefix_) {}
 
 
                     /**
-                     * @brief Move construct a new unit object from another unit
+                     * @brief Move construct a new unit from another unit object
                      * 
-                     * @param other: unit object to move
-                     * 
+                     * @param other: unit object to move from as r-value reference
                      */
                     constexpr unit(unit&& other) noexcept : 
 
-                        base_{std::move(other.base_)}, 
-                        prefix_{std::move(other.prefix_)} {}
+                        base_(std::move(other.base_)), 
+                        prefix_(std::move(other.prefix_)) {}
 
 
-                    /// @brief Destroy the unit object
+                    /// @brief Default destructor
                     ~unit() = default; 
 
 
@@ -1169,15 +1218,15 @@ namespace physics {
                     /**
                      * @brief Copy assignment operator
                      * 
-                     * @param other: unit object to copy
+                     * @param other: unit object to copy from as l-value const reference
                      * 
                      * @return constexpr unit&
-                     * 
                      */
                     constexpr unit& operator=(const unit& other) noexcept {
 
                         base_ = other.base_;
                         prefix_ = other.prefix_;
+
                         return *this;
 
                     }
@@ -1186,15 +1235,15 @@ namespace physics {
                     /**
                      * @brief Move assignment operator
                      * 
-                     * @param other: unit object to move
+                     * @param other: unit object to move from as r-value reference
                      * 
                      * @return constexpr unit& 
-                     * 
                      */
                     constexpr unit& operator=(unit&& other) noexcept {
 
                         base_ = std::move(other.base_);
                         prefix_ = std::move(other.prefix_);
+
                         return *this;
 
                     }
@@ -1203,15 +1252,15 @@ namespace physics {
                     /**
                      * @brief Multiply this unit with an unit
                      * 
-                     * @param other: unit object to multiply with as l-value
+                     * @param other: unit object to multiply with as l-value const reference
                      *                      
                      * @return constexpr unit&
-                     * 
                      */
                     constexpr unit& operator*=(const unit& other) noexcept { 
                         
                         base_ *= other.base_; 
                         prefix_ *= other.prefix_; 
+
                         return *this; 
                         
                     }
@@ -1220,15 +1269,15 @@ namespace physics {
                     /**
                      * @brief Multiply this unit with an unit
                      * 
-                     * @param other: unit object to multiply with as r-value
+                     * @param other: unit object to multiply with as r-value reference
                      *                      
                      * @return constexpr unit&
-                     * 
                      */
                     constexpr unit& operator*=(unit&& other) noexcept { 
                         
                         base_ *= std::move(other.base_); 
                         prefix_ *= std::move(other.prefix_); 
+
                         return *this; 
                         
                     }
@@ -1237,15 +1286,15 @@ namespace physics {
                     /**
                      * @brief Divide this unit with an unit
                      * 
-                     * @param other: unit object to divide with as l-value
+                     * @param other: unit object to divide with as l-value const reference
                      *                      
                      * @return constexpr unit&
-                     * 
                      */
                     constexpr unit& operator/=(const unit& other) noexcept { 
                         
                         base_ /= other.base_; 
                         prefix_ /= other.prefix_; 
+
                         return *this; 
                         
                     }                 
@@ -1254,15 +1303,15 @@ namespace physics {
                     /**
                      * @brief Divide this unit with an unit
                      * 
-                     * @param other: unit object to divide with as r-value
+                     * @param other: unit object to divide with as r-value reference
                      *                      
                      * @return constexpr unit&
-                     * 
                      */
                     constexpr unit& operator/=(unit&& other) noexcept { 
                         
                         base_ /= std::move(other.base_); 
                         prefix_ /= std::move(other.prefix_); 
+
                         return *this; 
                         
                     }  
@@ -1271,10 +1320,9 @@ namespace physics {
                     /**
                      * @brief Perform a multiplication by multiply the bases and the prefixes
                      * 
-                     * @param other: unit object to multiply with
+                     * @param other: unit object to multiply with as l-value const reference
                      *                      
                      * @return constexpr unit
-                     * 
                      */
                     constexpr unit operator*(const unit& other) const noexcept { 
                         
@@ -1286,10 +1334,9 @@ namespace physics {
                     /**
                      * @brief Perform a division by divide the bases and the prefixes
                      * 
-                     * @param other: unit object to divide with
+                     * @param other: unit object to divide with as l-value const reference
                      *                      
                      * @return constexpr unit
-                     * 
                      */
                     constexpr unit operator/(const unit& other) const noexcept { 
                         
@@ -1301,15 +1348,16 @@ namespace physics {
                     /**
                      * @brief Equality operator
                      * 
-                     * @param other: unit object to compare
+                     * @param other: unit object to compare with as l-value const reference
                      * 
                      * @return constexpr bool 
-                     * 
                      */
                     constexpr bool operator==(const unit& other) const noexcept {
 
-                        if (base_ != other.base_) return false; 
-                        return prefix_ == other.prefix_; 
+                        if (base_ != other.base_) 
+                            return false; 
+                        else 
+                            return prefix_ == other.prefix_; 
 
                     }
 
@@ -1317,10 +1365,9 @@ namespace physics {
                     /**
                      * @brief Inequality operator
                      * 
-                     * @param other: unit object to compare
+                     * @param other: unit object to !compare with as l-value const reference
                      * 
                      * @return constexpr bool 
-                     * 
                      */
                     constexpr bool operator!=(const unit& other) const noexcept { 
                         
@@ -1341,6 +1388,7 @@ namespace physics {
                     friend std::ostream& operator<<(std::ostream& os, const unit& units) noexcept {
 
                         os << units.to_string(); 
+
                         return os; 
 
                     }
@@ -1357,7 +1405,8 @@ namespace physics {
                      */
                     friend std::ofstream& operator<<(std::ofstream& file, const unit& units) noexcept {
 
-                        file << units.to_string(); 
+                        file << units.to_string();
+
                         return file; 
 
                     }
@@ -1371,7 +1420,6 @@ namespace physics {
                      * @brief Invert the unit
                      * 
                      * @return constexpr unit
-                     * 
                      */
                     constexpr unit inv() const noexcept { 
                         
@@ -1383,10 +1431,9 @@ namespace physics {
                     /**
                      * @brief Take the power of the unit
                      * 
-                     * @param power 
+                     * @param power
                      * 
                      * @return constexpr unit 
-                     * 
                      */
                     constexpr unit pow(const int& power) const noexcept { 
                         
@@ -1399,7 +1446,6 @@ namespace physics {
                      * @brief Take the square of the unit
                      * 
                      * @return constexpr unit 
-                     * 
                      */
                     constexpr unit square() const noexcept { 
                         
@@ -1412,7 +1458,6 @@ namespace physics {
                      * @brief Take the cube of the unit
                      * 
                      * @return constexpr unit 
-                     * 
                      */
                     constexpr unit cube() const noexcept { 
                         
@@ -1424,10 +1469,9 @@ namespace physics {
                     /**
                      * @brief Take the root of the unit
                      * 
-                     * @param power 
+                     * @param power
                      * 
                      * @return constexpr unit 
-                     * 
                      */
                     constexpr unit root(const int& power) const { 
                         
@@ -1440,7 +1484,6 @@ namespace physics {
                      * @brief Take the square root of the unit
                      * 
                      * @return constexpr unit 
-                     * 
                      */
                     constexpr unit sqrt() const { 
                         
@@ -1453,7 +1496,6 @@ namespace physics {
                      * @brief Take the cube root of the unit
                      * 
                      * @return constexpr unit 
-                     * 
                      */
                     constexpr unit cbrt() const { 
                         
@@ -1463,14 +1505,13 @@ namespace physics {
 
 
                 // =============================================
-                // get methods
+                // setters & getters
                 // ============================================= 
 
                     /**
                      * @brief Get the unit base object
                      * 
                      * @return constexpr unit_base 
-                     * 
                      */
                     constexpr unit_base base() const noexcept { 
                         
@@ -1483,7 +1524,6 @@ namespace physics {
                      * @brief Get the unit base object
                      * 
                      * @return constexpr unit_base& 
-                     * 
                      */
                     constexpr unit_base& base() noexcept { 
                         
@@ -1496,7 +1536,6 @@ namespace physics {
                      * @brief Get the unit prefix object
                      * 
                      * @return constexpr unit_prefix 
-                     * 
                      */
                     constexpr unit_prefix prefix() const noexcept { 
                         
@@ -1509,7 +1548,6 @@ namespace physics {
                      * @brief Get the unit prefix object
                      * 
                      * @return constexpr unit_prefix&
-                     * 
                      */
                     constexpr unit_prefix& prefix() noexcept { 
                         
@@ -1522,7 +1560,6 @@ namespace physics {
                      * @brief Get the unit object
                      * 
                      * @return constexpr unit
-                     * 
                      */
                     constexpr unit units() const noexcept { 
                         
@@ -1548,11 +1585,10 @@ namespace physics {
                      * 
                      * @param result: desired unit
                      * 
-                     * @return constexpr double 
+                     * @return constexpr scalar 
                      * @note the units will only convert if they have the same base unit
-                     * 
                      */
-                    constexpr double convertion_factor(const unit& other) const noexcept { 
+                    constexpr scalar convertion_factor(const unit& other) const noexcept { 
                         
                         return (base_ == other.base_) ? prefix_.multiplier() / other.prefix_.multiplier() : math::constants::invalid_conversion; 
                         
@@ -1565,11 +1601,10 @@ namespace physics {
                      * @param value: value to convert 
                      * @param other: desired unit unit
                      * 
-                     * @return constexpr double 
+                     * @return constexpr scalar 
                      * @note the units will only convert if they have the same base unit
-                     * 
                      */
-                    constexpr double convert(const double& value, const unit& other) const noexcept { 
+                    constexpr scalar convert(const scalar& value, const unit& other) const noexcept { 
                         
                         return (base_ == other.base_) ? value * prefix_.multiplier() / other.prefix_.multiplier() : math::constants::invalid_conversion; 
                         
@@ -1588,40 +1623,40 @@ namespace physics {
                     }
 
 
-                    /**
-                     * @brief Print the unit
-                     * 
-                     */
+                    /// @brief Print the unit to the standard output
                     inline void print() const noexcept {
 
-                        std::cout << *this;
+                        std::cout << this->to_string();
 
                     }
 
-
-                private:
             
                 // =============================================
-                // class members
+                // struct members & friends
                 // ============================================= 
 
-                    unit_base base_;
+                    unit_base base_; ///< unit base
 
-                    unit_prefix prefix_;
+                    unit_prefix prefix_; ///< unit prefix
+
+                    friend class measurement; ///< measurement class is a friend of unit
+
+                    friend class uncertain_measurement; ///< uncertain_measurement class is a friend of unit
 
 
-            }; // class unit     
-            static_assert(sizeof(unit) == 12, "unit is not the correct size");
+            }; // struct unit     
 
 
             #define CREATE_UNIT_BASE(NAME, METRE, SECOND, KILOGRAM, AMPERE, KELVIN, MOLE, CANDELA) \
                 constexpr unit_base NAME(METRE, SECOND, KILOGRAM, AMPERE, KELVIN, MOLE, CANDELA); 
             
 
-            #define CREATE_UNIT_PREFIX(NAME, MULTIPLIER, SYMBOL) constexpr unit_prefix NAME(MULTIPLIER, SYMBOL); 
+            #define CREATE_UNIT_PREFIX(NAME, MULTIPLIER, SYMBOL) \
+                constexpr unit_prefix NAME(MULTIPLIER, SYMBOL); 
 
 
-            #define CREATE_UNIT(NAME, PREFIX, BASE) constexpr unit NAME(PREFIX, BASE); 
+            #define CREATE_UNIT(NAME, PREFIX, BASE) \
+                constexpr unit NAME(PREFIX, BASE); 
 
 
             /// @brief Namespace containing the units of measurement
@@ -1633,6 +1668,8 @@ namespace physics {
 
 
                     CREATE_UNIT_BASE(default_type, 0, 0, 0, 0, 0, 0, 0)
+
+                    CREATE_UNIT_BASE(invalid_type, -9, -9, -9, -9, -9, -9, -9)
 
                     CREATE_UNIT_BASE(metre, 1, 0, 0, 0, 0, 0, 0)
                     
@@ -1700,6 +1737,9 @@ namespace physics {
                 } // namespace prefix
 
 
+                // invalid unit
+                constexpr unit no_units(prefix::default_type, base::invalid_type);
+
                 // unitless 
                 constexpr unit unitless(prefix::default_type, base::default_type);
 
@@ -1707,7 +1747,7 @@ namespace physics {
                 constexpr unit m(prefix::default_type, base::metre);
                 constexpr unit s(prefix::default_type, base::second);
                 constexpr unit kg(prefix::default_type, base::kilogram);
-                constexpr unit k(prefix::default_type, base::Kelvin);
+                constexpr unit K(prefix::default_type, base::Kelvin);
                 constexpr unit A(prefix::default_type, base::Ampere);
                 constexpr unit mol(prefix::default_type, base::mole);
                 constexpr unit cd(prefix::default_type, base::candela);
@@ -1761,7 +1801,7 @@ namespace physics {
                 constexpr unit volt(unit_base(2, -3, 1, -1, 0, 0, 0));
                 constexpr unit V = volt;
 
-                constexpr unit newton(kg * m / s);
+                constexpr unit newton(kg * m / s.square());
                 constexpr unit N = newton;
 
                 constexpr unit Pa(unit_base(-1, -2, 1, 0, 0, 0, 0));
@@ -1800,6 +1840,119 @@ namespace physics {
 
 
         /// @brief A class for representing a physical quantity with a numerical value and an unit
+        // template < auto T_units, typename = std::enable_if_t< std::is_same_v<std::remove_cv_t<decltype(T_units)>, unit> > >
+                //std::remove_cv_t<decltype(no_units)> >
+
+        template <struct unit T_units = no_units>
+        class measurement_test {
+
+            
+            public:
+
+
+                constexpr measurement_test(const scalar& value) noexcept : 
+
+                    value_{value} {
+
+                        if constexpr (T_units != no_units) 
+                            units_ = T_units;
+
+                        else 
+                            units_ = unitless; 
+
+                    }
+
+
+                constexpr measurement_test(scalar value, const unit units) : 
+                    
+                    value_{value} {
+
+                        if constexpr (T_units != no_units && units != T_units)
+                            throw std::invalid_argument("Inconsistent units"); 
+
+                        else if constexpr (T_units == no_units)
+                            units_ = units; 
+
+                        else 
+                            units_ = T_units;
+
+                    }
+
+
+                template <struct unit U_units = no_units>
+                constexpr measurement_test(const measurement_test<U_units>& other) {
+
+                    if constexpr (T_units != no_units && U_units != no_units && T_units != U_units)
+                        throw std::invalid_argument("Inconsistent units"); 
+                    
+                    else if (U_units == no_units && other.units() != T_units)
+                        throw std::invalid_argument("Inconsistent units"); 
+
+                    else {
+                        value_ = other.value(); 
+                        units_ = other.units(); 
+                    }
+
+                }
+
+
+                constexpr scalar value() const noexcept {
+
+                    return value_; 
+
+                }
+
+
+                constexpr scalar& value() noexcept {
+
+                    return value_; 
+                    
+                }
+
+
+                constexpr unit units() const noexcept {
+
+                    return units_; 
+
+                }
+
+
+                constexpr unit& units() noexcept {
+
+                    return units_; 
+                    
+                }
+
+
+                void print() const {
+                        
+                    std::cout << value_ << " " << units_ << "\n";
+    
+                }  
+
+            
+            private:
+
+                scalar value_;
+
+                unit units_;
+                
+
+        }; 
+
+        measurement_test(scalar, const unit) -> measurement_test<no_units>;
+
+
+        // // // template < auto T_units, typename std::enable_if_t< std::is_same_v<std::remove_cv_t<decltype(T_units)>, unit> > >
+        // template < class unit T_units >
+        // measurement_test(scalar, const unit) -> measurement_test<T_units>;
+
+        // template <>
+        // constexpr measurement_test(scalar, const unit) -> measurement_test<>;
+        
+
+
+        /// @brief A class for representing a physical quantity with a numerical value and an unit
         class measurement {
 
 
@@ -1809,49 +1962,46 @@ namespace physics {
             // constructors & destructor 
             // =============================================  
 
-                /// @brief Construct a new default measurement object with value 0.0 and unitless
+                /// @brief Construct a new default measurement object (value = 0, unit = unitless)
                 explicit constexpr measurement() noexcept : 
 
                     value_{0.0}, 
-                    units_{} {}
+                    units_() {}
 
 
                 /**
-                 * @brief Construct a new measurement object from a value and unit
+                 * @brief Construct a new measurement object from a value and an unit
                  * 
-                 * @param value: double value of the measurement
-                 * @param unit: unit of measurement
-                 * 
+                 * @param value: scalar value of the measurement
+                 * @param unit: unit of measurement as l-value const reference
                  */
-                explicit constexpr measurement(const double& value, 
+                explicit constexpr measurement(const scalar& value, 
                                                const unit& units = unit()) noexcept : 
                                                
                     value_{value}, 
-                    units_{units} {}
+                    units_(units) {}
 
 
                 /**
                  * @brief Copy constuct a new measurement object from another measurement
                  * 
                  * @param other: the measurement to copy
-                 * 
                  */
                 constexpr measurement(const measurement& other) noexcept : 
                 
                     value_{other.value_}, 
-                    units_{other.units_} {}
+                    units_(other.units_) {}
                     
                 
                 /**
                  * @brief Move construct a new measurement object from another measurement
                  * 
                  * @param other: the measurement to move from
-                 * 
                  */
                 constexpr measurement(measurement&& other) noexcept :
                     
                     value_{std::move(other.value_)}, 
-                    units_{std::move(other.units_)} {}
+                    units_(std::move(other.units_)) {}
 
 
                 /// @brief Default destructor of the measurement object
@@ -1865,32 +2015,119 @@ namespace physics {
                 /**
                  * @brief Copy assign a measurement from another measurement
                  * 
-                 * @param other: the measurement to copy
+                 * @param other: the measurement to copy as l-value const reference
                  * 
                  * @return measurement& 
-                 * 
                  */
                 constexpr measurement& operator=(const measurement& other) noexcept {
 
                     value_ = other.value_;
                     units_ = other.units_;
+
                     return *this;
 
                 }     
 
 
                 /**
-                 * @brief Move assign a measurement from another measurement
+                 * @brief Add a measurement to this measurement
                  * 
-                 * @param other: the measurement to move from
+                 * @param other: the measurement to add as l-value const reference
                  * 
                  * @return measurement& 
+                 */
+                constexpr measurement& operator+=(const measurement& other) { 
+                    
+                    if (units_.base() != other.units_.base()) 
+                        throw std::invalid_argument("Cannot add measurements with different unit bases");
+                    
+                    if (units_ != unitless) 
+                        value_ += other.value_as(units_); 
+
+                    else {
+                        value_ += other.value_; 
+                        units_ = other.units_; 
+                    }  
+
+                    return *this; 
+                
+                }
+
+
+                /**
+                 * @brief Subtract a measurement to this measurement
                  * 
+                 * @param other: the measurement to subtract as l-value const reference
+                 * 
+                 * @return measurement& 
+                 */
+                constexpr measurement& operator-=(const measurement& other) { 
+
+                    if (units_.base() != other.units_.base()) 
+                        throw std::invalid_argument("Cannot subtract measurements with different unit bases");
+                    
+                    if (units_ != unitless) 
+                        value_ -= other.value_as(units_);   
+
+                    else {
+                        value_ -= other.value_;    
+                        units_ = other.units_; 
+                    }   
+
+                    return *this; 
+                
+                }
+
+
+                /**
+                 * @brief Multiply this measurement and a measurement
+                 * 
+                 * @param other: the measurement to multiply as l-value const reference
+                 * 
+                 * @return measurement& 
+                 */
+                constexpr measurement& operator*=(const measurement& meas) noexcept { 
+
+                    value_ *= meas.value_;
+                    units_ *= meas.units_;    
+
+                    return *this; 
+                
+                }
+
+
+                /**
+                 * @brief Divide this measurement and a measurement
+                 * 
+                 * @param other: the measurement to divide as l-value const reference
+                 * 
+                 * @return measurement& 
+                 */
+                constexpr measurement& operator/=(const measurement& meas) { 
+
+                    if (meas.value_ == 0.0)
+                        throw std::runtime_error("Cannot divide measurement by a zero measurement");
+                   
+                    value_ /= meas.value_;
+                    units_ /= meas.units_;                                    
+                    
+                    return *this; 
+                
+                }
+
+
+                /**
+                 * @brief Move assign a measurement from another measurement
+                 * 
+                 * @param other: the measurement to move from as r-value reference
+                 * 
+                 * @return measurement& 
                  */
                 constexpr measurement& operator=(measurement&& other) noexcept {
 
                     value_ = std::move(other.value_);
                     units_ = std::move(other.units_);
+
                     return *this;
 
                 }
@@ -1899,40 +2136,22 @@ namespace physics {
                 /**
                  * @brief Add a measurement to this measurement
                  * 
-                 * @param other: the measurement to add as l-value
+                 * @param other: the measurement to add as r-value reference
                  * 
                  * @return measurement& 
-                 * 
-                 */
-                constexpr measurement& operator+=(const measurement& other) { 
-                    
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot add measurements with different unit bases");
-                    if (units_ != unitless) value_ += other.value_as(units_); 
-                    else {
-                        value_ += other.value_; 
-                        units_ = other.units_; 
-                    }                 
-                    return *this; 
-                
-                }
-
-
-                /**
-                 * @brief Add a measurement to this measurement
-                 * 
-                 * @param other: the measurement to add as r-value
-                 * 
-                 * @return measurement& 
-                 * 
                  */
                 constexpr measurement& operator+=(measurement&& other) { 
 
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot add measurements with different unit bases");
-                    if (units_ != unitless) value_ += std::move(other.value_as(units_));   
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot add measurements with different unit bases");
+                    
+                    if (units_ != unitless) 
+                        value_ += std::move(other.value_as(units_));   
                     else {
                         value_ += std::move(other.value_);  
                         units_ = std::move(other.units_); 
-                    }                
+                    }   
+
                     return *this; 
                 
                 }
@@ -1941,40 +2160,22 @@ namespace physics {
                 /**
                  * @brief Subtract a measurement to this measurement
                  * 
-                 * @param other: the measurement to subtract as l-value
+                 * @param other: the measurement to subtract as r-value reference
                  * 
                  * @return measurement& 
-                 * 
-                 */
-                constexpr measurement& operator-=(const measurement& other) { 
-
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract measurements with different unit bases");
-                    if (units_ != unitless) value_ -= other.value_as(units_);   
-                    else {
-                        value_ -= other.value_;    
-                        units_ = other.units_; 
-                    }              
-                    return *this; 
-                
-                }
-
-
-                /**
-                 * @brief Subtract a measurement to this measurement
-                 * 
-                 * @param other: the measurement to subtract as r-value
-                 * 
-                 * @return measurement& 
-                 * 
                  */
                 constexpr measurement& operator-=(measurement&& other) { 
 
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract measurements with different unit bases");
-                    if (units_ != unitless) value_ -= std::move(other.value_as(units_));   
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot subtract measurements with different unit bases");
+                   
+                    if (units_ != unitless)
+                        value_ -= std::move(other.value_as(units_));   
                     else {
                         value_ -= std::move(other.value_);    
                         units_ = std::move(other.units_); 
-                    }              
+                    }     
+
                     return *this;   
 
                 }
@@ -1983,32 +2184,15 @@ namespace physics {
                 /**
                  * @brief Multiply this measurement and a measurement
                  * 
-                 * @param other: the measurement to multiply as l-value
+                 * @param other: the measurement to multiply as r-value reference
                  * 
                  * @return measurement& 
-                 * 
-                 */
-                constexpr measurement& operator*=(const measurement& meas) noexcept { 
-
-                    value_ *= meas.value_;
-                    units_ *= meas.units_;                                    
-                    return *this; 
-                
-                }
-
-
-                /**
-                 * @brief Multiply this measurement and a measurement
-                 * 
-                 * @param other: the measurement to multiply as r-value
-                 * 
-                 * @return measurement& 
-                 * 
                  */
                 constexpr measurement& operator*=(measurement&& meas) noexcept { 
 
                     value_ *= std::move(meas.value_);
-                    units_ *= std::move(meas.units_);                                    
+                    units_ *= std::move(meas.units_);   
+
                     return *this; 
                 
                 }
@@ -2017,34 +2201,18 @@ namespace physics {
                 /**
                  * @brief Divide this measurement and a measurement
                  * 
-                 * @param other: the measurement to divide as l-value
+                 * @param other: the measurement to divide as r-value reference
                  * 
                  * @return measurement& 
-                 * 
-                 */
-                constexpr measurement& operator/=(const measurement& meas) { 
-
-                    if (meas.value_ == 0.0) throw std::runtime_error("Cannot divide measurement by 0");
-                    value_ /= meas.value_;
-                    units_ /= meas.units_;                                    
-                    return *this; 
-                
-                }
-
-
-                /**
-                 * @brief Divide this measurement and a measurement
-                 * 
-                 * @param other: the measurement to divide as r-value
-                 * 
-                 * @return measurement& 
-                 * 
                  */
                 constexpr measurement& operator/=(measurement&& meas) { 
                     
-                    if (meas.value_ == 0.0) throw std::runtime_error("Cannot divide measurement by 0");
+                    if (meas.value_ == 0.0) 
+                        throw std::runtime_error("Cannot divide measurement by a zero measurement");
+                   
                     value_ /= std::move(meas.value_);
                     units_ /= std::move(meas.units_);                                    
+                    
                     return *this; 
                 
                 }
@@ -2056,11 +2224,11 @@ namespace physics {
                  * @param value 
                  * 
                  * @return constexpr measurement& 
-                 * 
                  */
-                constexpr measurement& operator*=(const double& value) noexcept { 
+                constexpr measurement& operator*=(const scalar& value) noexcept { 
 
                     value_ *= value;    
+
                     return *this; 
                 
                 }
@@ -2072,13 +2240,27 @@ namespace physics {
                  * @param value 
                  * 
                  * @return constexpr measurement& 
-                 * 
                  */
-                constexpr measurement& operator/=(const double& value) { 
+                constexpr measurement& operator/=(const scalar& value) { 
                     
-                    if (value == 0.0) throw std::runtime_error("Cannot divide measurement by 0");
+                    if (value == 0.0) 
+                        throw std::runtime_error("Cannot divide measurement by 0");
+                    
                     value_ /= value;                    
+                    
                     return *this; 
+                
+                }
+
+                
+                /**
+                 * @brief Return the opposite of this measurement
+                 * 
+                 * @return constexpr measurement 
+                 */
+                constexpr measurement operator-() const noexcept { 
+                    
+                    return measurement(-value_, units_); 
                 
                 }
 
@@ -2089,25 +2271,13 @@ namespace physics {
                  * @param other: measurement to add as l-value const reference
                  * 
                  * @return measurement 
-                 * 
                  */
                 constexpr measurement operator+(const measurement& other) const { 
                     
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot sum measurements with different unit bases");
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot sum measurements with different unit bases");
+                   
                     return measurement(value_ + other.value_as(units_), units_); 
-                
-                }
-
-                
-                /**
-                 * @brief Return the opposite of this measurement
-                 * 
-                 * @return constexpr measurement 
-                 * 
-                 */
-                constexpr measurement operator-() const noexcept { 
-                    
-                    return measurement(-value_, units_); 
                 
                 }
 
@@ -2118,11 +2288,12 @@ namespace physics {
                  * @param other: measurement to subtract as l-value const reference
                  *  
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement operator-(const measurement& other) const { 
 
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract measurements with different unit bases");
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot subtract measurements with different unit bases");
+                    
                     return measurement(value_ - other.value_as(units_), units_); 
                 
                 }
@@ -2134,7 +2305,6 @@ namespace physics {
                  * @param other: measurement to multiply as l-value const reference
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement operator*(const measurement& other) const noexcept { 
                     
@@ -2149,11 +2319,12 @@ namespace physics {
                  * @param other: measurement to divide as l-value const reference
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement operator/(const measurement& other) const { 
                     
-                    if (other.value_ == 0.0) throw std::runtime_error("Cannot divide measurement by 0");
+                    if (other.value_ == 0.0) 
+                        throw std::runtime_error("Cannot divide measurement by a zero measurement");
+                   
                     return measurement(value_ / other.value_, units_ / other.units_); 
                 
                 }
@@ -2165,9 +2336,8 @@ namespace physics {
                  * @param value 
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
-                constexpr measurement operator*(const double& value) const noexcept { 
+                constexpr measurement operator*(const scalar& value) const noexcept { 
                     
                     return measurement(value_ * value, units_); 
                     
@@ -2180,26 +2350,26 @@ namespace physics {
                  * @param value
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
-                constexpr measurement operator/(const double& value) const { 
+                constexpr measurement operator/(const scalar& value) const { 
                     
-                    if (value_ == 0.0) throw std::runtime_error("Cannot divide measurement by 0");
+                    if (value_ == 0.0) 
+                        throw std::runtime_error("Cannot divide measurement by 0");
+                  
                     return measurement(value_ / value, units_); 
                     
                 } 
 
 
                 /**
-                 * @brief Perform a product between a double and a measurement
+                 * @brief Perform a product between a scalar and a measurement
                  * 
-                 * @param val: double
+                 * @param val: scalar
                  * @param meas: measurement
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
-                friend constexpr measurement operator*(const double& val, 
+                friend constexpr measurement operator*(const scalar& val, 
                                                        const measurement& meas) noexcept { 
                                                     
                     return meas * val; 
@@ -2208,18 +2378,19 @@ namespace physics {
                 
 
                 /**
-                 * @brief Perform a division between a double and a measurement
+                 * @brief Perform a division between a scalar and a measurement
                  * 
-                 * @param val: double
+                 * @param val: scalar
                  * @param meas: measurement
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
-                friend constexpr measurement operator/(const double& val, 
+                friend constexpr measurement operator/(const scalar& val, 
                                                        const measurement& meas) { 
 
-                    if (meas.value_ == 0.0) throw std::runtime_error("Cannot divide by zero");          
+                    if (meas.value_ == 0.0) 
+                        throw std::runtime_error("Cannot divide a scalar by a zero measurement");          
+                    
                     return measurement(val / meas.value_, meas.units_.inv()); 
                     
                 }
@@ -2231,7 +2402,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator==(const measurement& other) const { 
                     
@@ -2246,7 +2416,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator!=(const measurement& other) const { 
                     
@@ -2261,7 +2430,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator>(const measurement& other) const { 
                     
@@ -2276,7 +2444,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator<(const measurement& other) const { 
                     
@@ -2291,7 +2458,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator>=(const measurement& other) const { 
                     
@@ -2306,7 +2472,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference 
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator<=(const measurement& other) const { 
                     
@@ -2323,7 +2488,7 @@ namespace physics {
                  * @return bool
                  *  
                  */
-                constexpr bool operator==(const double& val) const { 
+                constexpr bool operator==(const scalar& val) const { 
                     
                     return (value_ == val) ? true : math::tools::compare_round_equals(value_, val); 
                     
@@ -2338,7 +2503,7 @@ namespace physics {
                  * @return bool
                  *  
                  */
-                constexpr bool operator!=(const double& val) const { 
+                constexpr bool operator!=(const scalar& val) const { 
                     
                     return !operator==(val); 
                     
@@ -2351,9 +2516,8 @@ namespace physics {
                  * @param val 
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator>(const double& val) const { 
+                constexpr bool operator>(const scalar& val) const { 
                     
                     return value_ > val; 
                     
@@ -2366,9 +2530,8 @@ namespace physics {
                  * @param val 
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator<(const double& val) const { 
+                constexpr bool operator<(const scalar& val) const { 
                     
                     return value_ < val; 
                     
@@ -2381,9 +2544,8 @@ namespace physics {
                  * @param val 
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator>=(const double& val) const { 
+                constexpr bool operator>=(const scalar& val) const { 
                     
                     return (value_ >= val) ? true : operator==(val); 
                     
@@ -2396,9 +2558,8 @@ namespace physics {
                  * @param val 
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator<=(const double& val) const { 
+                constexpr bool operator<=(const scalar& val) const { 
                     
                     return value_ <= val ? true : operator==(val); 
                     
@@ -2444,10 +2605,27 @@ namespace physics {
             // ============================================= 
 
                 /**
+                 * @brief Invert the measurement
+                 * 
+                 * @return constexpr measurement 
+                 * 
+                 * @note Cannot invert a measurement with a zero value
+                 */
+                constexpr measurement inv() const { 
+                    
+                    if (value_ == 0) 
+                        throw std::runtime_error("Cannot invert a measurement with a zero value");
+                        
+                    return measurement(1 / value_, units_.inv()); 
+                
+                }
+                
+                
+                /**
                  * @brief Get the absolute measurement object
                  * 
+                 * @param meas: measurement as l-value const reference
                  * @return constexpr measurement
-                 * 
                  */
                 friend constexpr measurement abs(const measurement& meas) noexcept { 
                     
@@ -2455,60 +2633,18 @@ namespace physics {
                 
                 }
 
-
-                /**
-                 * @brief Invert the measurement
-                 * 
-                 * @return constexpr measurement 
-                 * 
-                 * @note Cannot invert a measurement with a zero value
-                 * 
-                 */
-                constexpr measurement inv() const { 
-                    
-                    if (value_ == 0) throw std::runtime_error("Cannot invert a measurement with a zero value");
-                    return measurement(1 / value_, units_.inv()); 
-                
-                }
-
                 
                 /**
                  * @brief Take the power of the measurement
                  * 
+                 * @param meas: measurement as l-value const reference
                  * @param power 
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
-                constexpr measurement pow(const int& power) const noexcept { 
+                friend constexpr measurement pow(const measurement& meas, const int& power) noexcept { 
                     
-                    return measurement(std::pow(value_, power), units_.pow(power)); 
-                
-                }
-
-                
-                /**
-                 * @brief Take the square of the measurement
-                 * 
-                 * @return constexpr measurement 
-                 * 
-                 */
-                constexpr measurement square() const noexcept { 
-                    
-                    return measurement(std::pow(value_, 2), units_.square()); 
-                
-                }
-
-                
-                /**
-                 * @brief Take the cube of the measurement
-                 * 
-                 * @return constexpr measurement 
-                 * 
-                 */
-                constexpr measurement cube() const noexcept { 
-                    
-                    return measurement(std::pow(value_, 3), units_.cube()); 
+                    return measurement(std::pow(meas.value_, power), meas.units_.pow(power)); 
                 
                 }
 
@@ -2516,14 +2652,42 @@ namespace physics {
                 /**
                  * @brief Take the root power of the measurement
                  * 
+                 * @param meas: measurement as l-value const reference
                  * @param power 
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
-                constexpr measurement root(const int& power) const { 
+                friend constexpr measurement root(const measurement& meas, const int& power) { 
                     
-                    return measurement(std::pow(value_, 1.0 / power), units_.root(power)); 
+                    return measurement(std::pow(meas.value_, 1.0 / power), meas.units_.root(power)); 
+                
+                }
+
+
+                /**
+                 * @brief Take the square of the measurement
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr measurement 
+                 */
+                friend constexpr measurement square(const measurement& meas) noexcept { 
+                    
+                    return measurement(std::pow(meas.value_, 2), meas.units_.square()); 
+                
+                }
+
+                
+                /**
+                 * @brief Take the cube of the measurement
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr measurement 
+                 */
+                friend constexpr measurement cube(const measurement& meas) noexcept { 
+                    
+                    return measurement(std::pow(meas.value_, 3), meas.units_.cube()); 
                 
                 }
 
@@ -2531,12 +2695,16 @@ namespace physics {
                 /**
                  * @brief Take the square root of the measurement
                  * 
+                 * @param meas: measurement as l-value const reference
+                 * 
                  * @return constexpr measurement
-                 *  
                  */
-                constexpr measurement sqrt() const { 
+                friend constexpr measurement sqrt(const measurement& meas) { 
                     
-                    return measurement(std::sqrt(value_), units_.sqrt()); 
+                    if (meas.value_ < 0.0) 
+                        throw std::runtime_error("Cannot take the square root of a negative measurement");
+                    
+                    return measurement(std::sqrt(meas.value_), meas.units_.sqrt()); 
                 
                 }
 
@@ -2544,12 +2712,83 @@ namespace physics {
                 /**
                  * @brief Take the cubic root of the measurement
                  * 
+                 * @param meas: measurement as l-value const reference
+                 * 
                  * @return constexpr measurement
-                 *  
                  */
-                constexpr measurement cbrt() const { 
+                friend constexpr measurement cbrt(const measurement& meas) { 
                     
-                    return measurement(std::cbrt(value_), units_.cbrt()); 
+                    return measurement(std::cbrt(meas.value_), meas.units_.cbrt()); 
+                
+                }
+
+
+                /**
+                 * @brief Take the exponential of a measurement
+                 * @note The base of the exponential is e
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr measurement
+                 */
+                friend constexpr measurement exp(const measurement& meas) { 
+                    
+                    if (meas.units_ != unitless) 
+                        throw std::runtime_error("Cannot take the exponential of a measurement that is not unitless"); 
+                    
+                    return measurement(std::exp(meas.value_), unitless); 
+                
+                }
+
+
+                /**
+                 * @brief Take the logarithm of a measurement
+                 * @note The base of the logarithm is e
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr measurement
+                 */
+                friend constexpr measurement log(const measurement& meas) { 
+                    
+                    if (meas.units_ != unitless) 
+                        throw std::runtime_error("Cannot take the logarithm of a measurement that is not unitless"); 
+                    
+                    return measurement(std::log(meas.value_), unitless); 
+                
+                }
+                
+
+                /**
+                 * @brief Take the exponential base 10 of a measurement
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr measurement
+                 */
+                friend constexpr measurement exp10(const measurement& meas) { 
+                    
+                    if (meas.units_ != unitless) 
+                        throw std::runtime_error("Cannot take the exponential of a measurement that is not unitless"); 
+                    
+                    return measurement(std::pow(10, meas.value_), unitless); 
+                
+                }
+
+
+                /**
+                 * @brief Take the logarithm base 10 of a measurement
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr measurement
+                 */
+                friend constexpr measurement log10(const measurement& meas) { 
+                    
+                    if (meas.units_ != unitless) 
+                        throw std::runtime_error("Cannot take the logarithm of a measurement that is not unitless"); 
+                    
+                    return measurement(std::log10(meas.value_), unitless); 
                 
                 }
 
@@ -2557,15 +2796,16 @@ namespace physics {
                 /**
                  * @brief Take the sine of a measurement
                  * 
-                 * @param meas: measurement 
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement sin(const measurement& meas) { 
                     
-                    if (meas.units() != rad) 
+                    if (meas.units_ != rad) 
                         throw std::runtime_error("Cannot take the sine of a measurement that is not in radians"); 
-                    else return measurement(std::sin(meas.value_), unitless); 
+                    
+                    return measurement(std::sin(meas.value_), unitless); 
                 
                 }
 
@@ -2573,15 +2813,16 @@ namespace physics {
                 /**
                  * @brief Take the cosine of a measurement
                  * 
-                 * @param meas: measurement 
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement cos(const measurement& meas) { 
                     
-                    if (meas.units() != rad) 
+                    if (meas.units_ != rad) 
                         throw std::runtime_error("Cannot take the cosine of a measurement that is not in radians"); 
-                    else return measurement(std::cos(meas.value_), unitless); 
+                    
+                    return measurement(std::cos(meas.value_), unitless); 
                 
                 }
 
@@ -2589,15 +2830,16 @@ namespace physics {
                 /**
                  * @brief Take the tangent of a measurement
                  * 
-                 * @param meas: measurement 
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement tan(const measurement& meas) { 
                     
-                    if (meas.units() != rad) 
+                    if (meas.units_ != rad) 
                         throw std::runtime_error("Cannot take the tangent of a measurement that is not in radians"); 
-                    else return measurement(std::tan(meas.value_), unitless);
+                    
+                    return measurement(std::tan(meas.value_), unitless);
 
                 }
 
@@ -2605,15 +2847,16 @@ namespace physics {
                 /**
                  * @brief Take the arcsine of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement asin(const measurement& meas) { 
                     
-                    if (meas.units() != unitless) 
+                    if (meas.units_ != unitless) 
                         throw std::runtime_error("Cannot take the arcsine of a measurement that is not unitless"); 
-                    else return measurement(std::asin(meas.value_), rad);
+                    
+                    return measurement(std::asin(meas.value_), rad);
 
                 }
 
@@ -2621,15 +2864,16 @@ namespace physics {
                 /**
                  * @brief Take the arccosine of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement acos(const measurement& meas) { 
                     
-                    if (meas.units() != unitless) 
+                    if (meas.units_ != unitless) 
                         throw std::runtime_error("Cannot take the arccosine of a measurement that is not unitless"); 
-                    else return measurement(std::acos(meas.value_), rad);
+                    
+                    return measurement(std::acos(meas.value_), rad);
 
                 }
 
@@ -2637,15 +2881,16 @@ namespace physics {
                 /**
                  * @brief Take the arctangent of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement atan(const measurement& meas) { 
                     
-                    if (meas.units() != unitless) 
+                    if (meas.units_ != unitless) 
                         throw std::runtime_error("Cannot take the arctangent of a measurement that is not unitless"); 
-                    else return measurement(std::atan(meas.value_), rad);
+                    
+                    return measurement(std::atan(meas.value_), rad);
 
                 }
 
@@ -2653,15 +2898,16 @@ namespace physics {
                 /**
                  * @brief Take the hyperbolic sine of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement sinh(const measurement& meas) { 
                     
-                    if (meas.units() != rad) 
+                    if (meas.units_ != rad) 
                         throw std::runtime_error("Cannot take the hyperbolic sine of a measurement that is not in radians"); 
-                    else return measurement(std::sinh(meas.value_), unitless);
+                    
+                    return measurement(std::sinh(meas.value_), unitless);
 
                 }
 
@@ -2669,15 +2915,16 @@ namespace physics {
                 /**
                  * @brief Take the hyperbolic cosine of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement cosh(const measurement& meas) { 
                     
-                    if (meas.units() != rad) 
+                    if (meas.units_ != rad) 
                         throw std::runtime_error("Cannot take the hyperbolic cosine of a measurement that is not in radians"); 
-                    else return measurement(std::cosh(meas.value_), unitless);
+                    
+                    return measurement(std::cosh(meas.value_), unitless);
                 
                 }
 
@@ -2685,15 +2932,16 @@ namespace physics {
                 /**
                  * @brief Take the hyperbolic tangent of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement tanh(const measurement& meas) { 
                     
-                    if (meas.units() != rad) 
+                    if (meas.units_ != rad) 
                         throw std::runtime_error("Cannot take the hyperbolic tangent of a measurement that is not in radians"); 
-                    else return measurement(std::tanh(meas.value_), unitless);
+                    
+                    return measurement(std::tanh(meas.value_), unitless);
 
                 }
 
@@ -2701,15 +2949,16 @@ namespace physics {
                 /**
                  * @brief Take the hyperbolic arcsine of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement asinh(const measurement& meas) { 
                     
-                    if (meas.units() != unitless) 
+                    if (meas.units_ != unitless) 
                         throw std::runtime_error("Cannot take the hyperbolic arcsine of a measurement that is not unitless"); 
-                    else return measurement(std::asinh(meas.value_), rad);
+                    
+                    return measurement(std::asinh(meas.value_), rad);
 
                 }
 
@@ -2717,15 +2966,16 @@ namespace physics {
                 /**
                  * @brief Take the hyperbolic arccosine of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement acosh(const measurement& meas) { 
                     
-                    if (meas.units() != unitless) 
+                    if (meas.units_ != unitless) 
                         throw std::runtime_error("Cannot take the hyperbolic arccosine of a measurement that is not unitless"); 
-                    else return measurement(std::acosh(meas.value_), rad);
+                    
+                    return measurement(std::acosh(meas.value_), rad);
                 
                 }
 
@@ -2733,30 +2983,45 @@ namespace physics {
                 /**
                  * @brief Take the hyperbolic arctangent of a measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr measurement
                  */
                 friend constexpr measurement atanh(const measurement& meas) { 
                     
-                    if (meas.units() != unitless) 
+                    if (meas.units_ != unitless) 
                         throw std::runtime_error("Cannot take the hyperbolic arctangent of a measurement that is not unitless"); 
-                    else return measurement(std::atanh(meas.value_), rad);
+                    
+                    return measurement(std::atanh(meas.value_), rad);
 
                 }
 
 
             // =============================================                                                                                         
-            // set and get methods
+            // get methods
             // =============================================  
+
+                /**
+                 * @brief Get the sign of the measurement 
+                 * 
+                 * @return constexpr int32_t
+                 */
+                constexpr int32_t sign() const noexcept { 
+                    
+                    if (value_ == 0.) 
+                        return 0; 
+                    else 
+                        return (value_ > 0) ? 1 : -1; 
+                    
+                }
+
 
                 /**
                  * @brief Get the value of the measurement
                  * 
-                 * @return constexpr const double
-                 * 
+                 * @return constexpr const scalar
                  */
-                constexpr double value() const noexcept { 
+                constexpr scalar value() const noexcept { 
                     
                     return value_; 
                 
@@ -2766,10 +3031,9 @@ namespace physics {
                 /**
                  * @brief Get the value of the measurement
                  * 
-                 * @return constexpr double& 
-                 * 
+                 * @return constexpr scalar& 
                  */
-                constexpr double& value() noexcept { 
+                constexpr scalar& value() noexcept { 
                     
                     return value_; 
                 
@@ -2781,10 +3045,9 @@ namespace physics {
                  * 
                  * @param desired_units 
                  * 
-                 * @return constexpr double 
-                 * 
+                 * @return constexpr scalar 
                  */
-                constexpr double value_as(const unit& desired_units) const { 
+                constexpr scalar value_as(const unit& desired_units) const { 
                     
                     return (units_ == desired_units) ? value_ : units_.convert(value_, desired_units); 
                 
@@ -2795,7 +3058,6 @@ namespace physics {
                  * @brief Get the units of the measurement
                  * 
                  * @return constexpr unit 
-                 * 
                  */
                 constexpr unit units() const noexcept { 
                     
@@ -2808,7 +3070,6 @@ namespace physics {
                  * @brief Get the units of the measurement
                  * 
                  * @return constexpr unit&
-                 * 
                  */
                 constexpr unit& units() noexcept { 
                     
@@ -2821,7 +3082,6 @@ namespace physics {
                  * @brief Get the measurement object
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement as_measurement() const noexcept {
 
@@ -2849,7 +3109,6 @@ namespace physics {
                  * @param desired_units: desired unit of measurement 
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement convert_to(const unit& desired_units) const { 
                     
@@ -2862,7 +3121,6 @@ namespace physics {
                  * @brief Print the measurement
                  * 
                  * @param newline: if set to true it prints a newline character at the end of the measurement
-                 * 
                  */
                 inline void print(const bool& newline = true) const noexcept { 
 
@@ -2871,26 +3129,22 @@ namespace physics {
 
                 }
 
-            
+
             private:
 
             // =============================================                                                                                         
-            // class members
+            // class members & friends
             // =============================================  
 
-                /// @brief The numerical value of the measurement
-                double value_;
+                scalar value_; ///< The numerical value of the measurement
 
-                /// @brief The units of the measurement
-                unit units_;
+                unit units_; ///< The units of the measurement
 
 
-                /// @brief Friend class to allow access to private members
-                friend class uncertain_measurement;
-                
+                friend class uncertain_measurement; ///< uncertain_measurement is a friend of measurement
+
 
         }; // class measurement
-        static_assert(sizeof(measurement) == 20, "measurement is not the correct size");
 
 
         /// @brief A class for representing a physical quantity with a numerical value, an uncertanty and an unit
@@ -2908,7 +3162,7 @@ namespace physics {
 
                     value_{0.0}, 
                     uncertainty_{0.0}, 
-                    units_{} {}
+                    units_() {}
 
 
                 /**
@@ -2917,18 +3171,17 @@ namespace physics {
                  * @param value: the numerical value of the measurement
                  * @param uncertainty: the uncertainty of the measurement
                  * @param units: the units of the measurement
-                 * 
                  */
-                explicit constexpr uncertain_measurement(const double& val, 
-                                                         const double& uncertainty_val, 
+                explicit constexpr uncertain_measurement(const scalar& val, 
+                                                         const scalar& uncertainty_val, 
                                                          const unit& unit) :
 
                     value_{val}, 
                     uncertainty_{uncertainty_val}, 
-                    units_{unit} {
+                    units_(unit) {
                         
-                        if (uncertainty_ < 0.0) throw std::invalid_argument("Uncertainty cannot be negative");
-                        if (uncertainty_ > std::fabs(value_)) throw std::invalid_argument("Uncertainty cannot be greater than the value");
+                        if (uncertainty_ < 0.0) 
+                            throw std::invalid_argument("Uncertainty cannot be negative");
 
                     }
 
@@ -2938,9 +3191,8 @@ namespace physics {
                  * 
                  * @param value: the numerical value of the measurement
                  * @param units: the units of the measurement
-                 * 
                  */
-                explicit constexpr uncertain_measurement(const double& val, 
+                explicit constexpr uncertain_measurement(const scalar& val, 
                                                          const unit& unit) noexcept :
 
                     value_{val}, 
@@ -2953,17 +3205,16 @@ namespace physics {
                  * 
                  * @param measurement: measurement (value and unit)
                  * @param uncertainty: uncertainty
-                 * 
                  */
                 explicit constexpr uncertain_measurement(const measurement& other, 
-                                                         const double& uncertainty_val) : 
+                                                         const scalar& uncertainty_val) : 
 
-                    value_{other.value_}, 
+                    value_{other.value()}, 
                     uncertainty_{uncertainty_val}, 
-                    units_{other.units_} {
+                    units_(other.units()) {
 
-                        if (uncertainty_ < 0.0) throw std::invalid_argument("Uncertainty cannot be negative");
-                        if (uncertainty_ > std::fabs(value_)) throw std::invalid_argument("Uncertainty cannot be greater than the value");
+                        if (uncertainty_ < 0.0) 
+                            throw std::invalid_argument("Uncertainty cannot be negative");
 
                     }
 
@@ -2979,15 +3230,14 @@ namespace physics {
                 explicit constexpr uncertain_measurement(const measurement& value, 
                                                          const measurement& uncertainty) : 
 
-                    value_{value.value_}, 
-                    uncertainty_{uncertainty.value_as(value.units_)}, 
-                    units_{value.units_} {
+                    value_{value.value()}, 
+                    uncertainty_{uncertainty.value_as(value.units())}, 
+                    units_(value.units()) {
 
                         if (uncertainty_ < 0.0) 
                             throw std::invalid_argument("Uncertainty cannot be negative");
-                        if (uncertainty_ > std::fabs(value_)) 
-                            throw std::invalid_argument("Uncertainty cannot be greater than the value");
-                        if (value.units_.base() != uncertainty.units_.base()) 
+                            
+                        if (value.units().base_ != uncertainty.units().base_) 
                             throw std::invalid_argument("The units of the two measurements must have the same base_unit");
 
                     }
@@ -2997,26 +3247,24 @@ namespace physics {
                  * @brief Copy construct a new uncertain measurement object
                  * 
                  * @param other: uncertain measurement to copy as a l-value const reference
-                 * 
                  */
                 constexpr uncertain_measurement(const uncertain_measurement& other) noexcept :
 
                     value_{other.value_},
                     uncertainty_{other.uncertainty_},
-                    units_{other.units_} {}
+                    units_(other.units_) {}
 
 
                 /**
                  * @brief Move construct a new uncertain measurement object
                  * 
                  * @param other: uncertain measurement to move from as a r-value reference
-                 * 
                  */
                 constexpr uncertain_measurement(uncertain_measurement&& other) noexcept :
 
                     value_{std::move(other.value_)},
                     uncertainty_{std::move(other.uncertainty_)},
-                    units_{std::move(other.units_)} {}
+                    units_(std::move(other.units_)) {}
 
 
                 /// @brief default destructor
@@ -3033,13 +3281,13 @@ namespace physics {
                  * @param other: the uncertain_measurement to copy
                  * 
                  * @return uncertai_measurement& 
-                 * 
                  */
                 constexpr uncertain_measurement& operator=(const uncertain_measurement& other) noexcept {
                    
                     value_ = other.value_;
                     uncertainty_ = other.uncertainty_; 
                     units_ = other.units_;
+
                     return *this;
 
                 }   
@@ -3051,13 +3299,13 @@ namespace physics {
                  * @param other: the uncertain_measurement to move from
                  * 
                  * @return uncertai_measurement& 
-                 * 
                  */
                 constexpr uncertain_measurement& operator=(uncertain_measurement&& other) noexcept {
                    
                     value_ = std::move(other.value_);
                     uncertainty_ = std::move(other.uncertainty_); 
                     units_ = std::move(other.units_);
+                    
                     return *this;
                     
                 }   
@@ -3069,13 +3317,13 @@ namespace physics {
                  * @param other: the uncertain_measurement to copy
                  * 
                  * @return uncertai_measurement& 
-                 * 
                  */
                 constexpr uncertain_measurement& operator=(const measurement& other) noexcept {
                    
-                    value_ = other.value_;
+                    value_ = other.value();
                     uncertainty_ = 0.0; 
-                    units_ = other.units_;
+                    units_ = other.units();
+
                     return *this;
 
                 }   
@@ -3087,13 +3335,13 @@ namespace physics {
                  * @param other: the uncertain_measurement to move from
                  * 
                  * @return uncertai_measurement& 
-                 * 
                  */
                 constexpr uncertain_measurement& operator=(measurement&& other) noexcept {
                    
-                    value_ = std::move(other.value_);
+                    value_ = std::move(other.value());
                     uncertainty_ = 0.0; 
-                    units_ = std::move(other.units_);
+                    units_ = std::move(other.units());
+
                     return *this;
                     
                 }   
@@ -3105,15 +3353,15 @@ namespace physics {
                  * @param other: uncertain_measurement to multiply with
                  *  
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator*(const uncertain_measurement& other) const noexcept {
 
-                    double tval1 = uncertainty_ / value_;
-                    double tval2 = other.uncertainty_ / other.value_;
-                    double ntol = std::sqrt(tval1 * tval1 + tval2 * tval2);
-                    double nval = value_ * other.value_;
-                    return uncertain_measurement(nval, nval * ntol, units_ * other.units_);
+                    scalar tval1 = uncertainty_ / value_;
+                    scalar tval2 = other.uncertainty_ / other.value_;
+                    scalar ntol = std::sqrt(std::pow(tval1, 2) + std::pow(tval2, 2));
+                    scalar nval = value_ * other.value_;
+
+                    return uncertain_measurement(nval, std::fabs(nval) * ntol, units_ * other.units_);
 
                 }
         
@@ -3124,13 +3372,13 @@ namespace physics {
                  * @param other: uncertain_measurement to multiply with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement simple_product(const uncertain_measurement& other) const noexcept {
                     
-                    double ntol = uncertainty_ / value_ + other.uncertainty_ / other.value_;
-                    double nval = value_ * other.value_;
-                    return uncertain_measurement(nval, nval * ntol, units_ * other.units_);
+                    scalar ntol = uncertainty_ / std::fabs(value_) + other.uncertainty_ / std::fabs(other.value_);
+                    scalar nval = value_ * other.value_;
+
+                    return uncertain_measurement(nval, std::fabs(nval) * ntol, units_ * other.units_);
                 
                 }
                 
@@ -3141,26 +3389,24 @@ namespace physics {
                  * @param other: measurement to multiply with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator*(const measurement& other) const noexcept {
                     
-                    return uncertain_measurement(value_ * other.value_, other.value_ * uncertainty_, units_ * other.units_);
+                    return uncertain_measurement(value_ * other.value(), std::fabs(other.value()) * uncertainty_, units_ * other.units());
                 
                 }
 
 
                 /**
-                 * @brief Compute a product with a double and calculate the new uncertainties using the simple uncertainty multiplication method
+                 * @brief Compute a product with a scalar and calculate the new uncertainties using the simple uncertainty multiplication method
                  * 
-                 * @param val: the double to multiply with
+                 * @param val: the scalar to multiply with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
-                constexpr uncertain_measurement operator*(const double& val) const noexcept { 
+                constexpr uncertain_measurement operator*(const scalar& val) const noexcept { 
                     
-                    return uncertain_measurement(value_ * val, uncertainty_ * val, units_); 
+                    return uncertain_measurement(val * value_, std::fabs(val) * uncertainty_, units_); 
                 
                 }
 
@@ -3171,16 +3417,18 @@ namespace physics {
                  * @param other: uncertain_measurement to divide by
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator/(const uncertain_measurement& other) const {
                     
-                    if (other.value_ == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
-                    double tval1 = uncertainty_ / value_;
-                    double tval2 = other.uncertainty_ / other.value_;
-                    double ntol = std::sqrt(tval1 * tval1 + tval2 * tval2);
-                    double nval = value_ / other.value_;
-                    return uncertain_measurement(nval, nval * ntol, units_ / other.units_);
+                    if (other.value_ == 0.0) 
+                        throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+
+                    scalar tval1 = uncertainty_ / value_;
+                    scalar tval2 = other.uncertainty_ / other.value_;
+                    scalar ntol = std::sqrt(std::pow(tval1, 2) + std::pow(tval2, 2));
+                    scalar nval = value_ / other.value_;
+
+                    return uncertain_measurement(nval, std::fabs(nval) * ntol, units_ / other.units_);
                 
                 }
 
@@ -3191,14 +3439,16 @@ namespace physics {
                  * @param other: uncertain_measurement to divide by
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement simple_divide(const uncertain_measurement& other) const {
                     
-                    if (other.value_ == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
-                    double ntol = uncertainty_ / value_ + other.uncertainty_ / other.value_;
-                    double nval = value_ / other.value_;
-                    return uncertain_measurement(nval, nval * ntol, units_ / other.units_);
+                    if (other.value_ == 0.0) 
+                        throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+
+                    scalar ntol = uncertainty_ / std::fabs(value_) + other.uncertainty_ / std::fabs(other.value_);
+                    scalar nval = value_ / other.value_;
+
+                    return uncertain_measurement(nval, std::fabs(nval) * ntol, units_ / other.units_);
                 
                 }
 
@@ -3209,28 +3459,30 @@ namespace physics {
                  * @param other: measurement to divide by
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator/(const measurement& other) const {
                     
-                    if (other.value_ == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
-                    return uncertain_measurement(value_ / other.value_, uncertainty_ / other.value_, units_ / other.units_);
+                    if (other.value() == 0.0) 
+                        throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+
+                    return uncertain_measurement(value_ / other.value(), uncertainty_ / std::fabs(other.value()), units_ / other.units());
                 
                 }
 
 
                 /**
-                 * @brief Divide this uncertain_measurement with a double
+                 * @brief Divide this uncertain_measurement with a scalar
                  * 
-                 * @param val: the double to divide with
+                 * @param val: the scalar to divide with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
-                constexpr uncertain_measurement operator/(const double& val) const {
+                constexpr uncertain_measurement operator/(const scalar& val) const {
 
-                    if (val == 0.0) throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
-                    return uncertain_measurement(value_ / val, uncertainty_ / val, units_);
+                    if (val == 0.0) 
+                        throw std::invalid_argument("Cannot divide uncertain_measurement by 0");
+
+                    return uncertain_measurement(value_ / val, uncertainty_ / std::fabs(val), units_);
                 
                 }
 
@@ -3241,13 +3493,15 @@ namespace physics {
                  * @param other: uncertain_measurement to sum with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator+(const uncertain_measurement& other) const {
                     
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot add uncertain_measurements with different unit bases");
-                    double cval = other.units_.convertion_factor(units_);
-                    double ntol = std::sqrt(uncertainty_ * uncertainty_ + cval * cval * other.uncertainty_ * other.uncertainty_);
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot add uncertain_measurements with different unit bases");
+
+                    scalar cval = other.units_.convertion_factor(units_);
+                    scalar ntol = std::sqrt(std::pow(uncertainty_, 2) + std::pow(cval * other.uncertainty_, 2));
+
                     return uncertain_measurement(value_ + cval * other.value_, ntol, units_);
                
                 }
@@ -3259,13 +3513,15 @@ namespace physics {
                  * @param other: uncertain_measurement to sum with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement simple_add(const uncertain_measurement& other) const {
                     
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot add uncertain_measurements with different unit bases");
-                    double cval = other.units_.convertion_factor(units_);
-                    double ntol = uncertainty_ + other.uncertainty_ * cval;
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot add uncertain_measurements with different unit bases");
+
+                    scalar cval = other.units_.convertion_factor(units_);
+                    scalar ntol = uncertainty_ + other.uncertainty_ * cval;
+
                     return uncertain_measurement(value_ + cval * other.value_, ntol, units_);
                 
                 }
@@ -3277,11 +3533,12 @@ namespace physics {
                  * @param other: measurement to sum with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator+(const measurement& other) const {
                     
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot add uncertain_measurement and measurement with different unit bases");
+                    if (units_.base_ != other.units().base_) 
+                        throw std::invalid_argument("Cannot add uncertain_measurement and measurement with different unit bases");
+
                     return uncertain_measurement(value_ + other.value_as(units_), uncertainty_, units_);
                 
                 }
@@ -3291,7 +3548,6 @@ namespace physics {
                  * @brief Return the opposite of this uncertain_measurement
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator-() const noexcept {
 
@@ -3306,13 +3562,15 @@ namespace physics {
                  * @param other: uncertain_measurement to subtract with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator-(const uncertain_measurement& other) const {
                     
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract uncertain_measurements with different unit bases");
-                    double cval = other.units_.convertion_factor(units_);
-                    double ntol = std::sqrt(uncertainty_ * uncertainty_ + cval * cval * other.uncertainty_ * other.uncertainty_);
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot subtract uncertain_measurements with different unit bases");
+
+                    scalar cval = other.units_.convertion_factor(units_);
+                    scalar ntol = std::sqrt(std::pow(uncertainty_, 2) + std::pow(cval * other.uncertainty_, 2));
+
                     return uncertain_measurement(value_ - cval * other.value_, ntol, units_);
                
                 }
@@ -3324,13 +3582,15 @@ namespace physics {
                  * @param other: uncertain_measurement to subtract with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement simple_subtract(const uncertain_measurement& other) const {
                     
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract uncertain_measurements with different unit bases");
+                    if (units_.base_ != other.units_.base_) 
+                        throw std::invalid_argument("Cannot subtract uncertain_measurements with different unit bases");
+
                     auto cval = other.units_.convertion_factor(units_);
-                    double ntol = uncertainty_ + other.uncertainty_ * cval;
+                    scalar ntol = uncertainty_ + other.uncertainty_ * cval;
+
                     return uncertain_measurement(value_ - cval * other.value_, ntol, units_);
                 
                 }
@@ -3342,11 +3602,12 @@ namespace physics {
                  * @param other: measurement to subtract with
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement operator-(const measurement& other) const {
 
-                    if (units_.base() != other.units_.base()) throw std::invalid_argument("Cannot subtract uncertain_measurement and measurement with different unit bases");
+                    if (units_.base_ != other.units().base_) 
+                        throw std::invalid_argument("Cannot subtract uncertain_measurement and measurement with different unit bases");
+
                     return uncertain_measurement(value_ - other.value_as(units_), uncertainty_, units_);
                 
                 }
@@ -3358,12 +3619,14 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator==(const measurement& other) const noexcept {
                     
-                    if (uncertainty_ == 0.0) return (value_ == other.value_as(units_)) ? true : math::tools::compare_round_equals(value_, other.value_as(units_)); 
-                    return (other.value_as(units_) >= (value_ - uncertainty_) && other.value_as(units_) <= (value_ + uncertainty_));
+                    if (uncertainty_ == 0.0) 
+                        return (value_ == other.value_as(units_)) ? true : math::tools::compare_round_equals(value_, other.value_as(units_)); 
+                    
+                    else 
+                        return (other.value_as(units_) >= (value_ - uncertainty_) && other.value_as(units_) <= (value_ + uncertainty_));
                
                 }
 
@@ -3374,7 +3637,6 @@ namespace physics {
                  * @param other: uncertain_measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator==(const uncertain_measurement& other) const noexcept { 
                     
@@ -3389,7 +3651,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator!=(const measurement& other) const noexcept { 
                     
@@ -3404,7 +3665,6 @@ namespace physics {
                  * @param other: uncertain_measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator!=(const uncertain_measurement& other) const noexcept { 
                     
@@ -3419,7 +3679,6 @@ namespace physics {
                  * @param other: uncertain_measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator>(const uncertain_measurement& other) const noexcept { 
                     
@@ -3434,7 +3693,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator>(const measurement& other) const noexcept { 
                     
@@ -3446,12 +3704,11 @@ namespace physics {
                 /** 
                  * @brief More than operator
                  * 
-                 * @param val: double to compare as l-value const reference
+                 * @param val: scalar to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator>(const double& val) const noexcept { 
+                constexpr bool operator>(const scalar& val) const noexcept { 
                     
                     return value_ > val; 
                     
@@ -3464,7 +3721,6 @@ namespace physics {
                  * @param other: uncertain_measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator<(const uncertain_measurement& other) const noexcept { 
                     
@@ -3479,7 +3735,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator<(const measurement& other) const noexcept { 
                     
@@ -3491,12 +3746,11 @@ namespace physics {
                 /**
                  * @brief Less than operator
                  * 
-                 * @param val: double to compare as l-value const reference
+                 * @param val: scalar to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator<(const double& val) const noexcept { 
+                constexpr bool operator<(const scalar& val) const noexcept { 
                     
                     return value_ < val; 
                     
@@ -3509,7 +3763,6 @@ namespace physics {
                  * @param other: uncertain_measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator>=(const uncertain_measurement& other) const noexcept {
                     
@@ -3524,7 +3777,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator>=(const measurement& other) const noexcept {
                     
@@ -3536,12 +3788,11 @@ namespace physics {
                 /**
                  * @brief More than or equal operator
                  * 
-                 * @param val: double to compare as l-value const reference
+                 * @param val: scalar to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator>=(const double& val) const noexcept { 
+                constexpr bool operator>=(const scalar& val) const noexcept { 
 
                     return value_ >= val; 
                     
@@ -3554,7 +3805,6 @@ namespace physics {
                  * @param other: uncertain_measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator<=(const uncertain_measurement& other) const noexcept {
                     
@@ -3569,7 +3819,6 @@ namespace physics {
                  * @param other: measurement to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator<=(const measurement& other) const noexcept {
                     
@@ -3581,12 +3830,11 @@ namespace physics {
                 /**
                  * @brief Less than or equal operator
                  * 
-                 * @param val: double to compare as l-value const reference
+                 * @param val: scalar to compare as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
-                constexpr bool operator<=(const double& val) const noexcept { 
+                constexpr bool operator<=(const scalar& val) const noexcept { 
 
                     return value_ <= val; 
                     
@@ -3596,11 +3844,10 @@ namespace physics {
                 /**
                  * @brief Perform a product between a measurement and an uncertain_measurement
                  * 
-                 * @param meas: measurement
+                 * @param meas: measurement as l-value const reference
                  * @param umeas: uncertain_measurement
                  *  
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 friend constexpr uncertain_measurement operator*(const measurement& meas, 
                                                                  const uncertain_measurement& umeas) noexcept { 
@@ -3611,15 +3858,14 @@ namespace physics {
 
 
                 /**
-                 * @brief Perform a product between a double and an uncertain_measurement
+                 * @brief Perform a product between a scalar and an uncertain_measurement
                  * 
-                 * @param value: double
+                 * @param value: scalar
                  * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
-                friend constexpr uncertain_measurement operator*(const double& value, 
+                friend constexpr uncertain_measurement operator*(const scalar& value, 
                                                                  const uncertain_measurement& umeas) noexcept { 
                                     
                     return umeas.operator*(value); 
@@ -3634,35 +3880,38 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  *  
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 friend constexpr uncertain_measurement operator/(const measurement& meas, 
                                                                  const uncertain_measurement& umeas) {
                                                             
-                    if (umeas.value() == 0.0) throw std::runtime_error("Cannot divide by zero");
-                    double ntol = umeas.uncertainty() / umeas.value();
-                    double nval = meas.value() / umeas.value();
-                    return uncertain_measurement(nval, nval * ntol, meas.units() / umeas.units());
+                    if (umeas.value_ == 0.0) 
+                        throw std::runtime_error("Cannot divide a measurement by a zero uncertain_measurement");
+
+                    scalar ntol = umeas.uncertainty_ / umeas.value_;
+                    scalar nval = meas.value() / umeas.value_;
+
+                    return uncertain_measurement(nval, std::fabs(nval * ntol), meas.units() / umeas.units_);
                 
                 }
 
 
                 /**
-                 * @brief Perform a division between a double and an uncertain_measurement
+                 * @brief Perform a division between a scalar and an uncertain_measurement
                  * 
-                 * @param value: double
+                 * @param value: scalar
                  * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
-                friend constexpr uncertain_measurement operator/(const double& v1, 
+                friend constexpr uncertain_measurement operator/(const scalar& v1, 
                                                                  const uncertain_measurement& umeas) {
 
-                    if (umeas.value() == 0.0) throw std::runtime_error("Cannot divide by zero");
-                    double ntol = umeas.uncertainty() / umeas.value();
-                    double nval = v1 / umeas.value();
-                    return uncertain_measurement(nval, nval * ntol, umeas.units().inv());
+                    if (umeas.value_ == 0.0) 
+                        throw std::runtime_error("Cannot divide a scalar by a zero uncertain_measurement");
+
+                    scalar ntol = umeas.uncertainty_ / umeas.value_;
+                    scalar nval = v1 / umeas.value_;
+                    return uncertain_measurement(nval, std::fabs(nval * ntol), umeas.units_.inv());
                 
                 }
 
@@ -3670,19 +3919,21 @@ namespace physics {
                 /**
                  * @brief Perform a sum between a measurement and an uncertain_measurement
                  * 
-                 * @param meas: measurement 
+                 * @param meas: measurement as l-value const reference
                  * @param umeas: uncertain_measurement
                  *  
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 friend constexpr uncertain_measurement operator+(const measurement& meas, 
                                                                  const uncertain_measurement& umeas) {
                     
-                    if (meas.units().base() != umeas.units().base()) throw std::invalid_argument("Cannot sum measurement and uncertain_measurement with different unit bases");
-                    double cval = umeas.units().convertion_factor(meas.units());
-                    double ntol = umeas.uncertainty() * cval;
-                    return uncertain_measurement(meas.value() + cval * umeas.value(), ntol, meas.units());
+                    if (meas.units().base_ != umeas.units_.base_) 
+                        throw std::invalid_argument("Cannot sum measurement and uncertain_measurement with different unit bases");
+
+                    scalar cval = umeas.units_.convertion_factor(meas.units());
+                    scalar ntol = umeas.uncertainty_ * cval;
+
+                    return uncertain_measurement(meas.value() + cval * umeas.value_, ntol, meas.units());
                 
                 }
 
@@ -3694,15 +3945,17 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  *  
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 friend constexpr uncertain_measurement operator-(const measurement& meas, 
                                                                  const uncertain_measurement& umeas) {
 
-                    if (meas.units().base() != umeas.units().base()) throw std::invalid_argument("Cannot subtract measurement and uncertain_measurement with different unit bases");
-                    double cval = umeas.units().convertion_factor(meas.units());
-                    double ntol = umeas.uncertainty() * cval;
-                    return uncertain_measurement(meas.value() - cval * umeas.value(), ntol, meas.units());
+                    if (meas.units().base_ != umeas.units_.base_) 
+                        throw std::invalid_argument("Cannot subtract measurement and uncertain_measurement with different unit bases");
+
+                    scalar cval = umeas.units_.convertion_factor(meas.units());
+                    scalar ntol = umeas.uncertainty_ * cval;
+
+                    return uncertain_measurement(meas.value() - cval * umeas.value_, ntol, meas.units());
                 
                 }
 
@@ -3714,7 +3967,6 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  * 
                  * @return bool
-                 * 
                  */
                 friend constexpr bool operator==(const measurement& meas, 
                                                  const uncertain_measurement& umeas) noexcept { 
@@ -3731,7 +3983,6 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  * 
                  * @return bool
-                 * 
                  */
                 friend constexpr bool operator!=(const measurement& meas, 
                                                  const uncertain_measurement& umeas) noexcept { 
@@ -3748,12 +3999,11 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  * 
                  * @return bool
-                 * 
                  */
                 friend constexpr bool operator>(const measurement& meas, 
                                                 const uncertain_measurement& umeas) noexcept { 
                     
-                    return meas.value() > umeas.value(); 
+                    return meas.value() > umeas.value_; 
                 
                 }
                 
@@ -3770,7 +4020,7 @@ namespace physics {
                 friend constexpr bool operator<(const measurement& meas, 
                                                 const uncertain_measurement& umeas) noexcept { 
                     
-                    return meas.value() < umeas.value(); 
+                    return meas.value() < umeas.value_; 
                 
                 }
                 
@@ -3782,7 +4032,6 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  * 
                  * @return bool
-                 * 
                  */
                 friend constexpr bool operator>=(const measurement& meas, 
                                                  const uncertain_measurement& umeas) noexcept { 
@@ -3822,7 +4071,7 @@ namespace physics {
                  */
                 friend std::ostream& operator<<(std::ostream& os, const uncertain_measurement& umeas) noexcept { 
 
-                    double abs_value = std::fabs(umeas.value_);
+                    scalar abs_value = std::fabs(umeas.value_);
                     
                     // first significative digit positions
                     int32_t n_val = ((umeas.uncertainty_ >= 1) ? 
@@ -3835,42 +4084,39 @@ namespace physics {
                                         std::ceil(std::log10(umeas.uncertainty_)) : 
                                         std::floor(std::log10(umeas.uncertainty_))); 
 
+                    int32_t prec = (n_unc > n_val) ? 0 : n_val - n_unc; 
+
+                    bool scientific_notation_needed = (abs_value >= 1e4) || 
+                                                      (abs_value <= 1e-4) || 
+                                                      (umeas.uncertainty_ >= 1e4) || 
+                                                      (umeas.uncertainty_ <= 1e-4);
+
                     // check if the uncertainty needs to be printed
-                    if (umeas.uncertainty_ == 0.0) os << umeas.as_measurement(); 
-                    else if (umeas.uncertainty_ >= 1) { 
-                        
-                        // check for scientific notation
-                        if (abs_value > 1.e4 || umeas.uncertainty_ > 1.e4) {
+                    if (umeas.uncertainty_ == 0.0) 
+                        os << umeas.as_measurement(); 
+                    
+                    // check if scientific notation is needed
+                    if (scientific_notation_needed) {
 
-                            os << std::scientific << std::setprecision(1 + n_val - n_unc) << umeas.value_; 
+                        os << std::scientific; 
+                        os << std::setprecision(prec) << umeas.value_ << " ± "; 
+                        os << std::setprecision(0) << umeas.uncertainty_ << " " << umeas.units_;
 
-                        } else {
-
-                            os << std::setprecision(2 + n_val - n_unc) << umeas.value_; 
-                            os << std::fixed;
-
-                        } 
-
-                        os << std::setprecision(0) << " ± " << umeas.uncertainty_;
-                        
                     } else {
-                        
-                        // check for scientific notation
-                        if (abs_value < 1.e-4 || umeas.uncertainty_ < 1.e-4 || abs_value > 1.e4) {
 
-                            os << std::scientific << std::setprecision(1 + std::fabs(n_val) + n_unc) << umeas.value_; 
+                        os << std::fixed; 
+
+                        if (umeas.uncertainty_ >= 1.) 
                             os << std::setprecision(0); 
+                        else 
+                            os << std::setprecision(std::fabs(n_unc)); 
                             
-                        } else os << std::fixed << std::setprecision(std::fabs(n_unc)) << umeas.value_; 
-
-                        os << " ± " << umeas.uncertainty_;
+                        os << umeas.value_ << " ± " << umeas.uncertainty_ << " " << umeas.units_;
 
                     }
 
-                    // printing the units 
-                    os << " " << umeas.units_; 
-
                     os << std::defaultfloat << std::setprecision(6);
+                    
                     return os; 
                     
                 }
@@ -3887,7 +4133,7 @@ namespace physics {
                  */
                 friend std::ofstream& operator<<(std::ofstream& file, const uncertain_measurement& umeas) noexcept { 
 
-                    double abs_value = std::fabs(umeas.value_);
+                    scalar abs_value = std::fabs(umeas.value_);
                     
                     // first significative digit positions
                     int32_t n_val = ((umeas.uncertainty_ >= 1) ? 
@@ -3900,44 +4146,40 @@ namespace physics {
                                         std::ceil(std::log10(umeas.uncertainty_)) : 
                                         std::floor(std::log10(umeas.uncertainty_))); 
 
+                    bool scientific_notation_needed = (abs_value >= 1e4) || 
+                                                      (abs_value <= 1e-4) || 
+                                                      (umeas.uncertainty_ >= 1e4) || 
+                                                      (umeas.uncertainty_ <= 1e-4);
+
                     // check if the uncertainty needs to be printed
-                    if (umeas.uncertainty_ == 0.0) file << umeas.as_measurement(); 
-                    else if (umeas.uncertainty_ >= 1) { 
-                        
-                        // check for scientific notation
-                        if (abs_value > 1.e4 || umeas.uncertainty_ > 1.e4) {
+                    if (umeas.uncertainty_ == 0.0) 
+                        file << umeas.as_measurement(); 
+                    
+                    // check if scientific notation is needed
+                    if (scientific_notation_needed) {
 
-                            file << std::scientific << std::setprecision(1 + n_val - n_unc) << umeas.value_; 
+                        file << std::scientific; 
+                        file << std::setprecision((n_unc > n_val) ? 0 : n_val - n_unc) << umeas.value_ << " ± "; 
+                        file << std::setprecision(0) << umeas.uncertainty_ << " " << umeas.units_;
 
-                        } else {
-
-                            file << std::setprecision(2 + n_val - n_unc) << umeas.value_; 
-                            file << std::fixed;
-
-                        } 
-
-                        file << std::setprecision(0) << " ± " << umeas.uncertainty_;
-                        
                     } else {
-                        
-                        // check for scientific notation
-                        if (abs_value < 1.e-4 || umeas.uncertainty_ < 1.e-4 || abs_value > 1.e4) {
 
-                            file << std::scientific << std::setprecision(1 + std::fabs(n_val) + n_unc) << umeas.value_; 
+                        file << std::fixed; 
+                            file << std::fixed;
+                        file << std::fixed; 
+
+                        if (umeas.uncertainty_ >= 1.) 
                             file << std::setprecision(0); 
+                        else 
+                            file << std::setprecision(std::fabs(n_unc)); 
                             
-                        } else file << std::fixed << std::setprecision(std::fabs(n_unc)) << umeas.value_; 
-
-                        file << " ± " << umeas.uncertainty_;
+                        file << umeas.value_ << " ± " << umeas.uncertainty_ << " " << umeas.units_;
 
                     }
 
-                    // printing the units 
-                    file << " " << umeas.units_; 
-
-                    file << std::defaultfloat;
-                    return file; 
+                    file << std::defaultfloat << std::setprecision(6);
                     
+                    return file; 
                     
                 }
 
@@ -3952,7 +4194,6 @@ namespace physics {
                  * @param umeas: uncertain_measurement
                  * 
                  * @return constexpr uncertain_measurement
-                 * 
                  */
                 friend constexpr uncertain_measurement abs(const uncertain_measurement& umeas) noexcept { 
                     
@@ -3968,11 +4209,12 @@ namespace physics {
                  * 
                  * @note Cannot invert an uncertain_measurement with a zero value
                  * @note The uncertainty is not inverted
-                 * 
                  */
                 constexpr uncertain_measurement inv() const { 
                     
-                    if (value_ == 0) throw std::runtime_error("Cannot invert an uncertain_measurement with a zero value");
+                    if (value_ == 0) 
+                        throw std::runtime_error("Cannot invert an uncertain_measurement with a zero value");
+
                     return uncertain_measurement(1 / value_, uncertainty_ / std::pow(value_, 2), units_.inv());
                     
                 } 
@@ -3984,11 +4226,10 @@ namespace physics {
                  * @param power 
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement pow(const int& power) const noexcept { 
                     
-                    return uncertain_measurement(std::pow(value_, power), power * std::pow(value_, power - 1) * uncertainty_, units_.pow(power)); 
+                    return uncertain_measurement(std::pow(value_, power), std::fabs(power * std::pow(value_, power - 1)) * uncertainty_, units_.pow(power)); 
                     
                 }
 
@@ -3997,11 +4238,10 @@ namespace physics {
                  * @brief Take the square of the uncertain_measurement
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
-                constexpr uncertain_measurement square() const noexcept { 
+                friend constexpr uncertain_measurement square(const uncertain_measurement& umeas) noexcept { 
                     
-                    return uncertain_measurement(std::pow(value_, 2), 2 * value_ * uncertainty_, units_.square()); 
+                    return uncertain_measurement(std::pow(umeas.value_, 2), 2. * std::fabs(umeas.value_) * umeas.uncertainty_, umeas.units_.square()); 
                     
                 }
 
@@ -4010,11 +4250,10 @@ namespace physics {
                  * @brief Take the cube of the uncertain_measurement
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
-                constexpr uncertain_measurement cube() const noexcept { 
+                friend constexpr uncertain_measurement cube(const uncertain_measurement& umeas) noexcept { 
                     
-                    return uncertain_measurement(std::pow(value_, 3), 3 * std::pow(value_, 2) * uncertainty_, units_.cube()); 
+                    return uncertain_measurement(std::pow(umeas.value_, 3), 3. * std::pow(umeas.value_, 2) * umeas.uncertainty_, umeas.units_.cube()); 
                     
                 }
 
@@ -4025,11 +4264,10 @@ namespace physics {
                  * @param power 
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement root(const int& power) const { 
                     
-                    return uncertain_measurement(std::pow(value_, 1.0 / power), std::pow(value_, 1.0 / power - 1) * uncertainty_ / power, units_.root(power)); 
+                    return uncertain_measurement(std::pow(value_, 1.0 / power), std::fabs(std::pow(value_, 1.0 / power - 1)) * uncertainty_ / power, units_.root(power)); 
                     
                 }
 
@@ -4040,9 +4278,9 @@ namespace physics {
                  * @return constexpr uncertain_measurement
                  *  
                  */
-                constexpr uncertain_measurement sqrt() const { 
+                friend constexpr uncertain_measurement sqrt(const uncertain_measurement& umeas) { 
                     
-                    return uncertain_measurement(std::sqrt(value_), uncertainty_ / (2 * std::sqrt(value_)), units_.sqrt()); 
+                    return uncertain_measurement(std::sqrt(umeas.value_), umeas.uncertainty_ / (2. * std::sqrt(umeas.value_)), umeas.units_.sqrt()); 
                     
                 }
 
@@ -4053,9 +4291,9 @@ namespace physics {
                  * @return constexpr uncertain_measurement
                  *  
                  */                
-                constexpr uncertain_measurement cbrt() const { 
+                friend constexpr uncertain_measurement cbrt(const uncertain_measurement& umeas) { 
                     
-                    return uncertain_measurement(std::cbrt(value_), std::pow(value_, - 2. / 3.) * uncertainty_ / 3, units_.cbrt());
+                    return uncertain_measurement(std::cbrt(umeas.value_), std::pow(umeas.value_, - 2. / 3.) * umeas.uncertainty_ / 3., umeas.units_.cbrt());
                     
                 }
 
@@ -4071,7 +4309,8 @@ namespace physics {
                     
                     if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the sine of an uncertain_measurement that is not in radians"); 
-                    else return uncertain_measurement(std::sin(umeas.value_), std::fabs(std::cos(umeas.value_)) * umeas.uncertainty_, unitless); 
+
+                    return uncertain_measurement(std::sin(umeas.value_), std::fabs(std::cos(umeas.value_)) * umeas.uncertainty_, unitless); 
                 
                 }
 
@@ -4087,7 +4326,8 @@ namespace physics {
                     
                     if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the cosine of an uncertain_measurement that is not in radians"); 
-                    else return uncertain_measurement(std::cos(umeas.value_), std::fabs(-std::sin(umeas.value_)) * umeas.uncertainty_, unitless); 
+
+                    return uncertain_measurement(std::cos(umeas.value_), std::fabs(-std::sin(umeas.value_)) * umeas.uncertainty_, unitless); 
                 
                 }
 
@@ -4102,8 +4342,10 @@ namespace physics {
                 friend constexpr uncertain_measurement tan(const uncertain_measurement& meas) { 
                     
                     if (meas.units() != rad) 
-                        throw std::runtime_error("Cannot take the tangent of an uncertain_measurement that is not in radians"); 
-                    else return uncertain_measurement(std::tan(meas.value_), 1 + std::pow(meas.uncertainty_, 2), unitless);
+                        throw std::runtime_error("Cannot take the tangent of an uncertain_measurement that is not in radians");
+
+                    
+                    return uncertain_measurement(std::tan(meas.value_), (1 + std::pow(meas.value_, 2)) * meas.uncertainty_, unitless);
 
                 }
 
@@ -4119,7 +4361,8 @@ namespace physics {
                     
                     if (umeas.units() != unitless) 
                         throw std::runtime_error("Cannot take the arcsine of an uncertain_measurement that is not unitless"); 
-                    else return uncertain_measurement(std::asin(umeas.value_), umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
+                    
+                    return uncertain_measurement(std::asin(umeas.value_), umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
 
                 }
 
@@ -4135,7 +4378,8 @@ namespace physics {
                     
                     if (umeas.units() != unitless) 
                         throw std::runtime_error("Cannot take the arccosine of an uncertain_measurement that is not unitless"); 
-                    else return uncertain_measurement(std::acos(umeas.value_), - umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
+                    
+                    return uncertain_measurement(std::acos(umeas.value_), umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
 
                 }
 
@@ -4151,7 +4395,8 @@ namespace physics {
                     
                     if (umeas.units() != unitless) 
                         throw std::runtime_error("Cannot take the arctangent of an uncertain_measurement that is not unitless"); 
-                    else return uncertain_measurement(std::atan(umeas.value_), umeas.uncertainty_ / (1 + std::pow(umeas.value_, 2)), rad);
+                    
+                    return uncertain_measurement(std::atan(umeas.value_), umeas.uncertainty_ / (1 + std::pow(umeas.value_, 2)), rad);
 
                 }
 
@@ -4167,7 +4412,8 @@ namespace physics {
                     
                     if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the hyperbolic sine of an uncertain_measurement that is not in radians"); 
-                    else return uncertain_measurement(std::sinh(umeas.value_), std::cosh(umeas.value_) * umeas.uncertainty_, unitless);
+                    
+                    return uncertain_measurement(std::sinh(umeas.value_), std::cosh(umeas.value_) * umeas.uncertainty_, unitless);
 
                 }
 
@@ -4183,7 +4429,8 @@ namespace physics {
                     
                     if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the hyperbolic cosine of an uncertain_measurement that is not in radians"); 
-                    else return uncertain_measurement(std::cosh(umeas.value_), std::sinh(umeas.value_) * umeas.uncertainty_, unitless);
+                    
+                    return uncertain_measurement(std::cosh(umeas.value_), std::fabs(std::sinh(umeas.value_)) * umeas.uncertainty_, unitless);
                 
                 }
 
@@ -4199,7 +4446,8 @@ namespace physics {
                     
                     if (umeas.units() != rad) 
                         throw std::runtime_error("Cannot take the hyperbolic tangent of an uncertain_measurement that is not in radians"); 
-                    else return uncertain_measurement(std::tanh(umeas.value_), (1 - std::pow(umeas.value_, 2)) * umeas.uncertainty_, unitless);
+                    
+                    return uncertain_measurement(std::tanh(umeas.value_), std::fabs((1 - std::pow(umeas.value_, 2))) * umeas.uncertainty_, unitless);
 
                 }
 
@@ -4215,7 +4463,8 @@ namespace physics {
                     
                     if (umeas.units() != unitless) 
                         throw std::runtime_error("Cannot take the hyperbolic arcsine of an uncertain_measurement that is not unitless"); 
-                    else return uncertain_measurement(std::asinh(umeas.value_), umeas.uncertainty_ / std::sqrt(std::pow(umeas.value_, 2) + 1), rad);
+                    
+                    return uncertain_measurement(std::asinh(umeas.value_), umeas.uncertainty_ / std::sqrt(std::pow(umeas.value_, 2) + 1), rad);
 
                 }
 
@@ -4231,7 +4480,8 @@ namespace physics {
                     
                     if (umeas.units() != unitless) 
                         throw std::runtime_error("Cannot take the hyperbolic arccosine of an uncertain_measurement that is not unitless"); 
-                    else return uncertain_measurement(std::acosh(umeas.value_), umeas.uncertainty_ / std::sqrt(std::pow(umeas.value_, 2) - 1), rad);
+                    
+                    return uncertain_measurement(std::acosh(umeas.value_), umeas.uncertainty_ / std::fabs(std::sqrt(std::pow(umeas.value_, 2) - 1)), rad);
                 
                 }
 
@@ -4247,7 +4497,8 @@ namespace physics {
                     
                     if (umeas.units() != unitless) 
                         throw std::runtime_error("Cannot take the hyperbolic arctangent of an uncertain_measurement that is not unitless"); 
-                    else return uncertain_measurement(std::atanh(umeas.value_), umeas.uncertainty_ / std::sqrt(1 - std::pow(umeas.value_, 2)), rad);
+                    
+                    return uncertain_measurement(std::atanh(umeas.value_), umeas.uncertainty_ / std::fabs(std::sqrt(1 - std::pow(umeas.value_, 2))), rad);
 
                 }
 
@@ -4259,10 +4510,9 @@ namespace physics {
                 /**
                  * @brief Get the value of the measurement
                  * 
-                 * @return constexpr const double
-                 * 
+                 * @return constexpr const scalar
                  */
-                constexpr double value() const noexcept { 
+                constexpr scalar value() const noexcept { 
                     
                     return value_; 
                 
@@ -4272,10 +4522,9 @@ namespace physics {
                 /**
                  * @brief Get the value of the measurement
                  * 
-                 * @return constexpr double& 
-                 * 
+                 * @return constexpr scalar& 
                  */
-                constexpr double& value() noexcept { 
+                constexpr scalar& value() noexcept { 
                     
                     return value_; 
                 
@@ -4286,10 +4535,9 @@ namespace physics {
                  * @brief Get the value of the measurement expressed in another units of the measurement
                  * 
                  * @param desired_units 
-                 * @return constexpr double 
-                 * 
+                 * @return constexpr scalar 
                  */
-                constexpr double value_as(const unit& desired_units) const { 
+                constexpr scalar value_as(const unit& desired_units) const { 
                     
                     return (units_ == desired_units) ? value_ : units_.convert(value_, desired_units); 
                 
@@ -4300,7 +4548,6 @@ namespace physics {
                  * @brief Cast to a measurement
                  * 
                  * @return measurement 
-                 * 
                  */
                 constexpr measurement as_measurement() const noexcept { 
                     
@@ -4312,10 +4559,9 @@ namespace physics {
                 /**
                  * @brief Get the uncertainty of the measurement
                  * 
-                 * @return constexpr const double
-                 * 
+                 * @return constexpr const scalar
                  */
-                constexpr double uncertainty() const noexcept { 
+                constexpr scalar uncertainty() const noexcept { 
                     
                     return uncertainty_; 
                 
@@ -4325,10 +4571,9 @@ namespace physics {
                 /**
                  * @brief Get the uncertainty of the measurement
                  * 
-                 * @return constexpr double& 
-                 * 
+                 * @return constexpr scalar& 
                  */
-                constexpr double& uncertainty() noexcept { 
+                constexpr scalar& uncertainty() noexcept { 
                     
                     return uncertainty_; 
                 
@@ -4339,10 +4584,9 @@ namespace physics {
                  * @brief Get the uncertainty of the measurement expressed in another units of the measurement
                  * 
                  * @param desired_units 
-                 * @return constexpr double 
-                 * 
+                 * @return constexpr scalar 
                  */
-                constexpr double uncertainty_as(const unit& desired_units) const { 
+                constexpr scalar uncertainty_as(const unit& desired_units) const { 
                     
                     return (units_ == desired_units) ? uncertainty_ : units_.convert(uncertainty_, desired_units); 
                 
@@ -4352,9 +4596,9 @@ namespace physics {
                 /**
                  * @brief Get the relative uncertainty of the measurement
                  * 
-                 * @return constexpr double
+                 * @return constexpr scalar
                  */
-                constexpr double relative_uncertainty() const noexcept { 
+                constexpr scalar relative_uncertainty() const noexcept { 
                     
                     return uncertainty_ / value_;
 
@@ -4368,7 +4612,7 @@ namespace physics {
                  */
                 constexpr measurement weight() const {
                         
-                    return this->uncertainty_as_measurement().inv().square();
+                    return square(this->uncertainty_as_measurement().inv());
     
                 }
 
@@ -4377,7 +4621,6 @@ namespace physics {
                  * @brief Get the uncertainty as a separate measurement
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement uncertainty_as_measurement() const noexcept { 
                     
@@ -4390,7 +4633,6 @@ namespace physics {
                  * @brief Get the units of the measurement
                  * 
                  * @return constexpr unit 
-                 * 
                  */
                 constexpr unit units() const noexcept { 
                     
@@ -4403,7 +4645,6 @@ namespace physics {
                  * @brief Get the units of the measurement
                  * 
                  * @return constexpr unit&
-                 * 
                  */
                 constexpr unit& units() noexcept { 
                     
@@ -4416,7 +4657,6 @@ namespace physics {
                  * @brief Get the uncertain_measurement object
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement as_uncertain_measurement() const noexcept {
 
@@ -4436,7 +4676,21 @@ namespace physics {
                     return *this; 
 
                 }
-                
+
+
+                /**
+                 * @brief Add uncertainty to the uncertain_measurement
+                 * 
+                 * @param uncertainty: scalar
+                 * 
+                 * @return void
+                 */
+                constexpr void add_uncertainty(const scalar new_uncertainty) noexcept { 
+                    
+                    uncertainty_ = std::sqrt(std::pow(uncertainty_, 2) + std::pow(new_uncertainty, 2));
+
+                }
+
 
                 /**
                  * @brief Convert the uncertain_measurement to another units
@@ -4444,11 +4698,11 @@ namespace physics {
                  * @param desired_units: desired unit of measurement 
                  * 
                  * @return constexpr uncertain_measurement 
-                 * 
                  */
                 constexpr uncertain_measurement convert_to(const unit& newUnits) const noexcept {
 
                     auto cval = units_.convertion_factor(newUnits);
+
                     return uncertain_measurement(cval * value_, uncertainty_ * cval, newUnits);
 
                 }
@@ -4460,12 +4714,12 @@ namespace physics {
                  * @param newLine: bool
                  * 
                  * @return void
-                 * 
                  */
                 void print(const bool& newline = true) const noexcept { 
 
                     std::cout << *this; 
-                    if (newline) std::cout << "\n";
+                    if (newline) 
+                        std::cout << "\n";
 
                 }
 
@@ -4476,34 +4730,30 @@ namespace physics {
             // class members
             // =============================================  
 
-                /// @brief the numerical value of the measurement
-                double value_; 
+                scalar value_; ///< the numerical value of the measurement
                 
-                /// @brief the uncertainty of the measurement
-                double uncertainty_;
+                scalar uncertainty_; ///< the uncertainty of the measurement
 
-                /// @brief the units of the measurement
-                unit units_;
+                unit units_; ///< the units of the measurement
 
 
         }; // class uncertain_measurement
-        static_assert(sizeof(uncertain_measurement) == 28, "uncertain_measurement is not the correct size");
 
 
-        // =============================================
-        // some more operators
-        // =============================================
+    // =============================================
+    // some more operators
+    // =============================================
 
         /**
-         * @brief Create a measurement by multiplying a double with an unit
+         * @brief Create a measurement by multiplying a scalar with an unit
          * 
-         * @param val: double
+         * @param val: scalar
          * @param units: unit
          * 
          * @return constexpr measurement 
          * 
          */
-        constexpr measurement operator*(const double& val, 
+        constexpr measurement operator*(const scalar& val, 
                                         const unit& units) noexcept { 
                                             
             return measurement(val, units); 
@@ -4512,15 +4762,15 @@ namespace physics {
 
 
         /**
-         * @brief Create a measurement by dividing a double by an unit
+         * @brief Create a measurement by dividing a scalar by an unit
          * 
-         * @param val: double
+         * @param val: scalar
          * @param units: unit
          * 
          * @return constexpr measurement 
          * 
          */
-        constexpr measurement operator/(const double& val, 
+        constexpr measurement operator/(const scalar& val, 
                                         const unit& units) noexcept { 
                                             
             return measurement(val, units.inv()); 
@@ -4537,9 +4787,11 @@ namespace physics {
          * 
          * @return std::vector<measurement> 
          */
-        std::vector<measurement> read_measurements(const std::string& file_path_name, const unit& units, const uint32_t& size = 0) {
+        std::vector<measurement> read_measurements(const std::string& file_path_name, 
+                                                   const unit& units, 
+                                                   const uint32_t& size = 0) {
 
-            double value{}; 
+            scalar value{}; 
             std::vector<measurement> data;
             if (size > 0) data.reserve(size);
             std::ifstream file(file_path_name);
@@ -4570,9 +4822,11 @@ namespace physics {
          * 
          * @return std::vector<uncertain_measurements> 
          */
-        std::vector<uncertain_measurement> read_uncertain_measurements(const std::string& file_path_name, const unit& units, const uint32_t& size = 0) {
+        std::vector<uncertain_measurement> read_uncertain_measurements(const std::string& file_path_name, 
+                                                                       const unit& units, 
+                                                                       const uint32_t& size = 0) {
 
-            double value{}, uncertainty{};
+            scalar value{}, uncertainty{};
             std::vector<uncertain_measurement> data;
             if (size > 0) data.reserve(size);
             std::ifstream file(file_path_name);
@@ -4599,22 +4853,18 @@ namespace physics {
 
     /// @brief Namespace contains some usefull class and containers for representing physical quantities
     namespace tools {
-  
 
-        using namespace physics::measurements; 
+
+        using namespace measurements;
 
 
         /**
          * @brief Class expressing a generic vector of measurements in a n-dimentional system
          * 
          * @tparam DIM: the number of dimensions
-         * 
          */
         template <size_t DIM> 
         class vector {
-
-
-            using scalar = double; 
 
 
             public: 
@@ -4623,76 +4873,59 @@ namespace physics {
             // constructors and destructor
             // =============================================
 
+
                 /**
-                 * @brief Construct a new vector object
+                 * @brief Construct a new vector specifying the unit_base of the vector
                  * 
-                 * @param unit: unit of measurement (default unit is unitless)
-                 * 
+                 * @param unit: unit_base (default = unit_base())
                  */
                 explicit constexpr vector(const unit_base& base = base::default_type) noexcept {
 
-                    data_.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) data_.emplace_back(0.0 * unit(base));
+                    data_.fill(measurement(0, unit(base)));
 
                 }
 
 
                 /**
-                 * @brief Construct a new vector object from an std::vector of measurements
+                 * @brief Construct a new vector from a std::array of measurements
                  * 
-                 * @param data: std::vector<measurement> as l-value const reference
-                 * 
+                 * @tparam DIM: the number of dimensions
+                 * @param data: std::array<measurement, DIM> as l-value const reference
                  */
-                constexpr vector(const std::vector<measurement>& data) {
-
-                    if (data.size() != DIM) throw std::invalid_argument("Cannot construct a vector with an std::vector of measurements with different size");
-                    data_.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) data_.emplace_back(data[i]); 
-
-                }
+                constexpr vector(const std::array<measurement, DIM>& data) noexcept : 
+                    
+                    data_(data) {}
 
 
                 /**
-                 * @brief Construct a new vector object from an std::vector of measurements
+                 * @brief Construct a new vector from an std::array of measurements
                  * 
-                 * @param data: std::vector<measurement> as r-value reference
-                 * 
+                 * @tparam DIM: the number of dimensions
+                 * @param data: std::array<measurement, DIM> as r-value reference
                  */
-                constexpr vector(std::vector<measurement>&& data) {
-
-                    if (data.size() != DIM) throw std::invalid_argument("Cannot construct a vector with an std::vector of measurements with different size");
-                    data_.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) data_.emplace_back(std::move(data[i]));
-
-                }
+                constexpr vector(std::array<measurement, DIM>&& data) noexcept : 
+                    
+                    data_(std::move(data)) {}
 
 
                 /**
-                 * @brief Copy construct a new vector object from a vector
+                 * @brief Copy construct a new vector from a vector object 
                  * 
                  * @param other: vector as l-value const reference
-                 * 
                  */
-                constexpr vector(const vector& other) noexcept {
-                
-                    data_.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) data_.emplace_back(other.data_[i]); 
-
-                }
+                constexpr vector(const vector& other) noexcept : 
+                    
+                    data_(other.data_) {}
 
 
                 /**
-                 * @brief Move construct a new vector object from a vector
+                 * @brief Move construct a new vector from a vector object
                  * 
                  * @param other: vector as r-value reference
-                 * 
                  */
-                constexpr vector(vector&& other) noexcept {
-
-                    data_.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) data_.emplace_back(std::move(other.data_[i])); 
-
-                }
+                constexpr vector(vector&& other) noexcept : 
+                    
+                    data_(std::move(other.data_)) {}
 
 
                 /// @brief Default destructor
@@ -4708,30 +4941,12 @@ namespace physics {
                  * 
                  * @param other: vector as l-value const reference
                  * 
-                 * @return constexpr vector 
-                 * 
+                 * @return constexpr vector&
                  */
                 constexpr vector& operator=(const vector& other) noexcept {
 
-                    data_.clear(); 
-                    for (size_t i{}; i < DIM; ++i) data_[i] = other.data_[i]; 
-                    return *this; 
+                    data_ = other.data_; 
 
-                }
-
-
-                /**
-                 * @brief Move assignment operator
-                 * 
-                 * @param other: vector as r-value reference
-                 * 
-                 * @return constexpr vector& 
-                 * 
-                 */
-                constexpr vector& operator=(vector&& other) noexcept {
-                    
-                    data_.clear();
-                    for (size_t i{}; i < DIM; ++i) data_[i] = std::move(other.data_[i]); 
                     return *this; 
 
                 }
@@ -4739,35 +4954,18 @@ namespace physics {
 
                 /**
                  * @brief Add a vector to the current vector
+                 * 
+                 * @note: the two vectors must have the same unit of measurement
                  * 
                  * @param other: vector to add as l-value const reference
                  * 
                  * @return constexpr vector& 
-                 * 
-                 * @note: the two vectors must have the same unit of measurement and the same size
-                 * 
                  */
-                constexpr vector& operator+=(const vector& other) noexcept {
+                constexpr vector& operator+=(const vector& other) {
 
-                    for (size_t i{}; i < DIM; ++i) data_[i] += other.data_[i];
-                    return *this; 
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] += other.data_[i];
 
-                }
-
-
-                /**
-                 * @brief Add a vector to the current vector
-                 * 
-                 * @param other: vector to add as r-value reference
-                 * 
-                 * @return constexpr vector& 
-                 * 
-                 * @note: the two vectors must have the same unit of measurement and the same size
-                 * 
-                 */
-                constexpr vector& operator+=(vector&& other) noexcept {
-
-                    for (size_t i{}; i < DIM; ++i) data_[i] += std::move(other.data_[i]);
                     return *this; 
 
                 }
@@ -4780,12 +4978,47 @@ namespace physics {
                  * 
                  * @return constexpr vector& 
                  * 
-                 * @note: the two vectors must have the same unit of measurement and the same size
-                 * 
+                 * @note: the two vectors must have the same unit of measurement
                  */
-                constexpr vector& operator-=(const vector& other) noexcept {
+                constexpr vector& operator-=(const vector& other) {
 
-                    for (size_t i{}; i < DIM; ++i) data_[i] -= other.data_[i];
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] -= other.data_[i];
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Move assignment operator
+                 * 
+                 * @param other: vector as r-value reference
+                 * 
+                 * @return constexpr vector& 
+                 */
+                constexpr vector& operator=(vector&& other) noexcept {
+                    
+                    data_ = std::move(other.data_); 
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Add a vector to the current vector
+                 * @note: the two vectors must have the same unit of measurement
+                 * 
+                 * @param other: vector to add as r-value reference
+                 * 
+                 * @return constexpr vector& 
+                 */
+                constexpr vector& operator+=(vector&& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] += std::move(other.data_[i]);
+
                     return *this; 
 
                 }
@@ -4798,12 +5031,13 @@ namespace physics {
                  * 
                  * @return constexpr vector& 
                  * 
-                 * @note: the two vectors must have the same unit of measurement and the same size
-                 * 
+                 * @note: the two vectors must have the same unit of measurement
                  */
-                constexpr vector& operator-=(vector&& other) noexcept {
+                constexpr vector& operator-=(vector&& other) {
 
-                    for (size_t i{}; i < DIM; ++i) data_[i] -= std::move(other.data_[i]);
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] -= std::move(other.data_[i]);
+
                     return *this; 
 
                 }
@@ -4815,27 +5049,12 @@ namespace physics {
                  * @param meas: measurement to multiply with as l-value const reference
                  * 
                  * @return constexpr vector& 
-                 * 
                  */
                 constexpr vector& operator*=(const measurement& meas) noexcept {
 
-                    for (size_t i{}; i < DIM; ++i) data_[i] *= meas;
-                    return *this; 
+                    for (size_t i{}; i < DIM; ++i)  
+                        data_[i] *= meas;
 
-                }
-
-
-                /**
-                 * @brief Multiply the current vector by a measurement
-                 * 
-                 * @param meas: measurement to multiply with as r-value reference
-                 * 
-                 * @return constexpr vector&
-                 * 
-                 */
-                constexpr vector& operator*=(measurement&& meas) noexcept {
-
-                    for (size_t i{}; i < DIM; ++i) data_[i] *= std::move(meas);
                     return *this; 
 
                 }
@@ -4847,15 +5066,33 @@ namespace physics {
                  * @param meas: measurement to divide by as l-value const reference
                  *  
                  * @return constexpr vector& 
-                 * 
                  */
                 constexpr vector& operator/=(const measurement& meas) {
                     
-                    if (meas.value() == 0.0) throw std::runtime_error("Cannot divide by zero");
-                    else {
-                        for (size_t i{}; i < DIM; ++i) data_[i] /= meas;
-                        return *this; 
-                    }
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a vector by a zero measurement");
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] /= meas;
+                    
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Multiply the current vector by a measurement
+                 * 
+                 * @param meas: measurement to multiply with as r-value reference
+                 * 
+                 * @return constexpr vector&
+                 */
+                constexpr vector& operator*=(measurement&& meas) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] *= std::move(meas);
+
+                    return *this; 
 
                 }
 
@@ -4866,14 +5103,15 @@ namespace physics {
                  * @param meas: measurement to divide by as r-value reference
                  * 
                  * @return constexpr vector&
-                 * 
                  */
-                constexpr vector& operator/=(measurement&& meas) noexcept {
+                constexpr vector& operator/=(measurement&& meas) {
 
-                    for (size_t i{}; i < DIM; ++i) {
-                        if (meas.value() == 0.0) throw std::runtime_error("Cannot divide by zero");
-                        else data_[i] /= meas;
-                    }
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a vector by a zero measurement");
+                    
+                    for (size_t i{}; i < DIM; ++i)
+                        data_[i] /= meas;
+
                     return *this; 
 
                 }
@@ -4882,14 +5120,15 @@ namespace physics {
                 /**
                  * @brief Multiply the current vector by a scalar
                  * 
-                 * @param scalar: double as l-value const reference
+                 * @param scalar: scalar as l-value const reference
                  * 
                  * @return constexpr vector& 
-                 * 
                  */
                 constexpr vector& operator*=(const scalar& scalar) noexcept {
 
-                    for (size_t i{}; i < DIM; ++i) data_[i] *= scalar;
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] *= scalar;
+
                     return *this; 
 
                 }
@@ -4898,19 +5137,36 @@ namespace physics {
                 /**
                  * @brief Divide the current vector by a scalar
                  * 
-                 * @param scalar: double as l-value const reference
+                 * @param scalar: scalar as l-value const reference
                  *  
                  * @return constexpr vector& 
-                 * 
                  */
                 constexpr vector& operator/=(const scalar& scalar) {
 
-                    if (scalar == 0.0) throw std::runtime_error("Cannot divide by zero");
-                    else {
-                        for (size_t i{}; i < DIM; ++i) data_[i] /= scalar;
-                        return *this; 
-                    }
+                    if (scalar == 0.0) 
+                        throw std::runtime_error("Cannot divide a vector by zero");
+
+                    for (size_t i{}; i < DIM; ++i)
+                        data_[i] /= scalar;
                     
+                    return *this; 
+                    
+                }
+
+
+                /**
+                 * @brief Return the opposite of the current vector
+                 * 
+                 * @return constexpr vector 
+                 */
+                constexpr vector operator-() const noexcept {
+
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = -data_[i]; 
+                    
+                    return result;
+
                 }
 
 
@@ -4922,13 +5178,13 @@ namespace physics {
                  * @return constexpr vector 
                  * 
                  * @note: the two vectors must have the same unit of measurement and the same size
-                 * 
                  */
-                constexpr vector operator+(const vector& other) const noexcept {
+                constexpr vector operator+(const vector& other) const {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] + other.data_[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] + other.data_[i]; 
+                    
                     return result;
 
                 }
@@ -4942,29 +5198,13 @@ namespace physics {
                  * @return constexpr vector 
                  * 
                  * @note: the two vectors must have the same unit of measurement and the same size
-                 * 
                  */
-                constexpr vector operator-(const vector& other) const noexcept {
+                constexpr vector operator-(const vector& other) const {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] - other.data_[i]); 
-                    return result;
-
-                }
-
-
-                /**
-                 * @brief Return the opposite of the current vector
-                 * 
-                 * @return constexpr vector 
-                 * 
-                 */
-                constexpr vector operator-() const noexcept {
-
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(-data_[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] - other.data_[i]; 
+                    
                     return result;
 
                 }
@@ -4976,13 +5216,13 @@ namespace physics {
                  * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 constexpr vector operator*(const measurement& meas) const noexcept {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] * meas); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] * meas; 
+                    
                     return result;
 
                 }
@@ -4994,13 +5234,16 @@ namespace physics {
                  * @param meas: measurement as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
-                constexpr vector operator/(const measurement& meas) const noexcept {
+                constexpr vector operator/(const measurement& meas) const {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] / meas); 
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a vector by a zero measurement");
+
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] / meas; 
+                    
                     return result;
 
                 }
@@ -5013,13 +5256,13 @@ namespace physics {
                  * @param vec: vector as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 friend constexpr vector operator*(const measurement& meas, const vector& vec) noexcept {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(meas * vec.data_[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = meas * vec.data_[i]; 
+                    
                     return result;
 
                 }
@@ -5032,13 +5275,13 @@ namespace physics {
                  * @param vec: vector as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
-                friend constexpr vector operator/(const measurement& meas, const vector& other) noexcept {
+                friend constexpr vector operator/(const measurement& meas, const vector& other) {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(meas / other.data_[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = meas / other.data_[i];
+                    
                     return result;
 
                 }
@@ -5054,9 +5297,10 @@ namespace physics {
                  */
                 constexpr vector operator*(const scalar& scalar) const noexcept {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] * scalar); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] * scalar; 
+                    
                     return result;
 
                 }
@@ -5070,11 +5314,15 @@ namespace physics {
                  * @return constexpr vector
                  *  
                  */
-                constexpr vector operator/(const scalar& scalar) const noexcept {
+                constexpr vector operator/(const scalar& scalar) const {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] / scalar); 
+                    if (scalar == 0.0) 
+                        throw std::runtime_error("Cannot divide a vector by zero");
+
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] / scalar; 
+                    
                     return result;
 
                 }
@@ -5087,13 +5335,13 @@ namespace physics {
                  * @param vec: vector as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 friend constexpr vector operator*(const scalar& scalar, const vector& vec) noexcept {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(scalar * vec.data_[i] ); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar * vec.data_[i]; 
+                    
                     return result;
 
                 }
@@ -5106,57 +5354,89 @@ namespace physics {
                  * @param vec: vector as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */                
-                friend constexpr vector operator/(const scalar& scalar, const vector& vec) noexcept {
+                friend constexpr vector operator/(const scalar& scalar, const vector& vec) {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(scalar / vec.data_[i] ); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar / vec.data_[i]; 
+                    
                     return result;
 
                 }
 
 
-                constexpr vector operator*(const std::vector<scalar>& scalar_vec) const noexcept {
+                /**
+                 * @brief Multiply the current vector with a std::array<scalar>
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * 
+                 * @return constexpr vector 
+                 */
+                constexpr vector operator*(const std::array<scalar, DIM>& scalar_arr) const noexcept {
 
-                    assert(scalar_vec.size() == DIM);
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] * scalar_vec[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] * scalar_arr[i]; 
+                    
                     return result;
 
                 }
 
 
-                constexpr vector operator/(const std::vector<scalar>& scalar_vec) const noexcept {
+                /**
+                 * @brief Divide the current vector by a std::array<scalar>
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * 
+                 * @return constexpr vector 
+                 */
+                constexpr vector operator/(const std::array<scalar, DIM>& scalar_arr) const {
 
-                    assert(scalar_vec.size() == DIM);
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i] / scalar_vec[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        if (scalar_arr[i] != 0)
+                            result[i] = data_[i] / scalar_arr[i];
+                        else throw std::runtime_error("Cannot divide a vector by a vector with a zero component");
+                    
                     return result;
 
                 }
 
 
-                friend constexpr vector operator*(const std::vector<scalar>& scalar_vec, const vector& other) noexcept {
+                /**
+                 * @brief Multiply the a std::array<scalar> and a vector
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * @param vec: vector as l-value const reference
+                 * 
+                 * @return constexpr vector
+                 */
+                friend constexpr vector operator*(const std::array<scalar, DIM>& scalar_vec, const vector& other) noexcept {
 
-                    assert(scalar_vec.size() == DIM);
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(scalar_vec[i] * other.data_[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar_vec[i] * other.data_[i]; 
+                    
                     return result;
 
                 }
 
 
-                friend constexpr vector operator/(const std::vector<scalar>& scalar_vec, const vector& other) noexcept {
+                /**
+                 * @brief Divide the a std::array<scalar> and a vector
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * @param vec: vector as l-value const reference
+                 * 
+                 * @return constexpr vector 
+                 */
+                friend constexpr vector operator/(const std::array<scalar, DIM>& scalar_vec, const vector& other) noexcept {
 
-                    assert(scalar_vec.size() == DIM);
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(scalar_vec[i] / other.data_[i]); 
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar_vec[i] / other.data_[i]; 
+                    
                     return result;
 
                 }
@@ -5168,11 +5448,13 @@ namespace physics {
                  * @param other: vector as l-value const reference
                  * 
                  * @return bool
-                 * 
                  */
                 constexpr bool operator==(const vector& other) const noexcept {
 
-                    for (size_t i{}; i < DIM; ++i) if (data_[i] != other.data_[i]) return false;
+                    for (size_t i{}; i < DIM; ++i)
+                        if (data_[i] != other.data_[i]) 
+                            return false;
+                    
                     return true;
 
                 }
@@ -5188,7 +5470,10 @@ namespace physics {
                  */
                 constexpr bool operator!=(const vector& other) const noexcept {
 
-                    for (size_t i{}; i < DIM; ++i) if (data_[i] != other.data_[i]) return true;
+                    for (size_t i{}; i < DIM; ++i) 
+                        if (data_[i] != other.data_[i]) 
+                            return true;
+
                     return false;
 
                 }
@@ -5205,7 +5490,9 @@ namespace physics {
                  */
                 constexpr const measurement& operator[](const size_t& index) const { 
                     
-                    if (index >= DIM) throw std::out_of_range("Cannot access a vector with an index out of range");
+                    if (index >= DIM) 
+                        throw std::out_of_range("Cannot access a vector with an index out of range");
+
                     return data_[index]; 
                     
                 }
@@ -5219,11 +5506,12 @@ namespace physics {
                  * @return constexpr measurement& 
                  * 
                  * @note: index must be in the range [0, DIM)
-                 * 
                  */
                 constexpr measurement& operator[](const size_t& index) { 
                     
-                    if (index >= DIM) throw std::out_of_range("Cannot access a vector with an index out of range");
+                    if (index >= DIM) 
+                        throw std::out_of_range("Cannot access a vector with an index out of range");
+
                     return data_[index]; 
                     
                 }
@@ -5236,12 +5524,13 @@ namespace physics {
                  * @param vec: vector as l-value const reference
                  * 
                  * @return std::ostream&
-                 * 
                  */
                 friend std::ostream& operator<<(std::ostream& os, const vector& vec) noexcept {
 
-                    os << "{";
-                    for (size_t i{}; i < DIM; ++i) os << vec.data_[i] << (i != DIM - 1 ? ", " : "}");
+                    os << "{ ";
+                    for (size_t i{}; i < DIM; ++i) 
+                        os << vec.data_[i] << (i != DIM - 1 ? ", " : " }");
+
                     return os;
 
                 }
@@ -5254,12 +5543,13 @@ namespace physics {
                  * @param vec: vector as l-value const reference
                  * 
                  * @return std::ofstream&
-                 * 
                  */
                 friend std::ofstream& operator<<(std::ofstream& file, const vector& vec) noexcept {
 
-                    file << "{";
-                    for (size_t i{}; i < DIM; ++i) file << vec.data_[i] << (i != DIM - 1 ? ", " : "}");
+                    file << "{ ";
+                    for (size_t i{}; i < DIM; ++i) 
+                        file << vec.data_[i] << (i != DIM - 1 ? ", " : " }");
+
                     return file;
 
                 }
@@ -5276,13 +5566,13 @@ namespace physics {
                  * @param v2: vector as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 constexpr friend vector cross(const vector& v1, const vector& v2) {
 
-                    std::vector<measurement> cross_vec;
-                    cross_vec.reserve(DIM); 
-                    for (size_t i{}; i < DIM; ++i) cross_vec.emplace_back(v1[(i + 1) % v1.size()] * v2[(i + 2) % v1.size()] - v1[(i + 2) % v1.size()] * v2[(i + 1) % v1.size()]); 
+                    std::array<measurement, DIM> cross_vec;
+                    for (size_t i{}; i < DIM; ++i) 
+                        cross_vec[i] = v1[(i + 1) % v1.size()] * v2[(i + 2) % v1.size()] - v1[(i + 2) % v1.size()] * v2[(i + 1) % v1.size()]; 
+
                     return cross_vec;
                 
                 }
@@ -5295,12 +5585,13 @@ namespace physics {
                  * @param v2: vector as l-value const reference
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 constexpr friend measurement dot(const vector& v1, const vector& v2) noexcept {
 
                     measurement result(v1[0].units() * v2[0].units());
-                    for (size_t i{}; i < v1.size(); ++i) result += v1[i] * v2[i]; 
+                    for (size_t i{}; i < v1.size(); ++i)
+                        result += v1[i] * v2[i]; 
+                    
                     return result;
                 
                 }
@@ -5310,13 +5601,13 @@ namespace physics {
                  * @brief Invert the vector
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 constexpr vector inv() const {
 
-                    std::vector<measurement> result; 
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].inv()); 
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i].inv(); 
+                    
                     return result;
 
                 }
@@ -5325,16 +5616,17 @@ namespace physics {
                 /**
                  * @brief Take the power of the vector
                  * 
-                 * @param power
+                 * @param vec: vector as l-value const reference
+                 * @param power: int
                  *  
                  * @return constexpr vector 
-                 * 
                  */
-                constexpr vector pow(const int& power) const noexcept {
+                constexpr vector pow(const vector& vec, const int& power) noexcept {
 
-                    std::vector<measurement> result;
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].pow(power));
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = pow(vec.data_[i], power);
+                    
                     return result;
 
                 }
@@ -5343,14 +5635,16 @@ namespace physics {
                 /**
                  * @brief Take the square of the vector
                  * 
-                 * @return constexpr vector 
-                 * 
-                 */
-                constexpr vector square() const noexcept {
+                 * @param vec: vector as l-value const reference
 
-                    std::vector<measurement> result;
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].square());
+                 * @return constexpr vector 
+                 */
+                friend constexpr vector square(const vector& vec) noexcept {
+
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = square(vec.data_[i]);
+                    
                     return result;
 
                 }
@@ -5359,14 +5653,16 @@ namespace physics {
                 /**
                  * @brief Take the cube of the vector
                  * 
-                 * @return constexpr vector 
+                 * @param vec: vector as l-value const reference
                  * 
+                 * @return constexpr vector 
                  */
-                constexpr vector cube() const noexcept {
+                friend constexpr vector cube(const vector& vec) noexcept {
 
-                    std::vector<measurement> result;
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].cube());
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = cube(vec.data_[i]);
+                    
                     return result;
 
                 }
@@ -5375,14 +5671,17 @@ namespace physics {
                 /**
                  * @brief Take the root of the vector
                  * 
-                 * @param power 
+                 * @param vec: vector as l-value const reference
+                 * @param power: int
+                 * 
                  * @return constexpr vector 
                  */
-                constexpr vector root(const int& power) const {
+                friend constexpr vector root(const vector& vec, const int& power) {
 
-                    std::vector<measurement> result;
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].root(power));
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = root(vec.data_[i], power);
+                    
                     return result;
 
                 }
@@ -5391,14 +5690,16 @@ namespace physics {
                 /**
                  * @brief Take the square root of the vector
                  * 
-                 * @return constexpr vector 
+                 * @param vec: vector as l-value const reference
                  * 
+                 * @return constexpr vector 
                  */
-                constexpr vector sqrt() const {
+                friend constexpr vector sqrt(const vector& vec) {
 
-                    std::vector<measurement> result;
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].sqrt());
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = sqrt(vec.data_[i]);
+                    
                     return result;
 
                 }
@@ -5407,14 +5708,16 @@ namespace physics {
                 /**
                  * @brief Take the cube root of the vector
                  * 
-                 * @return constexpr vector 
+                 * @param vec: vector as l-value const reference
                  * 
+                 * @return constexpr vector 
                  */
-                constexpr vector cbrt() const {
+                friend constexpr vector cbrt(const vector& vec) {
 
-                    std::vector<measurement> result;
-                    result.reserve(DIM);
-                    for (size_t i{}; i < DIM; ++i) result.emplace_back(data_[i].cbrt());
+                    std::array<measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = cbrt(vec.data_[i]);
+                    
                     return result;
 
                 }
@@ -5428,7 +5731,6 @@ namespace physics {
                  * @brief Get the size of the vector
                  * 
                  * @return constexpr size_t 
-                 * 
                  */
                 constexpr size_t size() const noexcept { 
                     
@@ -5440,10 +5742,9 @@ namespace physics {
                 /**
                  * @brief Get the first element of the vector
                  * 
-                 * @return constexpr measurement
-                 * 
                  * @note the vector must have at least one element
                  * 
+                 * @return constexpr measurement
                  */
                 constexpr measurement x() const noexcept requires (DIM >= 1) { 
                     
@@ -5455,10 +5756,9 @@ namespace physics {
                 /**
                  * @brief Get the second element of the vector
                  * 
-                 * @return constexpr measurement
-                 * 
                  * @note the vector must have at least two elements
                  * 
+                 * @return constexpr measurement
                  */
                 constexpr measurement y() const noexcept requires (DIM >= 2) { 
                     
@@ -5470,10 +5770,9 @@ namespace physics {
                 /**
                  * @brief Get the third element of the vector
                  * 
-                 * @return constexpr measurement
-                 * 
                  * @note the vector must have at least three elements
-                 * 
+                 *
+                 * @return constexpr measurement
                  */
                 constexpr measurement z() const noexcept requires (DIM >= 3) { 
                     
@@ -5485,10 +5784,9 @@ namespace physics {
                 /**
                  * @brief Get the first element of the vector
                  * 
-                 * @return constexpr measurement&
-                 * 
                  * @note the vector must have at least one element
                  * 
+                 * @return constexpr measurement&
                  */
                 constexpr measurement& x() noexcept requires (DIM >= 1) { 
                     
@@ -5500,10 +5798,9 @@ namespace physics {
                 /**
                  * @brief Get the second element of the vector
                  * 
-                 * @return constexpr measurement&
-                 * 
                  * @note the vector must have at least two elements
                  * 
+                 * @return constexpr measurement&
                  */
                 constexpr measurement& y() noexcept requires (DIM >= 2) { 
                     
@@ -5515,10 +5812,9 @@ namespace physics {
                 /**
                  * @brief Get the third element of the vector
                  * 
-                 * @return constexpr measurement&
-                 * 
                  * @note the vector must have at least three elements
                  * 
+                 * @return constexpr measurement&
                  */
                 constexpr measurement& z() noexcept requires (DIM >= 3) { 
                     
@@ -5528,12 +5824,23 @@ namespace physics {
 
 
                 /**
+                 * @brief Get the unit of the vector
+                 * 
+                 * @return constexpr unit 
+                 */
+                constexpr unit units() const noexcept { 
+
+                    return data_.front().units(); 
+                
+                }
+
+
+                /**
                  * @brief Get the data of the vector
                  * 
-                 * @return constexpr std::vector<measurement> 
-                 * 
+                 * @return constexpr std::array<measurement> 
                  */
-                constexpr std::vector<measurement> data() const noexcept { 
+                constexpr std::array<measurement, DIM> data() const noexcept { 
                     
                     return data_; 
                 
@@ -5541,12 +5848,23 @@ namespace physics {
 
 
                 /**
+                 * @brief Get the data of the vector
+                 * 
+                 * @return constexpr std::array<measurement, DIM>& 
+                 */
+                constexpr std::array<measurement, DIM>& data() noexcept { 
+                    
+                    return data_;
+                
+                }
+
+
+                /**
                  * @brief Get the vector object
                  * 
-                 * @return constexpr vector<DIM> 
-                 * 
+                 * @return constexpr vector 
                  */
-                constexpr vector<DIM> as_vector() const noexcept { 
+                constexpr vector as_vector() const noexcept { 
                     
                     return *this; 
                 
@@ -5557,14 +5875,15 @@ namespace physics {
                  * @brief Get the norm of the vector
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement norm() const noexcept { 
 
-                    if constexpr (DIM == 1) return data_[0];
-                    measurement norm; 
-                    for (size_t i{}; i < DIM; ++i) norm += data_[i].square();
-                    return norm.sqrt(); 
+                    if constexpr (DIM == 1) 
+                        return data_[0];
+
+                    vector squared = square(*this);
+
+                    return sqrt(std::accumulate(squared.data().begin(), squared.data().end(), measurement{0.0, squared.units()}));
 
                 }
 
@@ -5573,14 +5892,15 @@ namespace physics {
                  * @brief Get the squared norm of the vector
                  * 
                  * @return constexpr measurement 
-                 * 
                  */
                 constexpr measurement norm2() const noexcept { 
 
-                    if constexpr (DIM == 1) return data_[0]; 
-                    measurement norm(0.0 * data_.front().units().square()); 
-                    for (size_t i{}; i < DIM; ++i) norm += data_[i].square();
-                    return norm; 
+                    if constexpr (DIM == 1) 
+                        return data_[0]; 
+
+                    vector squared(square(*this));
+
+                    return std::accumulate(squared.data().begin(), squared.data().end(), measurement{0.0, squared.units()});
                     
                 }
 
@@ -5589,14 +5909,10 @@ namespace physics {
                  * @brief Get the normalization of the vector
                  * 
                  * @return constexpr vector 
-                 * 
                  */
                 constexpr vector versor() const {
-                    
-                    vector result;
-                    measurement norm = this->norm();
-                    for (size_t i{}; i < DIM; ++i) result[i] = data_[i] / norm;
-                    return result; 
+
+                    return *this / this->norm(); 
 
                 } 
 
@@ -5604,14 +5920,13 @@ namespace physics {
                 /**
                  * @brief Get the polar angle
                  * 
-                 * @return constexpr measurement
-                 * 
                  * @note the vector must have at least two elements
                  * 
+                 * @return constexpr measurement
                  */
                 constexpr measurement phi() const noexcept requires (DIM >= 2) { 
                     
-                    return std::atan2(data_[1].value(), data_[0].value()) * rad; 
+                    return atan(data_[1] / data_[0]); 
                 
                 }     
                 
@@ -5619,25 +5934,35 @@ namespace physics {
                 /**
                  * @brief Get the azimuthal angle
                  * 
-                 * @return constexpr measurement
-                 * 
                  * @note the vector must have at least three elements
                  * 
+                 * @return constexpr measurement
                  */
                 constexpr measurement theta() const requires (DIM >= 3) { 
 
-                    if (data_[2] == 0.0 * m) return 0.0 * rad;
-                    return std::acos((data_[2] / norm()).value()) * rad;
+                    if (data_[2] == 0.0 * m) 
+                        return 0.0 * rad;
+                    else    
+                        return acos((data_[2] / norm()));
 
                 }
                 
 
-                /// @brief Print the vector to the standard output
-                constexpr void print() const noexcept {
+                /**
+                 * @brief Print the vector to the standard output
+                 * 
+                 * @param newline: if true, print a newline character at the end
+                 * 
+                 * @return void
+                 */
+                constexpr void print(const bool& newline = true) const noexcept {
 
                     std::cout << "{\n";
-                    for (size_t i{}; i < DIM; ++i) std::cout << "\t" << data_[i] << "\n";
-                    std::cout << "}\n";
+                    for (size_t i{}; i < DIM; ++i) 
+                        std::cout << "\t" << data_[i] << "\n";
+                    std::cout << "}";  
+                    if (newline) 
+                        std::cout << "\n";
 
                 }   
 
@@ -5647,16 +5972,25 @@ namespace physics {
                  * 
                  * @param file_name: the name of the file
                  * @param units: desired units for the output
+                 * 
+                 * @return void
                  */
                 void save(const std::string& file_name, const unit& units) const {
 
                     std::ofstream file_out(file_name, std::ios::app);
-                    if (file_out.is_open()) {
+                    if (file_out.is_open()) 
+
                         for (size_t i{}; i < DIM; ++i) {
+
                             file_out << data_[i].value_as(units); 
-                            if (i < DIM - 1) file_out << ' '; 
+                            if (i < DIM - 1) 
+                                file_out << ' '; 
+
                         }
-                    } else std::cerr << "PROBLEM: Unable to open '" << file_name << "'\n";
+
+                    else 
+                        throw std::invalid_argument("Unable to open '" + file_name + "'");
+
                     file_out << '\n';
                     file_out.close();
 
@@ -5669,14 +6003,1344 @@ namespace physics {
             // class members
             // =============================================
 
-                /// @brief Vector data
-                std::vector<measurement> data_;
+                std::array<measurement, DIM> data_; ///< array of measurement
 
 
         }; // class vector
 
 
-        /// @brief Class expressing a generic matrix of vectors of measurements in a n-dimentional system
+        /**
+         * @brief Class expressing a generic vector of uncertain_measurements in a n-dimentional system
+         * 
+         * @tparam DIM: the number of dimensions
+         */
+        template <size_t DIM> 
+        class uvector {
+
+
+            public: 
+
+            // =============================================
+            // constructors and destructor
+            // =============================================
+
+
+                /// @brief Construct a new uvector object
+                explicit constexpr uvector() noexcept : 
+
+                    data_() {}
+
+
+                /**
+                 * @brief Construct a new uvector specifying the unit_base of the uvector
+                 * 
+                 * @param unit: unit_base (default = unit_base())
+                 */
+                explicit constexpr uvector(const unit_base& base = base::default_type) noexcept {
+
+                    data_.fill(uncertain_measurement(0., 0., unit(base)));
+
+                }
+
+
+                /**
+                 * @brief Construct a new uvector from a std::array of uncertain_measurements
+                 * 
+                 * @tparam DIM: the number of dimensions
+                 * @param data: std::array<uncertain_measurement, DIM> as l-value const reference
+                 */
+                explicit constexpr uvector(const std::array<uncertain_measurement, DIM>& data) noexcept : 
+                    
+                    data_(data) {}
+
+
+                /**
+                 * @brief Construct a new uvector from an std::array of uncertain_measurements
+                 * 
+                 * @tparam DIM: the number of dimensions
+                 * @param data: std::array<uncertain_measurement, DIM> as r-value reference
+                 */
+                constexpr uvector(std::array<uncertain_measurement, DIM>&& data) noexcept : 
+                    
+                    data_(std::move(data)) {}
+
+
+                /**
+                 * @brief Copy construct a new uvector from a uvector object 
+                 * 
+                 * @param other: uvector as l-value const reference
+                 */
+                constexpr uvector(const uvector& other) noexcept : 
+                    
+                    data_(other.data_) {}
+
+
+                /**
+                 * @brief Move construct a new uvector from a uvector object
+                 * 
+                 * @param other: uvector as r-value reference
+                 */
+                constexpr uvector(uvector&& other) noexcept : 
+                    
+                    data_(std::move(other.data_)) {}
+
+
+                /// @brief Default destructor
+                ~uvector() = default;
+
+
+            // =============================================
+            // operators
+            // =============================================
+
+                /**
+                 * @brief Copy assignment operator
+                 * 
+                 * @param other: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector&
+                 */
+                constexpr uvector& operator=(const uvector& other) noexcept {
+
+                    data_ = other.data_; 
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Add a uvector to the current uvector
+                 * 
+                 * @note: The uvectors must have the same unit of measurement
+                 * 
+                 * @param other: uvector to add as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator+=(const uvector& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] += other.data_[i];
+
+                    return *this; 
+
+                }
+
+                
+                /**
+                 * @brief Subtract a uvector to the current uvector
+                 * 
+                 * @note: The uvectors must have the same unit of measurement
+                 * 
+                 * @param other: uvector to subtract as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator-=(const uvector& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] -= other.data_[i];
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Copy assignment operator from a vector object
+                 * 
+                 * @param other: vector as l-value const reference
+                 * 
+                 * @return constexpr uvector&
+                 */
+                constexpr uvector& operator=(const vector<DIM>& other) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] = uncertain_measurement(other.data_[i].value(), 0.0, other.data_[i].unit());
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Add a vector to the current uvector
+                 * 
+                 * @note: The uvector and the vector must have the same unit of measurement
+                 * 
+                 * @param other: vector to add as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator+=(const vector<DIM>& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] += other.data_[i];
+
+                    return *this; 
+
+                }
+
+                
+                /**
+                 * @brief Subtract a vector to the current uvector
+                 * 
+                 * @note: The uvector and the vector must have the same unit of measurement
+                 * 
+                 * @param other: vector to subtract as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator-=(const vector<DIM>& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] -= other.data_[i];
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a measurement
+                 * 
+                 * @param meas: measurement to multiply with as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator*=(const measurement& meas) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i)  
+                        data_[i] *= meas;
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a measurement
+                 * 
+                 * @param meas: measurement to divide by as l-value const reference
+                 *  
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator/=(const measurement& meas) {
+                    
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by a zero measurement");
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] /= meas;
+                    
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a uncertain_measurement
+                 * 
+                 * @param meas: uncertain_measurement to multiply with as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator*=(const uncertain_measurement& meas) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i)  
+                        data_[i] *= meas;
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a uncertain_measurement
+                 * 
+                 * @param meas: uncertain_measurement to divide by as l-value const reference
+                 *  
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator/=(const uncertain_measurement& meas) {
+                    
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by a zero uncertain_measurement");
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] /= meas;
+                    
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a scalar
+                 * 
+                 * @param scalar: scalar as l-value const reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator*=(const scalar& scalar) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] *= scalar;
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a scalar
+                 * 
+                 * @param scalar: scalar as l-value const reference
+                 *  
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator/=(const scalar& scalar) {
+
+                    if (scalar == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by zero");
+
+                    for (size_t i{}; i < DIM; ++i)
+                        data_[i] /= scalar;
+                    
+                    return *this; 
+                    
+                }
+
+
+                /**
+                 * @brief Move assignment operator
+                 * 
+                 * @param other: uvector as r-value reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator=(uvector&& other) noexcept {
+                    
+                    data_ = std::move(other.data_); 
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Add a uvector to the current uvector
+                 * @note: the two uvectors must have the same unit of measurement
+                 * 
+                 * @param other: uvector to add as r-value reference
+                 * 
+                 * @return constexpr uvector& 
+                 */
+                constexpr uvector& operator+=(uvector&& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] += std::move(other.data_[i]);
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Subtract a uvector to the current uvector
+                 * 
+                 * @param other: uvector to subtract as r-value reference
+                 * 
+                 * @return constexpr uvector& 
+                 * 
+                 * @note: the two uvectors must have the same unit of measurement
+                 */
+                constexpr uvector& operator-=(uvector&& other) {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] -= std::move(other.data_[i]);
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a measurement
+                 * 
+                 * @param meas: measurement to multiply with as r-value reference
+                 * 
+                 * @return constexpr uvector&
+                 */
+                constexpr uvector& operator*=(measurement&& meas) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] *= std::move(meas);
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a measurement
+                 * 
+                 * @param meas: measurement to divide by as r-value reference
+                 * 
+                 * @return constexpr uvector&
+                 */
+                constexpr uvector& operator/=(measurement&& meas) {
+
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by a zero measurement");
+                    
+                    for (size_t i{}; i < DIM; ++i)
+                        data_[i] /= meas;
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a uncertain_measurement
+                 * 
+                 * @param meas: uncertain_measurement to multiply with as r-value reference
+                 * 
+                 * @return constexpr uvector&
+                 */
+                constexpr uvector& operator*=(uncertain_measurement&& meas) noexcept {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        data_[i] *= std::move(meas);
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a uncertain_measurement
+                 * 
+                 * @param meas: uncertain_measurement to divide by as r-value reference
+                 * 
+                 * @return constexpr uvector&
+                 */
+                constexpr uvector& operator/=(uncertain_measurement&& meas) {
+
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by a zero uncertain_measurement");
+                    
+                    for (size_t i{}; i < DIM; ++i)
+                        data_[i] /= meas;
+
+                    return *this; 
+
+                }
+
+
+                /**
+                 * @brief Return the opposite of the current uvector
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector operator-() const noexcept {
+
+                    std::array<measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = -data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Sum the current uvector and another uvector
+                 * 
+                 * @param other: uvector to add as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 * 
+                 * @note: the two uvectors must have the same unit of measurement and the same size
+                 */
+                constexpr uvector operator+(const uvector& other) const {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] + other.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Subtract the current uvector and another uvector
+                 * 
+                 * @param other: uvector to subtract as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 * 
+                 * @note: the two uvectors must have the same unit of measurement and the same size
+                 */
+                constexpr uvector operator-(const uvector& other) const {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] - other.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a measurement
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector operator*(const measurement& meas) const noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] * meas; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a measurement
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector operator/(const measurement& meas) const {
+
+                    if (meas.value() == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by a zero measurement");
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] / meas; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector by a scalar
+                 * 
+                 * @param scalar: scalar as l-value const reference
+                 * 
+                 * @return constexpr uvector
+                 *  
+                 */
+                constexpr uvector operator*(const scalar& scalar) const noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] * scalar; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a scalar
+                 * 
+                 * @param scalar: scalar as l-value const reference
+                 * 
+                 * @return constexpr uvector
+                 *  
+                 */
+                constexpr uvector operator/(const scalar& scalar) const {
+
+                    if (scalar == 0.0) 
+                        throw std::runtime_error("Cannot divide a uvector by zero");
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] / scalar; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the current uvector with a std::array<scalar>
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector operator*(const std::array<scalar, DIM>& scalar_arr) const noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i] * scalar_arr[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the current uvector by a std::array<scalar>
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector operator/(const std::array<scalar, DIM>& scalar_arr) const {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        if (scalar_arr[i] != 0)
+                            result[i] = data_[i] / scalar_arr[i];
+                        else throw std::runtime_error("Cannot divide a uvector by a uvector with a zero component");
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the a measurement and a uvector
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector operator*(const measurement& meas, const uvector& vec) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = meas * vec.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the a measurement and a uvector
+                 * 
+                 * @param meas: measurement as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector operator/(const measurement& meas, const uvector& other) {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = meas / other.data_[i];
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the a uncertain_measurement and a uvector
+                 * 
+                 * @param meas: uncertain_measurement as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector operator*(const uncertain_measurement& meas, const uvector& vec) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = meas * vec.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the a uncertain_measurement and a uvector
+                 * 
+                 * @param meas: uncertain_measurement as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector operator/(const uncertain_measurement& meas, const uvector& other) {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = meas / other.data_[i];
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the a scalar and a uvector
+                 * 
+                 * @param scalar: scalar as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector operator*(const scalar& scalar, const uvector& vec) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar * vec.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the a scalar and a uvector
+                 * 
+                 * @param scalar: scalar as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */                
+                friend constexpr uvector operator/(const scalar& scalar, const uvector& vec) {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar / vec.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Multiply the a std::array<scalar> and a uvector
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector
+                 */
+                friend constexpr uvector operator*(const std::array<scalar, DIM>& scalar_vec, const uvector& other) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar_vec[i] * other.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Divide the a std::array<scalar> and a uvector
+                 * 
+                 * @param scalar_arr: std::array<scalar> as l-value const reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector operator/(const std::array<scalar, DIM>& scalar_vec, const uvector& other) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result; 
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = scalar_vec[i] / other.data_[i]; 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Equality operator
+                 * 
+                 * @param other: uvector as l-value const reference
+                 * 
+                 * @return bool
+                 */
+                constexpr bool operator==(const uvector& other) const noexcept {
+
+                    for (size_t i{}; i < DIM; ++i)
+                        if (data_[i] != other.data_[i]) 
+                            return false;
+                    
+                    return true;
+
+                }
+
+
+                /**
+                 * @brief Inequality operator
+                 * 
+                 * @param other: uvector as l-value const reference
+                 * 
+                 * @return bools
+                 *  
+                 */
+                constexpr bool operator!=(const uvector& other) const noexcept {
+
+                    for (size_t i{}; i < DIM; ++i) 
+                        if (data_[i] != other.data_[i]) 
+                            return true;
+
+                    return false;
+
+                }
+            
+
+                /**
+                 * @brief Access the i-th element of the uvector
+                 * 
+                 * @param index: size_t
+                 * 
+                 * @return constexpr uncertain_measurement 
+                 * 
+                 * @note: index must be in the range [0, DIM)
+                 */
+                constexpr const uncertain_measurement& operator[](const size_t& index) const { 
+                    
+                    if (index >= DIM) 
+                        throw std::out_of_range("Cannot access a uvector with an index out of range");
+
+                    return data_[index]; 
+                    
+                }
+
+
+                /**
+                 * @brief Access the i-th element of the uvector
+                 * 
+                 * @param index: size_t 
+                 * 
+                 * @return constexpr uncertain_measurement& 
+                 * 
+                 * @note: index must be in the range [0, DIM)
+                 */
+                constexpr uncertain_measurement& operator[](const size_t& index) { 
+                    
+                    if (index >= DIM) 
+                        throw std::out_of_range("Cannot access a uvector with an index out of range");
+
+                    return data_[index]; 
+                    
+                }
+
+
+                /**
+                 * @brief Print the uvector to the standard output
+                 * 
+                 * @param os: ostream as l-value reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return std::ostream&
+                 */
+                friend std::ostream& operator<<(std::ostream& os, const uvector& vec) noexcept {
+
+                    os << "{ ";
+                    for (size_t i{}; i < DIM; ++i) 
+                        os << vec.data_[i] << (i != DIM - 1 ? ", " : " }");
+
+                    return os;
+
+                }
+
+
+                /**
+                 * @brief Print the uvector to file
+                 * 
+                 * @param file: ofstream as l-value reference
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return std::ofstream&
+                 */
+                friend std::ofstream& operator<<(std::ofstream& file, const uvector& vec) noexcept {
+
+                    file << "{ ";
+                    for (size_t i{}; i < DIM; ++i) 
+                        file << vec.data_[i] << (i != DIM - 1 ? ", " : " }");
+
+                    return file;
+
+                }
+
+
+            // =============================================
+            // operations
+            // =============================================
+
+                /**
+                 * @brief Compute the cross product between two uvectors
+                 * 
+                 * @param v1: uvector as l-value const reference
+                 * @param v2: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr friend uvector cross(const uvector& v1, const uvector& v2) {
+
+                    std::array<uncertain_measurement, DIM> cross_vec;
+                    for (size_t i{}; i < DIM; ++i) 
+                        cross_vec[i] = v1[(i + 1) % v1.size()] * v2[(i + 2) % v1.size()] - v1[(i + 2) % v1.size()] * v2[(i + 1) % v1.size()]; 
+
+                    return cross_vec;
+                
+                }
+
+                
+                /**
+                 * @brief Compute the dot product between two uvectors
+                 * 
+                 * @param v1: uvector as l-value const reference
+                 * @param v2: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr friend uncertain_measurement dot(const uvector& v1, const uvector& v2) noexcept {
+
+                    uncertain_measurement result(v1[0].units() * v2[0].units());
+                    for (size_t i{}; i < v1.size(); ++i)
+                        result += v1[i] * v2[i]; 
+                    
+                    return result;
+                
+                }
+
+
+                /**
+                 * @brief Invert the uvector
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector inv() const {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = data_[i].inv(); 
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Take the power of the uvector
+                 * 
+                 * @param vec: uvector as l-value const reference
+                 * @param power: int
+                 *  
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector pow(const uvector& vec, const int& power) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = pow(vec.data_[i], power);
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Take the square of the uvector
+                 * 
+                 * @param vec: uvector as l-value const reference
+
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector square(const uvector& vec) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = square(vec.data_[i]);
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Take the cube of the uvector
+                 * 
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector cube(const uvector& vec) noexcept {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = cube(vec.data_[i]);
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Take the root of the uvector
+                 * 
+                 * @param vec: uvector as l-value const reference
+                 * @param power: int
+                 * 
+                 * @return constexpr uvector 
+                 */
+
+                friend constexpr uvector root(const uvector& vec, const int& power) {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = root(vec.data_[i], power);
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Take the square root of the uvector
+                 * 
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector sqrt(const uvector& vec) {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = sqrt(vec.data_[i]);
+                    
+                    return result;
+
+                }
+
+
+                /**
+                 * @brief Take the cube root of the uvector
+                 * 
+                 * @param vec: uvector as l-value const reference
+                 * 
+                 * @return constexpr uvector 
+                 */
+                friend constexpr uvector cbrt(const uvector& vec) {
+
+                    std::array<uncertain_measurement, DIM> result;
+                    for (size_t i{}; i < DIM; ++i)
+                        result[i] = cbrt(vec.data_[i]);
+                    
+                    return result;
+
+                }
+
+
+            // =============================================
+            // set & get methods
+            // =============================================
+
+                /**
+                 * @brief Get the size of the uvector
+                 * 
+                 * @return constexpr size_t 
+                 */
+                constexpr size_t size() const noexcept { 
+                    
+                    return DIM; 
+                    
+                }
+
+
+                /**
+                 * @brief Get the first element of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement
+                 * 
+                 * @note the uvector must have at least one element
+                 */
+                constexpr uncertain_measurement x() const noexcept requires (DIM >= 1) { 
+                    
+                    return data_[0]; 
+                
+                }
+                                
+
+                /**
+                 * @brief Get the second element of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement
+                 * 
+                 * @note the uvector must have at least two elements
+                 */
+                constexpr uncertain_measurement y() const noexcept requires (DIM >= 2) { 
+                    
+                    return data_[1]; 
+                
+                }
+
+
+                /**
+                 * @brief Get the third element of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement
+                 * 
+                 * @note the uvector must have at least three elements
+                 */
+                constexpr uncertain_measurement z() const noexcept requires (DIM >= 3) { 
+                    
+                    return data_[2]; 
+                
+                }
+
+
+                /**
+                 * @brief Get the first element of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement&
+                 * 
+                 * @note the uvector must have at least one element
+                 */
+                constexpr uncertain_measurement& x() noexcept requires (DIM >= 1) { 
+                    
+                    return data_[0]; 
+                
+                }
+                                
+
+                /**
+                 * @brief Get the second element of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement&
+                 * 
+                 * @note the uvector must have at least two elements
+                 */
+                constexpr uncertain_measurement& y() noexcept requires (DIM >= 2) { 
+                    
+                    return data_[1]; 
+                
+                }
+
+
+                /**
+                 * @brief Get the third element of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement&
+                 * 
+                 * @note the uvector must have at least three elements
+                 */
+                constexpr uncertain_measurement& z() noexcept requires (DIM >= 3) { 
+                    
+                    return data_[2]; 
+                
+                }
+
+
+                constexpr unit units() const noexcept { 
+
+                    return data_.front().units(); 
+                
+                }
+
+
+                /**
+                 * @brief Get the data of the uvector
+                 * 
+                 * @return constexpr std::array<uncertain_measurement> 
+                 */
+                constexpr std::array<uncertain_measurement, DIM> data() const noexcept { 
+                    
+                    return data_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the data of the uvector
+                 * 
+                 * @return constexpr std::array<uncertain_measurement>& 
+                 */
+                constexpr std::array<uncertain_measurement, DIM>& data() noexcept { 
+                    
+                    return data_;
+                
+                }
+
+
+                /**
+                 * @brief Get the uvector object
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector as_uvector() const noexcept { 
+                    
+                    return *this; 
+                
+                }
+
+
+                /**
+                 * @brief Get the norm of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement 
+                 */
+                constexpr uncertain_measurement norm() const noexcept { 
+
+                    if constexpr (DIM == 1) 
+                        return data_[0];
+
+                    uvector squared = square(*this);
+
+                    return sqrt(std::accumulate(squared.data().begin(), squared.data().end(), uncertain_measurement{0.0, 0.0, squared.units()}));
+
+                }
+
+
+                /**
+                 * @brief Get the squared norm of the uvector
+                 * 
+                 * @return constexpr uncertain_measurement 
+                 */
+                constexpr uncertain_measurement norm2() const noexcept { 
+
+                    if constexpr (DIM == 1) 
+                        return data_[0]; 
+
+                    uvector squared(square(*this));
+
+                    return std::accumulate(squared.data().begin(), squared.data().end(), uncertain_measurement{0.0, 0.0, squared.units()});
+                    
+                }
+
+
+                /**
+                 * @brief Get the normalization of the uvector
+                 * 
+                 * @return constexpr uvector 
+                 */
+                constexpr uvector versor() const {
+
+                    uncertain_measurement norm = this->norm();                    
+                    uvector result;
+                    for (size_t i{}; i < DIM; ++i) 
+                        result[i] = data_[i] / norm;
+
+                    return result; 
+
+                } 
+
+
+                /**
+                 * @brief Get the polar angle
+                 * 
+                 * @note the uvector must have at least two elements
+                 * 
+                 * @return constexpr uncertain_measurement
+                 */
+                constexpr uncertain_measurement phi() const noexcept requires (DIM >= 2) { 
+                    
+                    return atan(data_[1] / data_[0]); 
+                
+                }     
+                
+
+                /**
+                 * @brief Get the azimuthal angle
+                 * 
+                 * @note the uvector must have at least three elements
+                 * 
+                 * @return constexpr uncertain_measurement
+                 */
+                constexpr uncertain_measurement theta() const requires (DIM >= 3) { 
+
+                    if (data_[2] == 0.0 * m) 
+                        return uncertain_measurement(0.0, data_[2].uncertainty_, rad);
+                    else    
+                        return acos((data_[2] / norm()));
+
+                }
+                
+
+                /// @brief Print the uvector to the standard output
+                constexpr void print(const bool& newline) const noexcept {
+
+                    std::cout << "{\n";
+                    for (size_t i{}; i < DIM; ++i) 
+                        std::cout << "\t" << data_[i] << "\n";
+                    std::cout << "}";
+                    if (newline) std::cout << "\n";
+
+                }   
+
+
+                /**
+                 * @brief Save the uvector to a file
+                 * 
+                 * @param file_name: the name of the file
+                 * @param units: desired units for the output
+                 */
+                void save(const std::string& file_name, const unit& units) const {
+
+                    std::ofstream file_out(file_name, std::ios::app);
+                    if (file_out.is_open()) 
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            file_out << data_[i].value_as(units); 
+                            if (i < DIM - 1) 
+                                file_out << ' '; 
+
+                        }
+
+                    else throw std::invalid_argument("Unable to open '" + file_name + "'");
+
+                    file_out << '\n';
+                    file_out.close();
+
+                }
+
+
+            protected:
+
+            // =============================================
+            // class members
+            // =============================================
+
+                std::array<uncertain_measurement, DIM> data_; ///< array of uncertain_measurements
+
+
+            // =============================================
+            // friends
+            // =============================================
+
+                friend class vector<DIM>; 
+                 
+
+        }; // class uvector
+
+
+        /**
+         * @brief Class expressing a generic matrix of vectors of measurements in a n-dimentional system
+         * @see vector
+         * 
+         * @tparam rows: size_t number of rows
+         * @tparam cols: size_t number of columns
+         * 
+         * @note the matrix is stored in row-major order
+         * @note cols is set equal to rows by default 
+         */
         template <size_t rows, size_t cols = rows> 
         class matrix {
 
@@ -5691,7 +7355,7 @@ namespace physics {
 
                 size_t cols_;
 
-                using mat = std::vector<vector<rows>>;
+                using mat = std::array<vector<rows>, cols>;
 
                 mat data_;
 
@@ -5836,7 +7500,7 @@ namespace physics {
                 }
 
 
-                constexpr matrix operator*(const double& scalar) const noexcept {
+                constexpr matrix operator*(const scalar& scalar) const noexcept {
                     
                     assert(scalar != 0.0); 
                     matrix result;
@@ -5846,7 +7510,7 @@ namespace physics {
                 }
 
 
-                constexpr matrix operator/(const double& scalar) const noexcept {
+                constexpr matrix operator/(const scalar& scalar) const noexcept {
                     
                     assert(scalar != 0.0);
                     matrix result;
@@ -5962,39 +7626,88 @@ namespace physics {
             // constructors and destructor
             // =============================================   
 
-                explicit time() noexcept : 
+                /// @brief Construct a new time object as default = measurement(0.0, s)
+                explicit constexpr time() noexcept : 
 
                     time_(0.0, s) {}
 
 
-                explicit constexpr time(const double& time, const unit& unit = s) {
+                /**
+                 * @brief Construct a new time object from value and units of time
+                 * 
+                 * @param time: scalar value
+                 * @param unit: unit as l-value const reference
+                 * 
+                 * @note the unit.base() must be second
+                 */
+                explicit constexpr time(const scalar& time, const unit& unit = s) {
 
-                    if (time < 0.0) throw std::invalid_argument("Time cannot be negative");
-                    if (unit.base() != base::second) throw std::invalid_argument("Wrong time unit, the unit_base must be seconds");
+                    if (time < 0.0) 
+                        throw std::invalid_argument("Time cannot be negative");
+                    if (unit.base() != base::second) 
+                        throw std::invalid_argument("Wrong time unit, the unit_base must be seconds");
                     time_ = measurement(time, unit);
                     
                 }
 
 
+                /**
+                 * @brief Construct a new time object from a time measurement
+                 * 
+                 * @param time: measurement as l-value const reference
+                 * 
+                 * @note time.units().base() must be second
+                 */
                 constexpr time(const measurement& time) {
 
-                    if (time.value() < 0.0) throw std::invalid_argument("Time cannot be negative");
-                    if (time.units().base() != base::second) throw std::invalid_argument("Wrong time unit, the unit_base must be seconds");
+                    if (time.value() < 0.0) 
+                        throw std::invalid_argument("Time cannot be negative");
+                    if (time.units().base() != base::second) 
+                        throw std::invalid_argument("Wrong time unit, the unit_base must be seconds");
                     time_ = time;
 
                 }
 
 
+                /**
+                 * @brief Construct a new time object from a time measurement
+                 * 
+                 * @param time: measurement as r-value reference
+                 * 
+                 * @note time.units().base() must be second
+                 */
+                constexpr time(measurement&& time) {
+
+                    if (time.value() < 0.0) 
+                        throw std::invalid_argument("Time cannot be negative");
+                    if (time.units().base() != base::second) 
+                        throw std::invalid_argument("Wrong time unit, the unit_base must be seconds");
+                    time_ = std::move(time);
+
+                }
+
+
+                /**
+                 * @brief Copy construct a new time object from another time
+                 * 
+                 * @param other: time object to copy from as l-value const reference
+                 */
                 constexpr time(const time& other) noexcept :
                     
                     time_{other.time_} {}   
 
                 
+                /**
+                 * @brief Move construct a new time object from another time
+                 * 
+                 * @param other: time object to move from as r-value reference
+                 */
                 constexpr time(time&& other) noexcept :
                     
                     time_{std::move(other.time_)} {}
                 
 
+                /// @brief Default destructor
                 ~time() = default; 
 
 
@@ -6146,9 +7859,13 @@ namespace physics {
 
         /**
          * @brief Class expressing the position of a generic object as a vector of measurements
+         * @see template <size_t> vector 
          * 
-         * @tparam DIM: size_t dimentions of the system
+         * @note The position unit_base must be metre
+         * @note The position is expressed in a cartesian coordinate system
+         * @todo Add more coordinate system (e.g. polar, spherical, cylindrical)
          * 
+         * @tparam DIM: size_t dimentions of the space
          */
         template <size_t DIM> 
         class position : public vector<DIM> {
@@ -6156,180 +7873,175 @@ namespace physics {
 
             public: 
 
-                // =============================================
-                // constructors & destructor
-                // =============================================
+            // =============================================
+            // constructors & destructor
+            // =============================================
 
+                /**
+                 * @brief Construct a new default position object
+                 * 
+                 * @note The position is set to zero metres
+                 */
                 explicit constexpr position() noexcept : 
                 
                     vector<DIM>(base::metre) {}
 
 
-                constexpr position(const std::vector<measurement>& pos) noexcept : 
+                /**
+                 * @brief Construct a new position object from an std::array of measurements
+                 * 
+                 * @param pos: std::array of measurements as l-value const reference
+                 */
+                constexpr position(const std::array<measurement, DIM>& pos) noexcept : 
                     
                     vector<DIM>(pos) {
 
-                        for (auto& i : pos) assert(i.units().base() == base::metre);
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (pos[i].units().base() != base::metre) 
+                                throw std::invalid_argument("Wrong position unit, the unit_base must be metre");
+
+                        }
                     
                     }
 
 
+                /**
+                 * @brief Construct a new position object from an std::array of measurements
+                 * 
+                 * @param pos: std::array of measurements as r-value reference
+                 */
+                constexpr position(std::array<measurement, DIM>&& pos) noexcept : 
+                    
+                    vector<DIM>(std::move(pos)) {
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (pos[i].units().base() != base::metre) 
+                                throw std::invalid_argument("Wrong position unit, the unit_base must be metres");
+
+                        }
+                    
+                    }
+
+
+                /**
+                 * @brief Construct a new position object from a vector of measurements
+                 * 
+                 * @param pos: vector of measurements as l-value const reference
+                 */
                 constexpr position(const vector<DIM>& pos) noexcept : 
                     
                     vector<DIM>(pos) {
 
-                        for (auto& i : pos.data()) assert(i.units().base() == base::metre);
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (pos[i].units().base() != base::metre) 
+                                throw std::invalid_argument("Wrong position unit, the unit_base must be metres");
+                        
+                        }
                     
                     }
 
 
-                constexpr position(const position& other) noexcept : 
+                /**
+                 * @brief Construct a new position object from a vector of measurements
+                 * 
+                 * @param pos: vector of measurements as r-value reference
+                 */
+                constexpr position(vector<DIM>&& pos) noexcept : 
                     
-                    vector<DIM>(other) {}
+                    vector<DIM>(std::move(pos)) {
 
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (pos[i].units().base() != base::metre) 
+                                throw std::invalid_argument("Wrong position unit, the unit_base must be metres");
+                        
+                        }
+                    
+                    }
+
+                
+                /// @brief Default destructor
                 ~position() = default; 
 
 
-                // =============================================
-                // operators
-                // =============================================
+            // =============================================
+            // operators
+            // =============================================
 
-                constexpr position& operator=(const position& other) noexcept {
-                    
-                    *this = other; 
-                    return *this;
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param os: std::ostream&
+                 * @param pos: position to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ostream& 
+                 */
+                friend constexpr std::ostream& operator<<(std::ostream& os, const position& pos) noexcept { 
 
-                }
+                    os << "position = " << pos.as_vector(); 
 
-
-                constexpr position& operator+=(const position& other) noexcept {
-
-                    this += other;
-                    return *this;
-
-                }
-
-
-                constexpr position& operator-=(const position& other) noexcept {
-
-                    this -= other;
-                    return *this;
+                    return os;
 
                 }
 
 
-                constexpr position operator+(const position& other) const noexcept { 
-                    
-                    return *this + other.as_vector();
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param file: std::ofstream&
+                 * @param pos: position to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ofstream& 
+                 */
+                friend constexpr std::ofstream& operator<<(std::ofstream& file, const position& pos) noexcept { 
+
+                    file << "position = " << pos.as_vector(); 
+
+                    return file;
 
                 }
 
 
-                constexpr position operator-(const position& other) const noexcept { 
-                    
-                    return *this - other.as_vector();
+            // =============================================
+            // get methods
+            // =============================================
 
-                }
-
-
-                constexpr position operator-() const noexcept { 
-                    
-                    return -*this;
-
-                }
-
-
-                constexpr vector<DIM> operator*(const measurement& meas) noexcept {
-
-                    return *this * meas;
-
-                }
-
-
-                constexpr vector<DIM> operator/(const measurement& meas) noexcept {
-
-                    return *this / meas;
-
-                }
-
-
-                friend vector<DIM> operator*(const measurement& meas, const position& pos) noexcept {
-
-                    return meas * pos.as_vector();
-
-                }
-
-
-                friend vector<DIM> operator/(const measurement& meas, const position& pos) noexcept {
-
-                    return meas / pos.as_vector();
-                    
-                }
-
-
-                constexpr position operator*=(const double& val) noexcept {
-
-                    this *= val;
-                    return *this;
-
-                }
-
-
-                constexpr position operator/=(const double& val) noexcept {
-
-                    this /= val;
-                    return *this;
-
-                }
-
-
-                constexpr position operator*(const double& val) const noexcept { 
-                    
-                    return position(this * val); 
-                
-                }
-
-
-                constexpr position operator/(const double& val) const noexcept { 
-                    
-                    return position(this / val); 
-                
-                }
-
-
-                friend constexpr position operator*(const double& val, const position& pos) noexcept { 
-                    
-                    return val * pos.as_vector();
-                
-                }
-
-
-                friend constexpr vector<DIM> operator/(const double& val, const position& pos) noexcept { 
-                    
-                    return val / pos.as_vector();
-                
-                }
-
-
-                // =============================================
-                // position methods
-                // =============================================
-
+                /**
+                 * @brief Get the distance between this position and another position
+                 * 
+                 * @param other: position to be compared as l-value const reference
+                 * 
+                 * @return constexpr measurement 
+                 */
                 constexpr measurement distance(const position& other) const noexcept {    
                     
-                    return (*this - other).norm();
+                    return (other - *this).norm();
                     
                 }       
 
 
+                /**
+                 * @brief Get the square distance between this position and another position
+                 * 
+                 * @param other: position to be compared as l-value const reference
+                 * 
+                 * @return constexpr measurement 
+                 */
                 constexpr measurement distance2(const position& other) const noexcept {    
                     
-                    return (*this - other).norm2();
+                    return (other - *this).norm2();
                     
                 }       
 
 
+                /**
+                 * @brief Get the polar angle of this position
+                 * 
+                 * @return constexpr measurement 
+                 */
                 constexpr measurement phi() const noexcept {
 
                     return vector<DIM>::phi();
@@ -6337,13 +8049,28 @@ namespace physics {
                 }
 
                     
+                /**
+                 * @brief Get the polar angle between this position and another position
+                 * 
+                 * @param other: position to be compared as l-value const reference
+                 * 
+                 * @return constexpr measurement 
+                 */
                 constexpr measurement phi(const position& other) const noexcept requires (DIM >= 2) { 
 
-                    return measurement(std::atan2((other[1] - this[1]).value(), (other[0] - this[0]).value()), rad);
-                
+                    if (other != *this) 
+                        return (other - *this).phi();
+                    else 
+                        return 0.0 * rad;
+                                        
                 }
 
 
+                /**
+                 * @brief Get the azimuthal angle of this position
+                 * 
+                 * @return constexpr measurement 
+                 */
                 constexpr measurement theta() const noexcept {
 
                     return vector<DIM>::theta();
@@ -6351,33 +8078,51 @@ namespace physics {
                 }
 
 
+                /**
+                 * @brief Get the azimuthal angle between this position and another position
+                 * 
+                 * @param other: position to be compared as l-value const reference
+                 * 
+                 * @return constexpr measurement 
+                 */
                 constexpr measurement theta(const position& other) const noexcept requires (DIM >= 3) {
 
-                    if (other.pos_[2] == this[2]) return 0 * rad;
-                    return std::acos(((other[2] - this[2]) / this.distance(other)).value()) * rad; 
+                    if (other.pos_[2] != this->operator[](2)) 
+                        return (other - *this).theta(); 
+                    else 
+                        return 0.0 * rad;
                 
                 }
 
 
-                constexpr std::vector<double> versor() const noexcept {
+                /**
+                 * @brief Get the versor between this position and another position
+                 * 
+                 * @param other: position to be compared as l-value const reference
+                 * 
+                 * @return constexpr verctor
+                 */
+                constexpr vector<DIM> direction(const position& other) const noexcept requires (DIM >= 2) {
 
-                    return this.versor();
-
-                }
-
-                
-                constexpr std::vector<double> versor(const position& other) const noexcept requires (DIM >= 2) {
-
-                    if constexpr (DIM == 2) return { std::cos(phi(other).value()), std::sin(phi(other).value()) };
-                    if constexpr (DIM == 3) return { std::cos(phi(other).value()), std::sin(phi(other).value()), (other[2] - this[2]) / this.distance(other)};
+                    if (other != *this)
+                        return vector<DIM>((other - *this) / this->distance(other));
+                    else 
+                        return vector<DIM>(0 * unitless);
 
                 } 
 
 
-                constexpr void print() const noexcept {
+                /**
+                 * @brief Print the position to the standard output
+                 * 
+                 * @param newline: if true, print a newline character at the end of the output
+                 * 
+                 * @return void
+                 */
+                constexpr void print(const bool& newline = true) const noexcept {
 
-                    std::cout << "position = ";
-                    vector<DIM>::print();
+                    std::cout << "position = "; 
+                    this->vector<DIM>::print(newline); 
 
                 }   
 
@@ -6385,185 +8130,169 @@ namespace physics {
         }; // class position
 
 
-        // class expressing the linear velocity of an generic object 
-        // as a vector of measurements (base::metre / base::second) in a n-dimentional system
+        /**
+         * @brief Class expressing the linear velocity of a generic object as a vector of measurements
+         * @see template <size_t> vector 
+         * 
+         * @note The linear_velocity unit_base must be metre / second
+         * @note The linear_velocity is expressed in a cartesian coordinate system
+         * @todo Add more coordinate system (e.g. polar, spherical, cylindrical)
+         * 
+         * @tparam DIM: size_t dimentions of the space
+         */
         template <size_t DIM> 
         class linear_velocity : public vector<DIM> {
 
             
             public: 
 
-                // =============================================
-                // constructors & destructor
-                // =============================================
+            // =============================================
+            // constructors & destructor
+            // =============================================
 
+                /**
+                 * @brief Construct a new default linear_velocity object
+                 * 
+                 * @note The linear_velocity is set to zero metre / second
+                 */
                 explicit constexpr linear_velocity() noexcept : 
                 
                     vector<DIM>(base::metre / base::second) {}
 
 
-                constexpr linear_velocity(const std::vector<measurement>& vel) noexcept : 
+                /**
+                 * @brief Construct a new linear_velocity object from an std::array of measurements
+                 * 
+                 * @param vel: std::array of measurements as l-value const reference
+                 */
+                constexpr linear_velocity(const std::array<measurement, DIM>& vel) noexcept : 
                     
                     vector<DIM>(vel) {
 
-                        for (auto& i : vel) assert(i.units().base() == base::metre / base::second);
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (vel[i].units().base() != base::metre / base::second) 
+                                throw std::invalid_argument("Wrong linear_velocity unit, the unit_base must be metre / second");
+
+                        }
+                    
                     }
 
 
+                /**
+                 * @brief Construct a new linear_velocity object from an std::array of measurements
+                 * 
+                 * @param vel: std::array of measurements as r-value reference
+                 */
+                constexpr linear_velocity(std::array<measurement, DIM>&& vel) noexcept : 
+                    
+                    vector<DIM>(std::move(vel)) {
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (vel[i].units().base() != base::metre / base::second) 
+                                throw std::invalid_argument("Wrong linear_velocity unit, the unit_base must be metre / second");
+
+                        }
+                    
+                    }
+
+
+                /**
+                 * @brief Construct a new linear_velocity object from a vector of measurements
+                 * 
+                 * @param vel: vector of measurements as l-value const reference
+                 */
                 constexpr linear_velocity(const vector<DIM>& vel) noexcept : 
                     
                     vector<DIM>(vel) {
 
-                        for (auto& i : vel.data()) assert(i.units().base() == base::metre / base::second);
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (vel[i].units().base() != base::metre / base::second) 
+                                throw std::invalid_argument("Wrong linear_velocity unit, the unit_base must be metre / second");
+                        
+                        }
+                    
                     }
 
 
-                constexpr linear_velocity(const linear_velocity& other) noexcept : 
+                /**
+                 * @brief Construct a new linear_velocity object from a vector of measurements
+                 * 
+                 * @param vel: vector of measurements as r-value reference
+                 */
+                constexpr linear_velocity(vector<DIM>&& vel) noexcept : 
                     
-                    vector<DIM>(other) {}
+                    vector<DIM>(std::move(vel)) {
 
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (vel[i].units().base() != base::metre / base::second) 
+                                throw std::invalid_argument("Wrong linear_velocity unit, the unit_base must be metre / second");
+                        
+                        }
+                    
+                    }
+
+                
+                /// @brief Default destructor
                 ~linear_velocity() = default; 
 
 
-                // =============================================
-                // operators
-                // =============================================
+            // =============================================
+            // operators
+            // =============================================
 
-                constexpr linear_velocity operator=(const linear_velocity& other) noexcept {
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param os: std::ostream&
+                 * @param pos: linear_velocity to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ostream& 
+                 */
+                friend constexpr std::ostream& operator<<(std::ostream& os, const linear_velocity& vel) noexcept { 
 
-                    vector<DIM>::operator=(other);
-                    return *this;
+                    os << "linear velocity = " << vel.as_vector(); 
 
-                }
-
-
-                constexpr linear_velocity operator+=(const linear_velocity& other) noexcept {
-
-                    vector<DIM>::operator+=(other);
-                    return *this;
-
-                }
-
-
-                constexpr linear_velocity operator-=(const linear_velocity& other) noexcept {
-
-                    vector<DIM>::operator-=(other);
-                    return *this;
+                    return os;
 
                 }
 
 
-                constexpr linear_velocity operator+(const linear_velocity& other) const noexcept { 
-                    
-                    return vector<DIM>::operator+(other.as_vector());
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param file: std::ofstream&
+                 * @param vel: linear_velocity to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ofstream& 
+                 */
+                friend constexpr std::ofstream& operator<<(std::ofstream& file, const linear_velocity& vel) noexcept { 
+
+                    file << "linear velocity = " << vel.as_vector(); 
+
+                    return file;
 
                 }
 
 
-                constexpr linear_velocity operator-(const linear_velocity& other) const noexcept { 
-                    
-                    return vector<DIM>::operator-(other.as_vector());
+            // =============================================
+            // print
+            // =============================================
 
-                }
-
-
-                constexpr linear_velocity operator-() const noexcept { 
-                    
-                    return vector<DIM>::operator-();
-
-                }
-
-
-                constexpr vector<DIM> operator*(const measurement& meas) noexcept {
-
-                    return vector<DIM>::operator*(meas);
-
-                }
-
-
-                constexpr vector<DIM> operator/(const measurement& meas) noexcept {
-
-                    return vector<DIM>::operator/(meas);
-
-                }
-
-
-                friend vector<DIM> operator*(const measurement& meas, const linear_velocity& pos) noexcept {
-
-                    return meas * pos.as_vector();
-
-                }
-
-
-                friend vector<DIM> operator/(const measurement& meas, const linear_velocity& pos) noexcept {
-
-                    return meas / pos.as_vector();
-                    
-                }
-
-
-                constexpr linear_velocity operator*=(const double& val) noexcept {
-
-                    vector<DIM>::operator*=(val);
-                    return *this;
-
-                }
-
-
-                constexpr linear_velocity operator/=(const double& val) noexcept {
-
-                    vector<DIM>::operator/=(val);
-                    return *this;
-
-                }
-
-
-                constexpr linear_velocity operator*(const double& val) const noexcept { 
-                    
-                    return linear_velocity(vector<DIM>::operator*(val)); 
-                
-                }
-
-
-                constexpr linear_velocity operator/(const double& val) const noexcept { 
-                    
-                    return linear_velocity(vector<DIM>::operator/(val)); 
-                
-                }
-
-
-                friend constexpr linear_velocity operator*(const double& val, const linear_velocity& vel) noexcept { 
-                    
-                    return val * vel.as_vector();
-                
-                }
-
-
-                friend constexpr vector<DIM> operator/(const double& val, const linear_velocity& vel) noexcept { 
-                    
-                    return val / vel.as_vector();
-                
-                }
-
-
-                friend constexpr linear_velocity operator/(const position<DIM>& pos, const time& t) noexcept {
-
-                    return pos.as_vector() / t.as_measurement();
-
-                }
-
-
-                // =============================================
-                // print method
-                // =============================================
-
-                constexpr void print() const {
+                /**
+                 * @brief Print the linear_velocity to the standard output
+                 * 
+                 * @param newline: if true, print a newline character at the end of the output
+                 * 
+                 * @return void
+                 */
+                constexpr void print(const bool& newline = true) const {
 
                     std::cout << "linear velocity = ";
-                    vector<DIM>::print();
+                    vector<DIM>::print(newline);
 
                 }   
 
@@ -6571,185 +8300,169 @@ namespace physics {
         }; // class linear_velocity
     
 
-        // class expressing the linear acceleration of an generic object 
-        // as a vector of measurements (base::metre / base::second.square()) in a n-dimentional system
+        /**
+         * @brief Class expressing the linear acceleration of a generic object as a vector of measurements
+         * @see template <size_t> vector 
+         * 
+         * @note The linear_acceleration unit_base must be metre / second.square()
+         * @note The linear_acceleration is expressed in a cartesian coordinate system
+         * @todo Add more coordinate system (e.g. polar, spherical, cylindrical)
+         * 
+         * @tparam DIM: size_t dimentions of the space
+         */
         template <size_t DIM> 
         class linear_acceleration : public vector<DIM> {
 
             
             public: 
 
-                // =============================================
-                // constructors & destructor
-                // =============================================
+            // =============================================
+            // constructors & destructor
+            // =============================================
 
+                /**
+                 * @brief Construct a new default linear_acceleration object
+                 * 
+                 * @note The linear_acceleration is set to zero metre / second.square()
+                 */
                 explicit constexpr linear_acceleration() noexcept : 
                 
                     vector<DIM>(base::metre / base::second.square()) {}
 
 
-                constexpr linear_acceleration(const std::vector<measurement>& vel) noexcept : 
+                /**
+                 * @brief Construct a new linear_acceleration object from an std::array of measurements
+                 * 
+                 * @param acc: std::array of measurements as l-value const reference
+                 */
+                constexpr linear_acceleration(const std::array<measurement, DIM>& acc) noexcept : 
                     
-                    vector<DIM>(vel) {
+                    vector<DIM>(acc) {
 
-                        for (auto& i : vel) assert(i.units().base() == base::metre / base::second.square());
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (acc[i].units().base() != base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong linear_acceleration unit, the unit_base must be metre / second.square()");
+
+                        }
+                    
                     }
 
 
-                constexpr linear_acceleration(const vector<DIM>& vel) noexcept : 
+                /**
+                 * @brief Construct a new linear_acceleration object from an std::array of measurements
+                 * 
+                 * @param acc: std::array of measurements as r-value reference
+                 */
+                constexpr linear_acceleration(std::array<measurement, DIM>&& acc) noexcept : 
                     
-                    vector<DIM>(vel) {
+                    vector<DIM>(std::move(acc)) {
 
-                        for (auto& i : vel.data()) assert(i.units().base() == base::metre / base::second.square());
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (acc[i].units().base() != base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong linear_acceleration unit, the unit_base must be metre / second.square()");
+
+                        }
+                    
                     }
 
 
-                constexpr linear_acceleration(const linear_acceleration& other) noexcept : 
+                /**
+                 * @brief Construct a new linear_acceleration object from a vector of measurements
+                 * 
+                 * @param acc: vector of measurements as l-value const reference
+                 */
+                constexpr linear_acceleration(const vector<DIM>& acc) noexcept : 
                     
-                    vector<DIM>(other) {}
+                    vector<DIM>(acc) {
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (acc[i].units().base() != base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong linear_acceleration unit, the unit_base must be metre / second.square()");
+                        
+                        }
+                    
+                    }
 
 
+                /**
+                 * @brief Construct a new linear_acceleration object from a vector of measurements
+                 * 
+                 * @param acc: vector of measurements as r-value reference
+                 */
+                constexpr linear_acceleration(vector<DIM>&& acc) noexcept : 
+                    
+                    vector<DIM>(std::move(acc)) {
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (acc[i].units().base() != base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong linear_acceleration unit, the unit_base must be metre / second.square()");
+                        
+                        }
+                    
+                    }
+
+                
+                /// @brief Default destructor
                 ~linear_acceleration() = default; 
 
 
-                // =============================================
-                // operators
-                // =============================================
+            // =============================================
+            // operators
+            // =============================================
 
-                constexpr linear_acceleration operator=(const linear_acceleration& other) noexcept {
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param os: std::ostream&
+                 * @param pos: linear_acceleration to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ostream& 
+                 */
+                friend constexpr std::ostream& operator<<(std::ostream& os, const linear_acceleration& acc) noexcept { 
 
-                    vector<DIM>::operator=(other);
-                    return *this;
+                    os << "linear acceleration = " << acc.as_vector(); 
 
-                }
-
-
-                constexpr linear_acceleration operator+=(const linear_acceleration& other) noexcept {
-
-                    vector<DIM>::operator+=(other);
-                    return *this;
-
-                }
-
-
-                constexpr linear_acceleration operator-=(const linear_acceleration& other) noexcept {
-
-                    vector<DIM>::operator-=(other);
-                    return *this;
+                    return os;
 
                 }
 
 
-                constexpr linear_acceleration operator+(const linear_acceleration& other) const noexcept { 
-                    
-                    return vector<DIM>::operator+(other.as_vector());
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param file: std::ofstream&
+                 * @param acc: linear_acceleration to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ofstream& 
+                 */
+                friend constexpr std::ofstream& operator<<(std::ofstream& file, const linear_acceleration& acc) noexcept { 
+
+                    file << "linear acceleration = " << acc.as_vector(); 
+
+                    return file;
 
                 }
 
 
-                constexpr linear_acceleration operator-(const linear_acceleration& other) const noexcept { 
-                    
-                    return vector<DIM>::operator-(other.as_vector());
+            // =============================================
+            // print
+            // =============================================
 
-                }
-
-
-                constexpr linear_acceleration operator-() const noexcept { 
-                    
-                    return vector<DIM>::operator-();
-
-                }
-
-
-                constexpr vector<DIM> operator*(const measurement& meas) noexcept {
-
-                    return vector<DIM>::operator*(meas);
-
-                }
-
-
-                constexpr vector<DIM> operator/(const measurement& meas) noexcept {
-
-                    return vector<DIM>::operator/(meas);
-
-                }
-
-
-                friend vector<DIM> operator*(const measurement& meas, const linear_acceleration& pos) noexcept {
-
-                    return meas * pos.as_vector();
-
-                }
-
-
-                friend vector<DIM> operator/(const measurement& meas, const linear_acceleration& pos) noexcept {
-
-                    return meas / pos.as_vector();
-                    
-                }
-
-
-                constexpr linear_acceleration operator*=(const double& val) noexcept {
-
-                    vector<DIM>::operator*=(val);
-                    return *this;
-
-                }
-
-
-                constexpr linear_acceleration operator/=(const double& val) noexcept {
-
-                    vector<DIM>::operator/=(val);
-                    return *this;
-
-                }
-
-
-                constexpr linear_acceleration operator*(const double& val) const noexcept { 
-                    
-                    return linear_acceleration(vector<DIM>::operator*(val)); 
-                
-                }
-
-
-                constexpr linear_acceleration operator/(const double& val) const noexcept { 
-                    
-                    return linear_acceleration(vector<DIM>::operator/(val)); 
-                
-                }
-
-
-                friend constexpr linear_acceleration operator*(const double& val, const linear_acceleration& acc) noexcept { 
-                    
-                    return val * acc.as_vector();
-                
-                }
-
-
-                friend constexpr vector<DIM> operator/(const double& val, const linear_acceleration& acc) noexcept { 
-                    
-                    return val / acc.as_vector();
-                
-                }
-
-
-                friend constexpr linear_acceleration<DIM> operator/(const linear_velocity<DIM>& vel, const time& t) noexcept {
-
-                    return vel.as_vector() / t.as_measurement();
-
-                }   
-
-
-                // =============================================
-                // print method
-                // =============================================
-
-                constexpr void print() const {
+                /**
+                 * @brief Print the linear_acceleration to the standard output
+                 * 
+                 * @param newline: if true, print a newline character at the end of the output
+                 * 
+                 * @return void
+                 */
+                constexpr void print(const bool& newline = true) const {
 
                     std::cout << "linear acceleration = ";
-                    vector<DIM>::print();
+                    vector<DIM>::print(newline);
 
                 }   
 
@@ -6757,199 +8470,374 @@ namespace physics {
         }; // class linear_acceleration
 
 
-        // class expressing the force of an generic object 
-        // as a vector of measurements (base::kilogram * base::metre / base::second.square()) in a n-dimentional system
+            // /**
+            //  * @brief Create a new position vector multiplying a linear velocity with a time measurement
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param vel: linear_velocity as l-value const reference
+            //  * @param t: time as l-value const reference 
+            //  * 
+            //  * @return constexpr position<DIM> 
+            //  */
+            // template <size_t DIM> 
+            // constexpr position<DIM> operator*(const linear_velocity<DIM>& vel, const time& t) noexcept {
+
+            //     return vel * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new position vector multiplying a linear velocity with a time measurement
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param vel: linear_velocity as r-value reference
+            //  * @param t: time as r-value reference 
+            //  * 
+            //  * @return constexpr position<DIM> 
+            //  */
+            // template <size_t DIM> 
+            // constexpr position<DIM> operator*(linear_velocity<DIM>&& vel, time&& t) noexcept {
+
+            //     return vel * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new position vector multiplying a time measurement with a linear velocity 
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param t: time as l-value const reference 
+            //  * @param vel: linear_velocity as l-value const reference
+            //  * 
+            //  * @return constexpr position<DIM> 
+            //  */
+            // template <size_t DIM> 
+            // constexpr position<DIM> operator*(const time& t, const linear_velocity<DIM>& vel) noexcept {
+
+            //     return vel * t.as_measurement();
+
+            // }
+
+
+            // /**
+            // * @brief Create a new position vector multiplying a linear velocity with a time measurement
+            // * 
+            // * @tparam DIM: dimentions of the space
+            // * @param t: time as r-value reference 
+            // * @param vel: linear_velocity as r-value reference
+            // * 
+            // * @return constexpr position<DIM> 
+            // */
+            // template <size_t DIM> 
+            // constexpr position<DIM> operator*(time&& t, linear_velocity<DIM>&& vel) noexcept {
+
+            //     return vel * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_velocity object dividing a position by time 
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param pos: position<DIM> as l-value const reference
+            //  * @param t: time as l-value const reference
+            //  * 
+            //  * @return linear_velocity<DIM>
+            //  */
+            // template <size_t DIM> 
+            // constexpr linear_velocity<DIM> operator/(const position<DIM>& pos, const time& t) {
+
+            //     return pos / t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_velocity object dividing a position by time 
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param pos: position<DIM> as r-value reference
+            //  * @param t: time as r-value reference
+            //  * 
+            //  * @return linear_velocity<DIM>
+            //  */
+            // template <size_t DIM> 
+            // constexpr linear_velocity<DIM> operator/(position<DIM>&& pos, time&& t) {
+
+            //     return pos / t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_velocity object multiplying a linear_acceleration with a time measurement
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param acc: linear_acceleration as l-value const reference
+            //  * @param t: time as l-value const reference 
+            //  * 
+            //  * @return constexpr linear_velocity<DIM> 
+            //  */
+            // template <size_t DIM> 
+            // constexpr linear_velocity<DIM> operator*(const linear_acceleration<DIM>& acc, const time& t) noexcept {
+
+            //     return acc * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_velocity object multiplying a linear_acceleration with a time measurement
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param acc: linear_acceleration<DIM> as r-value reference
+            //  * @param t: time as r-value reference
+            //  * 
+            //  * @return linear_velocity<DIM>
+            //  */
+            // template <size_t DIM> 
+            // constexpr linear_velocity<DIM> operator*(linear_acceleration<DIM>&& acc, time&& t) noexcept {
+
+            //     return acc * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_velocity object multiplying a time measurement with a linear_acceleration
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param t: time as l-value const reference
+            //  * @param acc: linear_acceleration as l-value const reference
+            //  * 
+            //  * @return linear_velocity<DIM>
+            //  */
+            // template <size_t DIM> 
+            // constexpr linear_velocity<DIM> operator*(const time& t, const linear_acceleration<DIM>& acc) noexcept {
+
+            //     return acc * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_velocity object multiplying a linear_acceleration with a time measurement
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param t: time as r-value reference
+            //  * @param acc: linear_acceleration<DIM> as r-value reference
+            //  * 
+            //  * @return linear_velocity<DIM>
+            //  */
+            // template <size_t DIM> 
+            // constexpr linear_velocity<DIM> operator*(time&& t, linear_acceleration<DIM>&& acc) noexcept {
+
+            //     return acc * t.as_measurement();
+
+            // }
+
+
+            // /**
+            //  * @brief Create a new linear_acceleration object dividing a linear_velocity by time 
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param pos: linear_velocity<DIM> as l-value const reference
+            //  * @param t: time as l-value const reference
+            //  * 
+            //  * @return linear_acceleration<DIM>
+            //  */        
+            // template <size_t DIM> 
+            // constexpr linear_acceleration<DIM> operator/(const linear_velocity<DIM>& vel, const time& t) {
+
+            //     return vel / t.as_measurement();
+
+            // }   
+
+
+            // /**
+            //  * @brief Create a new linear_acceleration object dividing a linear_velocity by time 
+            //  * 
+            //  * @tparam DIM: dimentions of the space
+            //  * @param pos: linear_velocity<DIM> as r-value reference
+            //  * @param t: time as r-value reference
+            //  * 
+            //  * @return linear_acceleration<DIM>
+            //  */       
+            // template <size_t DIM> 
+            // constexpr linear_acceleration<DIM> operator/(linear_velocity<DIM>&& vel, time&& t) {
+
+            //     return vel / t.as_measurement();
+
+            // }   
+
+
+        /**
+         * @brief Class expressing the force as a vector of measurements
+         * @see template <size_t> vector 
+         * 
+         * @note The force unit_base must be kilogram * kilogram * metre / second.square()
+         * @note The force is expressed in a cartesian coordinate system
+         * @todo Add more coordinate system (e.g. polar, spherical, cylindrical)
+         * 
+         * @tparam DIM: size_t dimentions of the space
+         */
         template <size_t DIM> 
         class force : public vector<DIM> {
 
             
             public: 
 
-                // =============================================
-                // constructors & destructor
-                // =============================================
+            // =============================================
+            // constructors & destructor
+            // =============================================
 
+                /**
+                 * @brief Construct a new default force object
+                 * 
+                 * @note The force is set to zero kilogram * metre / second.square()
+                 */
                 explicit constexpr force() noexcept : 
                 
                     vector<DIM>(base::kilogram * base::metre / base::second.square()) {}
 
 
-                constexpr force(const std::vector<measurement>& vel) noexcept : 
+                /**
+                 * @brief Construct a new force object from an std::array of measurements
+                 * 
+                 * @param F: std::array of measurements as l-value const reference
+                 */
+                constexpr force(const std::array<measurement, DIM>& F) noexcept : 
                     
-                    vector<DIM>(vel) {
+                    vector<DIM>(F) {
 
-                        for (auto& i : vel) assert(i.units().base() == base::kilogram * base::metre / base::second.square());
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (F[i].units().base() != base::kilogram * base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong force unit, the unit_base must be kilogram * metre / second.square()");
+
+                        }
+                    
                     }
 
 
-                constexpr force(const vector<DIM>& vel) noexcept : 
+                /**
+                 * @brief Construct a new force object from an std::array of measurements
+                 * 
+                 * @param F: std::array of measurements as r-value reference
+                 */
+                constexpr force(std::array<measurement, DIM>&& F) noexcept : 
                     
-                    vector<DIM>(vel) {
+                    vector<DIM>(std::move(F)) {
 
-                        for (auto& i : vel.data()) assert(i.units().base() == base::kilogram * base::metre / base::second.square());
+                        for (size_t i{}; i < DIM; ++i) {
 
+                            if (F[i].units().base() != base::kilogram * base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong force unit, the unit_base must be kilogram * metre / second.square()");
+
+                        }
+                    
                     }
 
 
-                constexpr force(const force& other) noexcept : 
+                /**
+                 * @brief Construct a new force object from a vector of measurements
+                 * 
+                 * @param F: vector of measurements as l-value const reference
+                 */
+                constexpr force(const vector<DIM>& F) noexcept : 
                     
-                    vector<DIM>(other) {}
+                    vector<DIM>(F) {
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (F[i].units().base() != base::kilogram * base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong force unit, the unit_base must be kilogram * metre / second.square()");
+                        
+                        }
+                    
+                    }
 
 
+                /**
+                 * @brief Construct a new force object from a vector of measurements
+                 * 
+                 * @param F: vector of measurements as r-value reference
+                 */
+                constexpr force(vector<DIM>&& F) noexcept : 
+                    
+                    vector<DIM>(std::move(F)) {
+
+                        for (size_t i{}; i < DIM; ++i) {
+
+                            if (F[i].units().base() != base::kilogram * base::metre / base::second.square()) 
+                                throw std::invalid_argument("Wrong force unit, the unit_base must be kilogram * metre / second.square()");
+                        
+                        }
+                    
+                    }
+
+                
+                /// @brief Default destructor
                 ~force() = default; 
 
 
-                // =============================================
-                // operators
-                // =============================================
+            // =============================================
+            // print methods
+            // =============================================
 
-                constexpr force operator=(const force& other) noexcept {
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param os: std::ostream&
+                 * @param pos: force to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ostream& 
+                 */
+                friend constexpr std::ostream& operator<<(std::ostream& os, const force& F) noexcept { 
 
-                    vector<DIM>::operator=(other);
-                    return *this;
+                    os << "force = " << F.as_vector(); 
 
-                }
-
-
-                constexpr force operator+=(const force& other) noexcept {
-
-                    vector<DIM>::operator+=(other);
-                    return *this;
-
-                }
-
-
-                constexpr force operator-=(const force& other) noexcept {
-
-                    vector<DIM>::operator-=(other);
-                    return *this;
+                    return os;
 
                 }
 
 
-                constexpr force operator+(const force& other) const noexcept { 
-                    
-                    return vector<DIM>::operator+(other.as_vector());
+                /**
+                 * @brief Output stream operator
+                 * 
+                 * @param file: std::ofstream&
+                 * @param F: force to be printed as l-value const reference
+                 * 
+                 * @return constexpr std::ofstream& 
+                 */
+                friend constexpr std::ofstream& operator<<(std::ofstream& file, const force& F) noexcept { 
+
+                    file << "force = " << F.as_vector(); 
+
+                    return file;
 
                 }
 
 
-                constexpr force operator-(const force& other) const noexcept { 
-                    
-                    return vector<DIM>::operator-(other.as_vector());
-
-                }
-
-
-                constexpr force operator-() const noexcept { 
-                    
-                    return vector<DIM>::operator-();
-
-                }
-
-
-                constexpr vector<DIM> operator*(const measurement& meas) noexcept {
-
-                    return vector<DIM>::operator*(meas);
-
-                }
-
-
-                constexpr vector<DIM> operator/(const measurement& meas) noexcept {
-
-                    return vector<DIM>::operator/(meas);
-
-                }
-
-
-                friend vector<DIM> operator*(const measurement& meas, const force& pos) noexcept {
-
-                    return meas * pos.as_vector();
-
-                }
-
-
-                friend vector<DIM> operator/(const measurement& meas, const force& pos) noexcept {
-
-                    return meas / pos.as_vector();
-                    
-                }
-
-
-                constexpr force operator*=(const double& val) noexcept {
-
-                    vector<DIM>::operator*=(val);
-                    return *this;
-
-                }
-
-
-                constexpr force operator/=(const double& val) noexcept {
-
-                    vector<DIM>::operator/=(val);
-                    return *this;
-
-                }
-
-
-                constexpr force operator*(const double& val) const noexcept { 
-                    
-                    return force(vector<DIM>::operator*(val)); 
-                
-                }
-
-
-                constexpr force operator/(const double& val) const noexcept { 
-                    
-                    return force(vector<DIM>::operator/(val)); 
-                
-                }
-
-
-                friend constexpr force operator*(const double& val, const force& acc) noexcept { 
-                    
-                    return val * acc.as_vector();
-                
-                }
-
-
-                friend constexpr vector<DIM> operator/(const double& val, const force& acc) noexcept { 
-                    
-                    return val / acc.as_vector();
-                
-                }
-
-
-                // =============================================
-                // print method
-                // =============================================
-
-                constexpr void print() const {
+                /**
+                 * @brief Print the force to the standard output
+                 * 
+                 * @param newline: if true, print a newline character at the end of the output
+                 * 
+                 * @return void
+                 */
+                constexpr void print(const bool& newline = true) const {
 
                     std::cout << "force = ";
-                    vector<DIM>::print();
+                    vector<DIM>::print(newline);
 
                 }   
 
 
         }; // class force
-
-
-        template <size_t DIM>
-        constexpr position<DIM> operator*(const linear_velocity<DIM>& vel, const time& t) noexcept {
-
-            return vel.as_vector() * t.as_measurement();
-
-        }
-
-
-        template <size_t DIM>
-        constexpr linear_velocity<DIM> operator*(const linear_acceleration<DIM>& acc, const time& t) noexcept {
-
-            return acc.as_vector() * t.as_measurement();
-
-        }
 
 
         /// @brief Class for timing the execution of a generic function/process
@@ -6958,67 +8846,46 @@ namespace physics {
             
             public:
 
-                // =============================================
-                // constructor and destructor
-                // =============================================   
+            // =============================================
+            // constructor and destructor
+            // =============================================   
 
                 /**
                  * @brief Construct a new timer object
-                 * 
                  */
-                constexpr timer() = default;
+                timer() noexcept {
+
+                    reset(); 
+                    
+                }
 
 
                 /**
                  * @brief Destroy the timer object
-                 * 
                  */
                 ~timer() = default;
 
+            
+            // =============================================
+            // timer methods
+            // =============================================   
+
+
+                inline void reset() {
+
+                    start_ = std::chrono::high_resolution_clock::now();
+
+                }
+
+
+                inline measurement elapsed(const unit& units = s) {
+
+                    if (units.base_ != base::second) 
+                        throw std::invalid_argument("Wrong unit, the unit_base must be second");
+
+                    return measurement(units.convertion_factor(ns) * std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start_).count(), units);
                 
-                // =============================================
-                // timer methods
-                // =============================================   
-
-                /**
-                 * @brief start the timer
-                 * 
-                 */
-                inline void start() { 
-                    
-                    start_ = std::chrono::high_resolution_clock::now(); 
-                    
-                }
-
-
-                /**
-                 * @brief stop the timer
-                 * 
-                 */
-                inline void pause() { 
-                    
-                    pause_ = std::chrono::high_resolution_clock::now(); 
-                    
-                }
-                
-
-                constexpr measurement elapsed(const unit& units = s) const {
-
-                    if (units != s) return measurement(s.convert(static_cast<std::chrono::duration<double>>(pause_ - start_).count(), units), units);
-                    else return measurement(static_cast<std::chrono::duration<double>>(pause_ - start_).count(), units);
-
-                }
-
-
-                /**
-                 * @brief print the elapsed time
-                 * 
-                 */
-                inline void print(const unit& units = s) const { 
-
-                    std::cout << "elapsed time = " << elapsed(units) << "\n"; 
-
-                }
+                }             
 
 
             protected: 
@@ -7026,8 +8893,8 @@ namespace physics {
                 // =============================================
                 // class members
                 // =============================================     
-                
-                std::chrono::time_point<std::chrono::high_resolution_clock> start_, pause_;
+
+                std::chrono::time_point<std::chrono::high_resolution_clock> start_;
 
 
         }; // class timer
@@ -7036,394 +8903,168 @@ namespace physics {
     } // namespace tools
 
 
-} // namespace physics
-
-
-
-namespace std {
-
-
-    using measurement = physics::measurements::measurement; 
-
-    
-    std::vector<measurement> operator*(const std::vector<measurement>& vec, const double& value) {
-        
-        std::vector<measurement> result; 
-        result.reserve(vec.size()); 
-        for (size_t i{}; i < result.size(); ++i) result[i] = vec[i] * value; 
-        return result; 
-
-    }
-
-    
-    std::vector<measurement> operator/(const std::vector<measurement>& vec, const double& value) {
-        
-        std::vector<measurement> result; 
-        result.reserve(vec.size()); 
-        for (size_t i{}; i < result.size(); ++i) result[i] = vec[i] / value; 
-        return result; 
-
-    }
-
-
-}
-
-
-namespace math {
-
-
-    namespace equations {
-        
-
-        using namespace physics::tools; 
-
-
-        template <size_t DIM, typename... Args>
-        struct ode {
-            
-
-            std::function<vector<DIM>(const vector<DIM>&, const Args&...)> eval_; 
-
-
-            std::function<vector<DIM>(const vector<DIM>&, const Args&...)> diff_; 
-
-
-            constexpr ode(const std::function<vector<DIM>(const vector<DIM>&, const Args&...)>& evaluate, 
-                          const std::function<vector<DIM>(const vector<DIM>&, const Args&...)>& differentiate) noexcept :
-
-                eval_(evaluate), 
-                diff_(differentiate) {}
-
-            
-            constexpr vector<DIM> eval(const vector<DIM>& init, const Args&... param) const noexcept {
-
-                return eval_(init, param...); 
-
-            }
-
-
-            constexpr vector<DIM> diff(const vector<DIM>& init, const Args&... param) const noexcept {
-
-                return diff_(init, param...); 
-
-            } 
-
-
-        }; // struct ode
-
-
-        template <size_t DIM, size_t N_EQ, typename... Args>
-        struct ode_system {
-
-
-            std::function<matrix<DIM, N_EQ>(const matrix<DIM, N_EQ>&, const Args&...)> diff_; 
-
-
-            constexpr ode_system(const std::function<matrix<DIM, N_EQ>(const matrix<DIM, N_EQ>&, const Args&...)>& differentiate) noexcept :
-
-                diff_(differentiate) {}
-
-
-            constexpr matrix<DIM, N_EQ> diff(const matrix<DIM, N_EQ>& init, const Args&... param) const noexcept {
-
-                return diff_(init, param...); 
-
-            } 
-
-
-        }; // struct ode_system
-
-
-        template <size_t DIM, size_t N_EQ, typename... Args>
-        struct ode_solver {
-
-
-            template <class ODE, class Type, class Incr>
-            constexpr Type euler(const ODE& ode, const Type& init, const Args&... param, const Incr& incr) const noexcept {
-
-                return init + ode.diff(init, param...) * incr;
-                
-            }
-
-
-            template <class ODE, class Type, class Incr>
-            constexpr Type RK4(const ODE& ode, const Type& init, const Args&... param, const Incr& incr) const noexcept {
-
-                matrix<DIM, N_EQ> k1(ode.diff(init, param...));
-                matrix<DIM, N_EQ> k2(ode.diff(init + k1 * (incr / 2.), param...)); 
-                matrix<DIM, N_EQ> k3(ode.diff(init + k2 * (incr / 2.), param...));
-                matrix<DIM, N_EQ> k4(ode.diff(init + k3 * incr, param...)); 
-                return init + (k1 + k2 * 2. + k3 * 2. + k4) * (incr / 6.); 
-
-            }
-
-
-        }; // struct ode_solver
-
-
-        template <size_t DIM, typename... Args>
-        class hamiltonian {
-
-            
-            private: 
-            
-
-                ode<DIM, Args...>* potential_;
-
-
-                ode_system<DIM, 2, Args...> system_;
-
-
-                ode_solver<DIM, 2, Args...> solver_;
-
-
-            public: 
-                
-                
-                constexpr hamiltonian(ode<DIM, Args...>* potential) noexcept :
-
-                    potential_{potential}, 
-                    system_{
-                    
-                        [this](const matrix<DIM, 2>& init, const Args&... param) -> matrix<DIM, 2> { 
-                        
-                            return matrix<DIM, 2>({init[1], - potential_->diff(init[0], param...)}); 
-
-                        }
-
-                    } {}
-
-/*
-                constexpr hamiltonian(ode<DIM>* potential) noexcept {
-
-                    potential_.emplace_back(potential);
-
-                }
-
-
-                constexpr hamiltonian(const std::vector<ode<DIM>*>& potentials) noexcept : 
-
-                    potential_(potentials) {}
-
-
-                constexpr void add_potential(ode<DIM>* pot) noexcept {
-
-                    potential_.emplace_back(pot);
-
-                }
-
-
-                constexpr void add_potential(const std::vector<ode<DIM>*>& potentials) noexcept {
-
-                    potential_.insert(potential_.end(), potentials.begin(), potentials.end());
-
-                }
-
-
-                constexpr void remove_potential(ode<DIM>* pot) noexcept {
-
-                    potential_.erase(std::remove(potential_.begin(), potential_.end(), pot), potential_.end());
-
-                }
-
-
-                constexpr vector<DIM> eval(const measurement& mass, const position<DIM>& pos, const linear_velocity<DIM>& vel) const noexcept {
-
-                    vector<DIM> pot_eval(base::kilogram * base::metre.square() / base::second.square());
-                    for (auto& pot : potential_) pot_eval += pot->eval(pos.as_vector());
-                    return mass * vel.square() / 2. + pot_eval;
-
-                }
-
-*/
-
-
-                constexpr matrix<DIM, 2> solve(const measurement& mass, const matrix<DIM, 2>& init, const Args&... param, const physics::tools::time& incr) const noexcept {
-                    
-                    return solver_.RK4(system_, init, param..., std::vector<measurement>({incr.as_measurement(), incr.as_measurement() / mass}));
-
-                }
-
-
-        }; // class hamiltonian
-
-
-    } // namespace equations 
-
-
-} // namespace math
-
-
-namespace physics {
-
-
     /// @brief Namespace constains some physical constants
     namespace constants {
 
 
         using namespace physics::measurements; 
 
-        constexpr measurement G = measurement(6.67430e-17, N * km.square() / kg.square());
+
+        constexpr measurement G(6.67430e-17, N * km.square() / kg.square()); ///< gravitational constant
         
-        constexpr measurement electron_mass = measurement(9.109383701528e-31, kg);     
-        
-        constexpr measurement proton_mass = measurement(1.672621923695e-27, kg);
-        
-        constexpr measurement electron_charge = measurement(-1.602176634e-19, C);
-        
-        constexpr measurement proton_charge = measurement(1.602176634e-19, C); 
+        constexpr measurement c(299792458, m / s); ///< speed of light in vacuum
+
+        constexpr measurement h(6.62607015e-34, J * s); ///< Planck constant
+
+        constexpr measurement hbar(1.054571817e-34, J * s); ///< reduced Planck constant
+
+        constexpr measurement mu0(1.25663706212e-6, N / A.square()); ///< magnetic permeability of vacuum
+
+        constexpr measurement eps0 = 1 / (mu0 * square(c)); ///< electric permittivity of vacuum
+
+        constexpr measurement e(1.602176634e-19, C); ///< elementary charge
+
+        constexpr measurement m_e(9.1093837015e-31, kg); ///< electron mass
+
+        constexpr measurement m_p(1.67262192369e-27, kg); ///< proton mass
+
+        constexpr measurement m_n(1.67492749804e-27, kg); ///< neutron mass
+
+        constexpr measurement k_B(1.380649e-23, J / K); ///< Boltzmann constant
+
+        constexpr measurement N_A(6.02214076e23, mol.inv()); ///< Avogadro constant
+
+        constexpr measurement R = N_A * k_B; ///< ideal gas constant
 
 
     } // namespace constants
 
 
-    namespace potentials {
-
-
-        using namespace tools;  
-        using namespace math::equations;       
-
-        
-        template <size_t DIM>
-        class gravitational_potential : public ode<DIM, measurement, measurement, position<DIM>> {
-
-
-            public:
-
-
-                constexpr gravitational_potential() noexcept : 
-                    
-                    ode<DIM, measurement, measurement, position<DIM>>{
-                        
-                        [this](const vector<DIM>& init, const measurement& mass, const measurement& source_mass, const position<DIM>& source_position) -> vector<DIM> { 
-                            
-                            return - physics::constants::G * mass * source_mass * (init - source_position.as_vector()) / (init - source_position.as_vector()).norm2();
-                            
-                        }, 
-
-                        [this](const vector<DIM>& init, const measurement& mass, const measurement& source_mass, const position<DIM>& source_position) -> vector<DIM> { 
-
-                            return physics::constants::G * mass * source_mass * (init - source_position.as_vector()) / (init - source_position.as_vector()).norm().cube();
-
-                        }
-
-                    } {}
-
-
-
-        }; // class gravitational_potential
-
-
-    } // namespace potential
-
-
+    /// @brief Namespace contains some objects 
     namespace objects {
 
 
         using namespace physics::tools;
-        using namespace physics::potentials; 
 
-
+        
+        /**
+         * @brief Class for a generic mass_point
+         * 
+         * @tparam DIM: dimension of the space
+         */
         template <size_t DIM>
-        class object {
+        class mass {
 
 
-            protected:
-                    
-                // =============================================
-                // class members
-                // =============================================
-                
-                uint32_t id_;
-
-                std::string type_;
-
-                std::string name_;
-
-                // shape* shape_;
-
-                position<DIM> position_;
-
-                linear_velocity<DIM> linear_velocity_;
-
-                linear_acceleration<DIM> linear_acceleration_;
-
-                force<DIM> force_; 
-
-                    
             public: 
 
                 // =============================================
                 // constructors and destructor 
                 // =============================================
 
-                explicit constexpr object(const std::string& type,
-                                          // shape shape = geometry::shapes::circle(0.0 * m),
-                                          const position<DIM>& pos, 
-                                          const linear_velocity<DIM>& vel = linear_velocity<DIM>(), 
-                                          const linear_acceleration<DIM>& acc = linear_acceleration<DIM>(), 
-                                          const force<DIM>& F = force<DIM>(),
-                                          const uint32_t& id = 0, 
-                                          const std::string& name = "") noexcept : 
+                /**
+                 * @brief Construct a new mass object
+                 * 
+                 * @param m: measurement of mass
+                 * @param pos: position<DIM> vector
+                 * @param vel: linear_velocity vector
+                 * @param acc: linear_acceleration vector
+                 * @param gravity: bool (if true, the object is affected by the gravitational field)
+                 * @param id: uint32_t id
+                 * @param type: std::string type
+                 * @param name: std::string name
+                 */
+                explicit constexpr mass(const measurement& m = measurement(0.0, kg), 
+                                        const position<DIM>& pos = position<DIM>(), 
+                                        const linear_velocity<DIM>& vel = linear_velocity<DIM>(), 
+                                        const linear_acceleration<DIM>& acc = linear_acceleration<DIM>(), 
+                                        const bool& gravity = true,
+                                        const uint32_t& id = 0, 
+                                        const std::string& type = nullptr,
+                                        const std::string& name = nullptr
+                                        // shape shape = geometry::shapes::circle(0.0 * m)
+                                        ) : 
 
+                    // shape_(std::move(&shape)), 
+                    mass_(m),
+                    position_(pos),
+                    linear_velocity_(vel), 
+                    linear_acceleration_(acc), 
+                    gravitational_field_{gravity},
                     id_{id}, 
                     type_{type},
-                    name_{name},
-                    // shape_(std::move(&shape)), 
-                    position_{pos},
-                    linear_velocity_{vel}, 
-                    linear_acceleration_{acc},
-                    force_{F} {}
+                    name_{name} {
+
+                        assert(mass_ >= 0.0 * kg);
+
+                    }
 
 
-                constexpr object(const object& other) noexcept : 
+                /**
+                 * @brief Copy construct a new mass object
+                 * 
+                 * @param other: mass object to copy from as l-value const reference
+                 */
+                constexpr mass(const mass& other) : 
                 
+
+                    // shape_{other.shape_},
+                    mass_(other.mass_),
+                    position_(other.position_), 
+                    linear_velocity_(other.linear_velocity_), 
+                    linear_acceleration_(other.linear_acceleration_),
+                    gravitational_field_{other.gravitational_field_},
                     id_{other.id_}, 
                     type_{other.type_},
-                    name_{other.name_},
-                    // shape_{other.shape_},
-                    position_{other.position_}, 
-                    linear_velocity_{other.linear_velocity_}, 
-                    linear_acceleration_{other.linear_acceleration_},
-                    force_{other.force_} {
+                    name_{other.name_} {
 
                         std::cout << "object copy constructor called\n";
 
                     } 
 
-    /*
-                    constexpr object(object&& other) noexcept : 
-                    
-                        id_{std::move(other.id_)}, 
-                        type_{std::move(other.type_)},
-                        name_{std::move(other.name_)},
-                        // shape_{std::move(other.shape_)},
-                        position_{std::move(other.position_)}, 
-                        linear_velocity_{std::move(other.linear_velocity_)}, 
-                        linear_acceleration_{std::move(other.linear_acceleration_)},
-                        force_{std::move(other.force_)} {
 
-                            std::cout << "object move constructor called\n";
-
-                        } 
-    */
+                /**
+                 * @brief Move construct a new mass object
+                 * 
+                 * @param other: mass object to move from as r-value reference
+                 */
+                constexpr mass(mass&& other) : 
                 
-                ~object() noexcept {
+                    // shape_{std::move(other.shape_)},
+                    mass_(std::move(other.mass_)),
+                    position_{std::move(other.position_)}, 
+                    linear_velocity_{std::move(other.linear_velocity_)}, 
+                    linear_acceleration_{std::move(other.linear_acceleration_)},
+                    gravitational_field_{other.gravitational_field_},
+                    id_{std::move(other.id_)}, 
+                    type_{std::move(other.type_)},
+                    name_{std::move(other.name_)} {
 
-                    std::cout << "object destructor called\n";
-                    
-                }
+                        std::cout << "object move constructor called\n";
+
+                    } 
 
 
-                // =============================================
-                // operators
-                // =============================================
+                /// @brief Default destructor
+                ~mass() noexcept = default;
 
-                constexpr object& operator=(const object& other) noexcept {
+
+            // =============================================
+            // operators
+            // =============================================
+
+                /**
+                 * @brief Copy assignment operator
+                 * 
+                 * @param other: mass object to copy from as l-value const reference
+                 * 
+                 * @return constexpr mass& 
+                 */
+                constexpr mass& operator=(const mass& other) noexcept {
 
                     std::cout << "object copy assignment operator called\n";
 
-                    if (this != &other) {
+                    if (*this != other) {
 
                         id_ = other.id_;
                         type_ = other.type_;
@@ -7432,7 +9073,6 @@ namespace physics {
                         position_ = other.position_;
                         linear_velocity_ = other.linear_velocity_;
                         linear_acceleration_ = other.linear_acceleration_;
-                        force_ = other.force_;
 
                     }
 
@@ -7441,20 +9081,28 @@ namespace physics {
                 }
 
 
-                constexpr object& operator=(object&& other) noexcept {
+                /**
+                 * @brief Move assignment operator
+                 * 
+                 * @param other: mass object to move from as r-value reference
+                 * 
+                 * @return constexpr mass& 
+                 */
+                constexpr mass& operator=(mass&& other) noexcept {
 
                     std::cout << "object move assignment operator called\n";
 
-                    if (this != &other) {
+                    if (*this != other) {
 
-                        id_ = std::move(other.id_);
-                        type_ = std::move(other.type_);
-                        name_ = std::move(other.name_);
                         // shape_ = std::move(other.shape_);
+                        mass_ = std::move(other.mass_); 
                         position_ = std::move(other.position_);
                         linear_velocity_ = std::move(other.linear_velocity_);
                         linear_acceleration_ = std::move(other.linear_acceleration_);
-                        force_ = std::move(other.force_);
+                        gravitational_field_ = std::move(other.gravitational_field_);
+                        id_ = std::move(other.id_);
+                        type_ = std::move(other.type_);
+                        name_ = std::move(other.name_);
 
                     }
 
@@ -7463,7 +9111,14 @@ namespace physics {
                 }
 
 
-                constexpr bool operator==(const object& other) const noexcept {
+                /**
+                 * @brief Equality operator
+                 * 
+                 * @param other: mass object to compare with as l-value const reference
+                 * 
+                 * @return bool
+                 */
+                constexpr bool operator==(const mass& other) const noexcept {
 
                     return (id_ == other.id_ && 
                             type_ == other.type_ && 
@@ -7471,46 +9126,28 @@ namespace physics {
                             // shape_ == other.shape_ && 
                             position_ == other.position_ && 
                             linear_velocity_ == other.linear_velocity_ && 
-                            linear_acceleration_ == other.linear_acceleration_ && 
-                            force_ == other.force_);
+                            linear_acceleration_ == other.linear_acceleration_);
 
                 }
 
 
-                constexpr bool operator!=(const object& other) const noexcept {
+                /**
+                 * @brief Inequality operator
+                 * 
+                 * @param other: mass object to !compare with as l-value const reference
+                 * 
+                 * @return bool
+                 */
+                constexpr bool operator!=(const mass& other) const noexcept {
 
                     return !(*this == other);
 
                 }
 
 
-                // =============================================
-                // object methods
-                // =============================================
-
-                constexpr void add_force(const force<DIM>& other) {
-
-                    force_ += other; 
-
-                }
-
-
-                constexpr void add_force(const vector<DIM>& other) {
-                    
-                    for (auto i : other.data()) assert(i.units() == newton);
-                    force_ += other; 
-
-                }
-
-
-                constexpr void reset_force() { 
-                    
-                    force_ = force<DIM>(); 
-                    
-                }
-
-
-                constexpr virtual void update_linear_acceleration() {}
+            // =============================================
+            // object methods
+            // =============================================
 
 
 /*
@@ -7607,32 +9244,252 @@ namespace physics {
                 }
 
 
-                // =============================================
-                // get and print methods
-                // =============================================
+            // =============================================
+            // get methods
+            // =============================================
 
-                constexpr uint32_t id() const { 
+                /**
+                 * @brief Get the mass measurement 
+                 * 
+                 * @return constexpr measurement 
+                 */
+                constexpr measurement mass_measurement() const noexcept { 
+                    
+                    return mass_; 
+                    
+                }
+
+
+                /**
+                 * @brief Get the mass measurement
+                 * 
+                 * @return constexpr measurement& 
+                 */
+                constexpr measurement& mass_measurement() noexcept {
+
+                    return mass_; 
+
+                }
+
+
+                /**
+                 * @brief Get the position vector 
+                 * 
+                 * @return constexpr position<DIM> 
+                 */
+                constexpr position<DIM> as_position() const noexcept { 
+                    
+                    return position_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the position vector
+                 * 
+                 * @return constexpr position<DIM>& 
+                 */
+                constexpr position<DIM>& as_position() noexcept { 
+                    
+                    return position_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the linear velocity vector 
+                 * 
+                 * @return constexpr linear_velocity<DIM> 
+                 */
+                constexpr linear_velocity<DIM> as_linear_velocity() const noexcept { 
+                    
+                    return linear_velocity_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the linear velocity vector
+                 * 
+                 * @return constexpr linear_velocity<DIM>& 
+                 */
+                constexpr linear_velocity<DIM>& as_linear_velocity() noexcept { 
+                    
+                    return linear_velocity_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the linear acceleration vector 
+                 * 
+                 * @return constexpr linear_acceleration<DIM> 
+                 */
+                constexpr linear_acceleration<DIM> as_linear_acceleration() const noexcept { 
+                    
+                    return linear_acceleration_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the linear acceleration vector
+                 * 
+                 * @return constexpr linear_acceleration<DIM>& 
+                 */
+                constexpr linear_acceleration<DIM>& as_linear_acceleration() noexcept { 
+                    
+                    return linear_acceleration_; 
+                
+                }
+
+
+                /**
+                 * @brief Get the matrix of the state (position, linear_velocity, linear_acceleration)
+                 * 
+                 * @return constexpr matrix<DIM, 3> 
+                 */
+                constexpr matrix<DIM, 3> state() const noexcept {
+
+                    return matrix<DIM, 2>({position_.as_vector(), linear_velocity_.as_vector(), linear_acceleration_.as_vector()});
+
+                }
+
+
+                /**
+                 * @brief Get the momentum vector
+                 * 
+                 * @return constexpr vector<DIM> 
+                 */
+                constexpr vector<DIM> momentum() const { 
+                    
+                    return mass_ * linear_velocity_.as_vector();
+                    
+                }
+
+
+                /**
+                 * @brief Get the angular momentum vector
+                 * 
+                 * @return constexpr vector<DIM> 
+                 */
+                constexpr vector<DIM> angular_momentum() const { 
+                    
+                    return mass_ * cross(position_.as_vector(), linear_velocity_.as_vector()); 
+                    
+                }
+
+
+                /**
+                 * @brief Get the kinetic energy
+                 * 
+                 * @return constexpr measurement 
+                 */
+                constexpr measurement kinetic_energy() const { 
+                    
+                    return 0.5 * mass_ * linear_velocity_.norm2(); 
+                    
+                }
+
+
+                /**
+                 * @brief Get the gravitational field flag
+                 * 
+                 * @return bool 
+                 */
+                constexpr bool gravitational_field() const noexcept { 
+                    
+                    return gravitational_field_; 
+                    
+                }
+
+
+                /**
+                 * @brief Get the gravitational field flag
+                 * 
+                 * @return bool&
+                 */
+                constexpr bool& gravitational_field() noexcept { 
+                    
+                    return gravitational_field_; 
+                    
+                }
+
+
+                /**
+                 * @brief Get the id
+                 * 
+                 * @return constexpr uint32_t 
+                 */
+                constexpr uint32_t id() const noexcept { 
+                    
+                    return id_;
+                    
+                }
+
+
+                /**
+                 * @brief Get the id
+                 * 
+                 * @return constexpr uint32_t& 
+                 */
+                constexpr uint32_t& id() noexcept { 
                     
                     return id_;
                     
                 }
 
                 
-                constexpr std::string type() const { 
+                /**
+                 * @brief Get the type
+                 * 
+                 * @return constexpr std::string
+                 */
+                constexpr std::string type() const noexcept { 
+                    
+                    return type_;
+                    
+                }
+
+                
+                /**
+                 * @brief Get the type
+                 * 
+                 * @return constexpr std::string& 
+                 */
+                constexpr std::string& type() noexcept { 
                     
                     return type_;
                     
                 }
 
 
-                constexpr std::string name() const { 
+                /**
+                 * @brief Get the name
+                 * 
+                 * @return constexpr std::string 
+                 */
+                constexpr std::string name() const noexcept { 
                     
                     return name_;
                     
                 }
 
+
+                /**
+                 * @brief Get the name
+                 * 
+                 * @return constexpr std::string& 
+                 */
+                constexpr std::string& name() noexcept { 
+                    
+                    return name_;
+                    
+                }
+
+
 /*
-                inline shape& shape() const { 
+                inline shape& shape() const noexcept { 
                     
                     return *shape_;
                 
@@ -7640,489 +9497,89 @@ namespace physics {
 */
 
 
-                constexpr position<DIM> get_position() const { 
-                    
-                    return position_; 
-                
-                }
-
-
-                constexpr linear_velocity<DIM> get_linear_velocity() const { 
-                    
-                    return linear_velocity_; 
-                
-                }
-
-
-                constexpr linear_acceleration<DIM> get_linear_acceleration() const { 
-                    
-                    return linear_acceleration_; 
-                
-                }
-
-
-                constexpr matrix<DIM, 2> get_state() const { 
-
-                    return matrix<DIM, 2>({position_.as_vector(), linear_velocity_.as_vector()}); 
-
-                }
-
-
-                constexpr force<DIM> get_force() const { 
-                    
-                    return force_; 
-                    
-                }
-
-
-                constexpr size_t dim() const {
+                /**
+                 * @brief Get the dimention of the space
+                 * 
+                 * @return constexpr size_t 
+                 */
+                constexpr size_t dim() const noexcept {
 
                     return DIM; 
 
                 }
 
 
-                constexpr object<DIM> as_object() const { 
+                /**
+                 * @brief Get the mass object
+                 * 
+                 * @return constexpr object<DIM> 
+                 */
+                constexpr mass<DIM> as_mass_object() const noexcept { 
                     
                     return *this; 
                     
                 }
 
 
-                constexpr void print() const {
+                /**
+                 * @brief Get the mass object
+                 * 
+                 * @return constexpr object<DIM>& 
+                 */
+                constexpr mass<DIM>& as_mass_object() noexcept { 
+                    
+                    return *this; 
+                    
+                }
+
+
+                /// @brief Print the mass object to the standard output
+                constexpr void print() const noexcept {
 
                     std::cout << "\nobject:\n";
-                    std::cout << "type = " << type_ << "\n";
-                    if (id_ != 0) std::cout << "id = " << id_ << "\n";
-                    if (! name_.empty()) std::cout << "name = " << name_ << "\n"; 
+                    if (id_ != 0) 
+                        std::cout << "id = " << id_ << "\n";
+                    if (!type_.empty())
+                        std::cout << "type = " << type_ << "\n";
+                    if (!name_.empty()) 
+                        std::cout << "name = " << name_ << "\n"; 
                     // shape_->print(); 
                     position_.print(); 
                     linear_velocity_.print(); 
                     linear_acceleration_.print();
-                    force_.print(); 
 
                 }               
 
 
-        }; // class object        
-
-
-        template <size_t DIM>
-        class mass : public object<DIM> {
-
-
-            protected: 
-
-                // =============================================
-                // class member
-                // =============================================
-
-                measurement mass_; 
-
-                bool gravitational_field_;
-
-
-            public: 
-
-                // =============================================
-                // constructors and destructor
-                // =============================================
-
-                explicit constexpr mass(const measurement& mass,
-                                        const position<DIM> pos, 
-                                        const uint32_t& id,
-                                        const std::string& name,
-                                        const bool& gravity = true) noexcept :
-
-                    object<DIM>("mass", pos, linear_velocity<DIM>(), linear_acceleration<DIM>(), force<DIM>(), id, name),
-                    mass_{mass},
-                    gravitational_field_{gravity} {}
-
-
-                explicit constexpr mass(const measurement& mass,
-                                        // shape shape = geometry::shapes::circle(0.0 * m),
-                                        const position<DIM>& pos, 
-                                        const linear_velocity<DIM>& lin_vel = linear_velocity<DIM>(), 
-                                        const linear_acceleration<DIM>& lin_acc = linear_acceleration<DIM>(),
-                                        const force<DIM>& F = force<DIM>(),
-                                        const uint32_t& id = 0,
-                                        const std::string& name = "",
-                                        const std::string& type = "mass",
-                                        const bool& gravity = true) noexcept : 
-                    
-                    object<DIM>(type, pos, lin_vel, lin_acc, F, id, name),
-                    mass_(mass),
-                    gravitational_field_(gravity) {
-
-                        std::cout << "mass constructor called\n";
-
-                    }
-
-
-                explicit constexpr mass(const measurement& mass,
-                                        const object<DIM>& obj,
-                                        const bool& gravity = true) noexcept : 
-                                 
-                    object<DIM>(obj),
-                    mass_(mass),
-                    gravitational_field_(gravity) {
-
-                        std::cout << "mass constructor called\n";
-
-                    }
-
-
-                constexpr mass(const mass& other) noexcept : 
-
-                    object<DIM>(other.as_object()),
-                    mass_(other.mass_),
-                    gravitational_field_(other.gravitational_field_) {
-
-                        std::cout << "mass copy constructor called\n";
-
-                    }
-
-
-                ~mass() noexcept {
-                        
-                    std::cout << "mass destructor called\n";
-    
-                }
-
-
-                // =============================================
-                // operators
-                // =============================================
-
-                constexpr mass operator=(const mass& other) {
-
-                    mass_ = other.mass_; 
-                    gravitational_field_ = other.gravitational_field_; 
-                    this->id_ = other.id_;
-                    this->type_ = other.type_;
-                    this->name_ = other.name_; 
-                    // this->shape_ = other.shape_; 
-                    this->position_ = other.position_; 
-                    this->linear_velocity_ = other.linear_velocity_; 
-                    this->linear_acceleration_ = other.linear_acceleration_; 
-                    return *this; 
-
-                }
-
-
-                constexpr mass operator=(mass&& other) {
-
-                    mass_ = other.mass_; 
-                    gravitational_field_ = other.gravitational_field_; 
-                    this->id_ = other.id_;
-                    this->type_ = other.type_;
-                    this->name_ = other.name_;
-                    // this->shape_ = other.shape_; 
-                    this->position_ = other.position_; 
-                    this->linear_velocity_ = other.linear_velocity_; 
-                    this->linear_acceleration_ = other.linear_acceleration_; 
-                    return *this; 
-
-                }
-
-
-                // =============================================
-                // set and get methods
-                // =============================================
-
-                constexpr void set_mass(const measurement& mass) { 
-                    
-                    assert(mass.value() >= 0.0);
-                    assert(mass.units().base() == base::kilogram);
-                    mass_ = mass; 
-                    
-                }
-                
-
-                constexpr measurement get_mass() const { 
-                    
-                    return mass_; 
-                    
-                }
-
-
-                constexpr void gravitational_field(const bool& gravity) { 
-                    
-                    gravitational_field_ = gravity; 
-                    
-                }
-
-
-                constexpr bool gravitational_field() const { 
-                    
-                    return gravitational_field_; 
-                    
-                }
-
-
-                constexpr vector<DIM> momentum() const { 
-                    
-                    return mass_ * this->linear_velocity_.as_vector();
-                    
-                }
-
-
-                constexpr std::vector<measurement> angular_momentum() const { 
-                    
-                    return mass_ * cross(this->position_.as_vector(), this->linear_velocity_.as_vector()); 
-                    
-                }
-
-
-                constexpr measurement kinetic_energy() const { 
-                    
-                    return 0.5 * mass_ * this->linear_velocity_.norm2(); 
-                    
-                }
-
-
-                constexpr mass<DIM> as_mass() const { 
-                    
-                    return *this; 
-                    
-                }
-
-
-                constexpr linear_acceleration<DIM> get_gravitational_pull(const position<DIM>& pos) const { 
-                    
-                    return linear_acceleration<DIM>(this->position_.direction(pos) * (- constants::G * mass_ / this->position_.distance2(pos))); 
-                    
-                }
-
-
-                constexpr void gravitate(const mass& other) {
-
-                    if (gravitational_field_ == true && other.gravitational_field_ == true) {
-                        add_force(this->position_.direction(other.get_position()) * (constants::G * mass_ * other.mass_) / this->position_.distance2(other.position_));
-                    }
-
-                }
-
-
-                constexpr void update_linear_acceleration() {
-
-                    this->linear_acceleration_ = this->force_ / mass_; 
-                    //  + this->solver_.RK4(equations_, get_linear_acceleration(), t.as_measurement()); 
-
-                }
-                
-
-                // =============================================
-                // print methods
-                // =============================================
-
-                void print_momentum() const {
-
-                    std::cout << "momentum = {\n"; 
-                    for (auto p : momentum()) {
-                        std::cout << "\t"; 
-                        p.print(); 
-                    }
-                    std::cout << "}\n";
-
-                }
-
-
-                void print_kinetic_energy() const {
-
-                    std::cout << "kinetic energy = "; 
-                    kinetic_energy().print(); 
-
-                }
-
-
-                constexpr void print() const {
-
-                    std::cout << "\nobject: \n"; 
-                    std::cout << "type = " << this->type_ << "\n"; 
-                    if (this->id_ != 0) std::cout << "id = " << this->id_ << "\n";
-                    if (! this->name_.empty()) std::cout << "name = " << this->name_ << "\n";
-                    // shape_->print(); 
-                    std::cout << "mass = "; 
-                    mass_.print();
-                    this->position_.print(); 
-                    this->linear_velocity_.print(); 
-                    this->linear_acceleration_.print();
-                    this->force_.print();
-
-                }     
-
-
-        }; // class mass
-
-
-        template <class T>
-        class system {
-
-
             protected:
-            
-                // =============================================
-                // class members
-                // =============================================     
-
-                std::vector<T> bodies_; 
-
-
-            public:
-
-                // =============================================
-                // constructors and destructor
-                // =============================================     
-
-                explicit constexpr system() noexcept {}
-
-
-                constexpr system(const std::vector<T>& objs) noexcept : 
+                    
+            // =============================================
+            // class members
+            // =============================================
                 
-                    bodies_{objs} {}
+                measurement mass_; ///< object mass measurement
+
+                position<DIM> position_; ///< object position vector
+
+                linear_velocity<DIM> linear_velocity_; ///< object linear velocity vector
+
+                linear_acceleration<DIM> linear_acceleration_; ///< object linear acceleration vector
+
+                // shape* shape_; ///< object shape
+
+                uint32_t id_; ///< object id
+
+                std::string type_; ///< object type
+
+                std::string name_; ///< object name
+
+                bool gravitational_field_; ///< if true, the object is affected by the gravitational field
 
 
-                ~system() = default; 
+        }; // class mass        
 
-
-                // =============================================
-                // objects methods
-                // =============================================     
-                
-                constexpr void add(const T& other) noexcept { 
-                    
-                    bodies_.emplace_back(other); 
-                
-                } 
-
-
-                constexpr void reset() noexcept { 
-                    
-                    bodies_.clear(); 
-                
-                }
-
-
-                constexpr size_t count() const { 
-                    
-                    return bodies_.size(); 
-                    
-                }
-
-
-                constexpr std::vector<T> objects() const { 
-                    
-                    return bodies_; 
-                    
-                }
-
-
-                constexpr T element(const uint& pos) const { 
-                    
-                    return bodies_[pos]; 
-                    
-                }
-                
-
-                constexpr T operator[](const uint& pos) const { 
-                    
-                    return bodies_[pos]; 
-                    
-                }
-
-
-                constexpr T& operator[](const uint& pos) { 
-                    
-                    return bodies_[pos]; 
-                    
-                }
-
-
-                constexpr virtual void update() {} 
-
-
-                constexpr virtual void evolve(const tools::time& dt) {}
-
-
-        }; // class system
-
-        
-        template <size_t DIM>
-        class mass_system : public system<mass<DIM>> {
-
-
-            private: 
-
-                // =============================================
-                // class members
-                // =============================================     
-
-                hamiltonian<DIM, measurement, measurement, position<DIM>> hamiltonian_{dynamic_cast<ode<DIM, measurement, measurement, position<DIM>>*>(new gravitational_potential<DIM>())};
-
-
-                constexpr position<DIM> get_center_of_mass(const position<DIM>& SR_center, const measurement& initial_mass) const {
-
-                    vector<DIM> center_of_mass(base::metre * base::kilogram);
-                    for (auto& i : system<mass<DIM>>::bodies_) if (i.get_position() != SR_center) center_of_mass += i.get_position() * i.get_mass();
-                    return center_of_mass / (get_total_mass() - initial_mass);
-
-                }
-
-
-            public:
-
-
-                constexpr mass_system() noexcept : 
-                    
-                    system<mass<DIM>>{} {}
-
-                
-                constexpr mass_system(const std::vector<mass<DIM>>& objs) noexcept : 
-                    
-                    system<mass<DIM>>{objs} {}
-
-
-                constexpr measurement get_total_mass() const {
-
-                    measurement total_mass(0.0 * kg);
-                    for (auto& i : system<mass<DIM>>::bodies_) total_mass += i.get_mass();
-                    return total_mass;
-
-                }
-
-
-                constexpr position<DIM> get_center_of_mass() const {
-
-                    vector<DIM> center_of_mass(base::metre * base::kilogram);
-                    for (auto& i : system<mass<DIM>>::bodies_) center_of_mass += i.get_position() * i.get_mass();
-                    return center_of_mass / get_total_mass();
-
-                }
-
-
-                constexpr void evolve(const tools::time& dt = (1 / 90.) * s) override {
-
-                    for (auto& obj : system<mass<DIM>>::bodies_) {
-                        
-                        obj.set_state(hamiltonian_.solve(obj.get_mass(), obj.get_state(), obj.get_mass(), get_total_mass() - obj.get_mass(), get_center_of_mass(obj.get_position(), obj.get_mass()), dt));
-
-                    }
-
-                }
-
-
-                constexpr void print() const {
-
-                    for (auto& i : system<mass<DIM>>::bodies_) i.print();
-
-                }
-
-
-        }; // class mass_system
-
-
-    }
+    
+    } // namespace objects
 
 
 } // namespace physics
@@ -8147,7 +9604,8 @@ namespace math {
 
             double mean(const std::vector<double>& v) {
 
-                if (v.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+                if (v.size() == 0) 
+                    throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
                 return std::accumulate(v.begin(), v.end(), 0.) / v.size();
 
             }
@@ -8168,7 +9626,7 @@ namespace math {
 
                 double average = mean(v);
                 double accu{}; 
-                for (auto x : v) accu += std::pow(x - average, 2); 
+                for (auto x : v) accu += pow(x - average, 2); 
                 return accu / v.size();
 
             }
@@ -8189,23 +9647,47 @@ namespace math {
 
 
             /**
-             * @brief Compute the mean value of a vector of measurements, 
-             *        the uncertainty is computed as the standard deviation of mean (sdom)
+             * @brief Compute the mean value of a vector of measurements
+             * @note The uncertainty is computed as the standard deviation of mean (sdom)
              * 
              * @param vec: vector of measurements
              * 
-             * @note 
              * @return uncertain_measurement
              */
             uncertain_measurement mean(const std::vector<measurement>& vec) {
 
-                if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+                if (vec.size() == 0) 
+                    throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
                 
-                measurement average = std::accumulate(vec.begin(), vec.end(), measurement(0., vec.front().units())) / vec.size();
-                measurement sigma_sq = measurement(0., vec.front().units().square()); 
-                for (auto x : vec) sigma_sq += (x - average).square(); 
+                measurement average = std::accumulate(vec.begin(), vec.end(), measurement(0., vec[0].units())) / vec.size();
+                measurement sigma_sq = measurement(0., vec[0].units().square()); 
+                for (auto x : vec) 
+                    sigma_sq += square(x - average); 
 
-                return uncertain_measurement(average, sigma_sq.sqrt() / vec.size());                 
+                return uncertain_measurement(average, sqrt(sigma_sq / (vec.size() * (vec.size() - 1))));                 
+
+            }
+
+
+            /**
+             * @brief Compute the mean value of a vector of uncertain_measurements.
+             * @note The uncertainty is computed as the standard deviation of mean (sdom)
+             * 
+             * @param vec: vector of uncertain_measurements
+             * 
+             * @return uncertain_measurement
+             */
+            uncertain_measurement mean(const std::vector<uncertain_measurement>& vec) {
+
+                if (vec.size() == 0) 
+                    throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+                
+                measurement average = (std::accumulate(vec.begin(), vec.end(), uncertain_measurement(0., 0., vec[0].units())) / vec.size()).as_measurement();
+                measurement sigma_sq = measurement(0., vec[0].units().square()); 
+                for (auto x : vec) 
+                    sigma_sq += square(x - average).as_measurement(); 
+
+                return uncertain_measurement(average, sqrt(sigma_sq / (vec.size() * (vec.size() - 1))));                 
 
             }
 
@@ -8219,11 +9701,17 @@ namespace math {
              */
             measurement median(const std::vector<measurement>& v) {
 
-                if (v.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+                if (v.size() == 0) 
+                    throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+
                 std::vector<measurement> copy{v}; 
-                if (std::is_sorted(copy.begin(), copy.end()) == false) std::sort(copy.begin(), copy.end());
-                if (v.size() % 2 != 0) return copy[v.size() / 2];
-                else return (copy[v.size() / 2] + copy[(v.size() / 2) - 1]) / 2; 
+                if (std::is_sorted(copy.begin(), copy.end()) == false) 
+                    std::sort(copy.begin(), copy.end());
+
+                if (v.size() % 2 != 0) 
+                    return copy[v.size() / 2];
+                else 
+                    return (copy[v.size() / 2] + copy[(v.size() / 2) - 1]) / 2; 
 
             }
 
@@ -8239,7 +9727,9 @@ namespace math {
 
                 measurement average = mean(vec).as_measurement();
                 measurement sigma_sq = measurement(0., vec[0].units().square()); 
-                for (auto x : vec) sigma_sq += (x - average).square(); 
+                for (auto x : vec) 
+                    sigma_sq += square(x - average); 
+
                 return sigma_sq / vec.size();
 
             }
@@ -8254,7 +9744,7 @@ namespace math {
              */
             inline measurement standard_dev(const std::vector<measurement>& vec) { 
                 
-                return variance(vec).sqrt(); 
+                return sqrt(variance(vec)); 
             
             }
 
@@ -8268,7 +9758,7 @@ namespace math {
              */
             inline measurement sdom(const std::vector<measurement>& vec) { 
                 
-                return (variance(vec) / vec.size()).sqrt(); 
+                return sqrt((variance(vec) / (vec.size() - 1))); 
             
             }
 
@@ -8282,7 +9772,8 @@ namespace math {
              */
             uncertain_measurement wmean(const std::vector<uncertain_measurement>& vec) {
 
-                if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+                if (vec.size() == 0) 
+                    throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
                 
                 measurement weighted = measurement(0., vec[0].units().inv());
                 measurement weights = measurement(0., vec[0].units().inv().square());
@@ -8291,7 +9782,7 @@ namespace math {
                     weights += x.weight();
                 }
 
-                return uncertain_measurement(weighted / weights, weights.inv().sqrt());
+                return uncertain_measurement(weighted / weights, sqrt(weights.inv()));
 
             }
 
@@ -8305,9 +9796,12 @@ namespace math {
              */
             measurement wvariance(const std::vector<uncertain_measurement>& vec) {
 
-                if (vec.size() == 0) throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
-                measurement weights = measurement(0., vec[0].units().inv().square());
+                if (vec.size() == 0) 
+                    throw std::invalid_argument("Can't operate a descriptive statistic funtion on an empty vector"); 
+                
+                measurement weights = square(measurement(0., vec[0].units().inv()));
                 for (auto& x : vec) weights += x.weight(); 
+                
                 return weights.inv(); 
 
             }
@@ -8322,7 +9816,7 @@ namespace math {
              */
             inline measurement wsd(const std::vector<uncertain_measurement>& vec) {
 
-                return wvariance(vec).sqrt();
+                return sqrt(wvariance(vec));
             
             }
 
@@ -8330,9 +9824,13 @@ namespace math {
             measurement chi_sq(const std::vector<measurement>& v, 
                                const std::vector<measurement>& expected) {
 
-                if (v.size() != expected.size()) throw std::invalid_argument("Can't operate a chi square funtion on vectors of different size"); 
+                if (v.size() != expected.size()) 
+                    throw std::invalid_argument("Can't operate a chi square funtion on vectors of different size"); 
+                
                 measurement accu = measurement(0., v[0].units()); 
-                for (size_t i{}; i < v.size(); ++i) accu += (v[i] - expected[i]).square() / expected[i]; 
+                for (size_t i{}; i < v.size(); ++i) 
+                    accu += square((v[i] - expected[i])) / expected[i]; 
+                
                 return accu; 
 
             }         
@@ -8377,23 +9875,23 @@ namespace math {
                         for (size_t i{}; i < N; ++i) {
 
                             sum_X += xData[i];
-                            sum_XX += xData[i].square(); 
+                            sum_XX += square(xData[i]); 
                             sum_Y += yData[i];
                             sum_XY += xData[i] * yData[i]; 
 
                         }
 
-                        delta = (N * sum_XX - sum_X.square());
+                        delta = (N * sum_XX - square(sum_X));
                         slope_ = (N * sum_XY - sum_X * sum_Y) / delta;
                         intercept_ = (sum_XX * sum_Y - sum_X * sum_XY) / delta;
 
                         for (size_t i{}; i < N; ++i) 
-                            sigma_y += (yData[i] - intercept_.as_measurement() - slope_.as_measurement() * xData[i]).square(); 
+                            sigma_y += square(yData[i] - intercept_.as_measurement() - slope_.as_measurement() * xData[i]); 
 
                         sigma_y /= (N - 2);
 
-                        slope_.uncertainty() = (N * sigma_y / delta).sqrt().value();
-                        intercept_.uncertainty() = (sigma_y * sum_XX / delta).sqrt().value();
+                        slope_.uncertainty() = sqrt(N * sigma_y / delta).value();
+                        intercept_.uncertainty() = sqrt(sigma_y * sum_XX / delta).value();
 
                     }
 
@@ -8415,18 +9913,18 @@ namespace math {
                         size_t N{xData.size()};      
                         for (size_t i{}; i < N; ++i) {
 
-                            weight = yData[i].uncertainty_as_measurement().inv().square();
+                            weight = square(yData[i].uncertainty_as_measurement().inv());
                             wsum += weight; 
                             wsum_X += xData[i].as_measurement() * weight;
                             wsum_Y += yData[i].as_measurement() * weight;
-                            wsum_XX += xData[i].as_measurement().square() * weight; 
+                            wsum_XX += square(xData[i].as_measurement()) * weight; 
                             wsum_XY += xData[i].as_measurement() * yData[i].as_measurement() * weight; 
 
                         }
 
-                        delta = (wsum * wsum_XX - wsum_X.square());
-                        slope_ = uncertain_measurement((wsum * wsum_XY - wsum_X * wsum_Y) / delta, (wsum / delta).sqrt().value());
-                        intercept_ = uncertain_measurement((wsum_XX * wsum_Y - wsum_X * wsum_XY) / delta, (wsum_XX / delta).sqrt().value());
+                        delta = (wsum * wsum_XX - square(wsum_X));
+                        slope_ = uncertain_measurement((wsum * wsum_XY - wsum_X * wsum_Y) / delta, sqrt(wsum / delta).value());
+                        intercept_ = uncertain_measurement((wsum_XX * wsum_Y - wsum_X * wsum_XY) / delta, sqrt(wsum_XX / delta).value());
 
                     }
 
@@ -8449,23 +9947,30 @@ namespace math {
                         size_t N{xData.size()};      
                         for (size_t i{}; i < N; ++i) {
 
-                            weight = ((xData[i].uncertainty_as_measurement() * sigma_y_from_x).square() + yData[i].uncertainty_as_measurement().square()).inv().square();
+                            weight = square((square((xData[i].uncertainty_as_measurement() * sigma_y_from_x)) + square(yData[i].uncertainty_as_measurement())).inv());
                             wsum += weight; 
                             wsum_X += xData[i].as_measurement() * weight;
                             wsum_Y += yData[i].as_measurement() * weight;
-                            wsum_XX += xData[i].as_measurement().square() * weight; 
+                            wsum_XX += square(xData[i].as_measurement()) * weight; 
                             wsum_XY += xData[i].as_measurement() * yData[i].as_measurement() * weight; 
 
                         }
 
-                        delta = (wsum * wsum_XX - wsum_X.square());
-                        slope_ = uncertain_measurement((wsum * wsum_XY - wsum_X * wsum_Y) / delta, (wsum / delta).sqrt().value());
-                        intercept_ = uncertain_measurement((wsum_XX * wsum_Y - wsum_X * wsum_XY) / delta, (wsum_XX / delta).sqrt().value());
+                        delta = (wsum * wsum_XX - square(wsum_X));
+                        slope_ = uncertain_measurement((wsum * wsum_XY - wsum_X * wsum_Y) / delta, sqrt(wsum / delta).value());
+                        intercept_ = uncertain_measurement((wsum_XX * wsum_Y - wsum_X * wsum_XY) / delta, sqrt(wsum_XX / delta).value());
+
+                    }
+
+ 
+                    constexpr uncertain_measurement predict(const measurement x) const noexcept {
+
+                        return intercept_ + slope_ * x;
 
                     }
 
 
-                    constexpr uncertain_measurement predict(const double& x) const noexcept {
+                    constexpr uncertain_measurement predict(const uncertain_measurement x) const noexcept {
 
                         return intercept_ + slope_ * x;
 
