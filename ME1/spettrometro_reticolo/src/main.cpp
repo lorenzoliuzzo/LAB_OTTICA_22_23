@@ -217,7 +217,6 @@ int main() {
 
 
     // stampa risultati
-
     std::cout << "Lunghezza reticolo: " << lunghezza_reticolo << "\n";
     std::cout << "Posizione angolare primo minimo: " << theta0 << " rad\n";
     std::cout << "Passo del reticolo: " << d << "\n";
