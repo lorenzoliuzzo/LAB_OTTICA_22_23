@@ -1,6 +1,7 @@
 \contentsline {section}{\numberline {1}Abstract}{1}{section.1}%
-\contentsline {section}{\numberline {2}Formule}{1}{section.2}%
-\contentsline {section}{\numberline {3}Metodi}{2}{section.3}%
-\contentsline {section}{\numberline {4}Analisi dati}{2}{section.4}%
-\contentsline {section}{\numberline {5}Considerazioni finali}{2}{section.5}%
+\contentsline {section}{\numberline {2}Calibrazione dell'apparato}{2}{section.2}%
+\contentsline {section}{\numberline {3}Valutazione delle grandezze caratteristiche dell'apparato}{2}{section.3}%
+\contentsline {section}{\numberline {4}Misura delle lunghezze d'onda dello spettro del mercurio}{4}{section.4}%
+\contentsline {section}{\numberline {5}Potere dispersivo del reticolo calcolato a partire dai dati raccolti sulle lunghezze d'onda}{4}{section.5}%
+\contentsline {section}{\numberline {6}Appendice}{6}{section.6}%
 \contentsfinish 
