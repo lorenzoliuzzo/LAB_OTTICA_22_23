@@ -2,4 +2,5 @@
 \contentsline {section}{\numberline {2}Calibrazione dell'apparato}{1}{section.2}%
 \contentsline {section}{\numberline {3}Misura dell'angolo $\alpha $ del prisma}{1}{section.3}%
 \contentsline {section}{\numberline {4}Misura dell'indice di rifrazione del prisma}{2}{section.4}%
+\contentsline {section}{\numberline {5}Analisi dei dati}{4}{section.5}%
 \contentsfinish 

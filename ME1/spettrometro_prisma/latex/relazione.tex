@@ -89,7 +89,7 @@
         note le lunghezze d'onda $\lambda$ dello spettro del mercurio (precedentemente calcolate con uno spettrometro a reticolo),
         per quei particolari valori di $\lambda$. Nella tabella \ref{tabular:spettro}, per ogni riga dello spettro sono riportate il colore, 
         la lunghezza d'onda $\lambda$, l'indice di rifrazione $n$ corrispondente alla lunghezza d'onda con il relativo errore $\sigma_n$.\\
-        Sono in oltre state verificate le relazioni lineari con una probabilità associata al $\chi^2$ pari rispettivamente a:
+        Sono in oltre state verificate le relazioni lineari \ref{eq:cauchy1} e \ref{eq:cauchy2} con una probabilità associata al $\chi^2$ pari a: 
         \[\chi_1 = 30\% \ \ \ \chi_2 = 34\%   \]
 
         \begin{table}[H]
@@ -102,7 +102,7 @@
 
                 \midrule
                 \textcolor{yellow}{Giallo est.}	            &	578,1	&	1,7846 &   0,0008 \\
-                \textcolor{Goldenrod}{Giallo int.}     	    &	575,2	&	1,7847 &   0,0014 \\
+                \textcolor{Goldenrod}{Giallo int.}     	    &	575,2	&	1,785  &   0,001  \\
                 \textcolor{green}{Verde}                 	&	545,6	&	1,7915 &   0,0007 \\
                 \textcolor{Emerald}{Verde acqua est.}	    &	496,9	&   1,8046 &   0,0007 \\
                 \textcolor{cyan}{blu}                    	&	434,8	&   1,8248 &   0,0007 \\
@@ -123,7 +123,7 @@
         Innanzitutto si è proceduto con la messa a fuoco del cannocchiale rispetto a un obbiettivo sufficientemente lontano 
         affinché fosse valida l'approssimazione di onda piana. A questo punto è stato messo a fuoco il collimatore 
         rispetto alla precedente regolazione del cannocchiale, in modo che fosse verificata l'approssimazione di campo lontano. 
-        La piattaforma che regge il prisma è stata poi messa in bolla. A questo punto è iniziata la presa dati.
+        La piattaforma che regge il prisma è stata poi messa in bolla. \\
 
 
     \section{Misura dell'angolo $\alpha$ del prisma}
@@ -140,10 +140,10 @@
         È stato possibile ricavare l'angolo $\alpha$ dalla relazione geometrica: \[ \alpha = 180 ^\circ - \Delta\theta \]
 
         La misura è stata ripetuta 8 volte e in tabella \ref{tabular:delta theta} sono riportate le misure degli angoli misurati $\theta_1$ e $\theta_2$ 
-        e la loro differenza $\Delta\theta$. A questo punto è stata fatta una media dei $\Delta\theta$ ottenendo come valore:
+        e la loro differenza $\Delta\theta$. È dunque stata fatta una media dei $\Delta\theta$ ottenendo come valore:
         \[ \Delta\theta = 240,03^\circ \] a cui è stata associata come incertezza la deviazione standard della media del set di misure:
         \[ \sigma_{\Delta\theta} = 0,03^\circ \]
-        A questo punto è stato possibile valutare l'angolo $\alpha$, ottenendo un valore pari a: 
+        Infine, è stato possibile valutare l'angolo $\alpha$, ottenendo un valore pari a: 
         \[\alpha = (60,03\pm 0,03)^\circ = (1,0477\pm 0,0006)\, \mathrm{rad}\]
 
         \begin{table}[H]
@@ -176,7 +176,7 @@
     \section{Misura dell'indice di rifrazione del prisma}
 
         Per prima cosa è stato misurato l'angolo di zero $\theta_0$. La misura è stata ripetuta 10 volte e con una media è stato ottenuto come valore:
-        \[ \theta_0 = (178,67\pm 0,02) ^\circ = (3,118 \pm 0,0003)\, \mathrm{rad} \]
+        \[ \theta_0 = (178,67\pm 0,02) ^\circ = (3,1184 \pm 0,0003)\, \mathrm{rad} \]
         Dove come errore associato è stata utilizzata la risoluzione al posto della  deviazione standard della media delle 10 misure 
         perché la deviazione standard risulta inferiore alla risoluzione dello strumento di misura. 
         Le misure di $\theta_0$ sono riportate in tabella \ref{tabular:theta zero}.
@@ -221,7 +221,8 @@
             \begin{tabular}{c c c c c c c}
 
                 \toprule 
-                giallo est. [°] & gialli int. [°]& verde acqua [°]& verde [°]& blu [°]& viola est. [°]& viola int. [°]  \\
+                \textbf{giallo est.} [°] & \textbf{gialli int.} [°]& \textbf{verde acqua} [°]& 
+                \textbf{verde} [°]& \textbf{blu} [°]& \textbf{viola est.} [°]& \textbf{viola int.} [°]  \\
                 
                 \midrule
                 112,13	&	112,05	&	111,42	&	109,70	&	106,93	&	104,67	&	104,48\\
@@ -241,10 +242,10 @@
         Dai dati raccolti, per ogni lunghezza d'onda, è stato ottenuto un valore medio $\theta(\lambda)_m$ la cui incertezza $\sigma_{\theta(\lambda)_m}$ 
         è stata stimata attraverso la deviazione standard della media delle misure. L'angolo di deviazione minima $\delta$ è stato trovato sottraendo 
         alla posizione relativa la posizione di zero $\theta_0$. L'incertezza su $\delta_m(\lambda)$, $\sigma_{\delta_m(\lambda)}$, è stata ottenuta sommando 
-        in quadratura i singoli errori dei due addendi. A questo punto, tramite la relazione:
+        in quadratura i singoli errori dei due addendi. Tramite la relazione:
         \[n(\lambda) = \frac{sin(\frac{\delta_m(\lambda) + \alpha}{2})}{sin(\frac{\alpha}{2})}\]
-        è stato ricavato l'indice di rifrazione del prisma per ogni lunghezza d'onda. 
-        Con errore associato $\sigma_n$ ottenuto dalla somma in quadratura dei due errori $\sigma_1$ e $\sigma_2$:
+        è stato ricavato l'indice di rifrazione del prisma per ogni lunghezza d'onda, con errore associato $\sigma_n$ pari alla somma in quadratura 
+        dei due errori $\sigma_1$ e $\sigma_2$:
         \[\sigma_1 = \sigma_{\delta} \cdot \frac{\cos(\frac{\alpha + \delta}{2})}{2\sin(\frac{\alpha}{2})} \]
         \[\sigma_2 = \sigma_{\alpha}\cdot \frac{\cos(\frac{\alpha + \delta}{2})\sin(\frac{\alpha}{2}) - 
                     \sin(\frac{\alpha + \delta}{2})\cos(\frac{\alpha}{2})}{2\sin^2(\frac{\alpha}{2})} \]
@@ -257,11 +258,11 @@
             \begin{tabular}{ c c c c c  }
 
                 \toprule 
-                colore & $\delta$ rad & $\sigma_{\delta}$rad & $n$ & $\sigma_n$   \\
+                \textbf{colore} & $\delta$ rad & $\sigma_{\delta}$rad & $n$ & $\sigma_n$   \\
                 
                 \midrule
                 \textcolor{yellow}{Giallo est.}	        &   1,159	&	0,001	&	1,7846 &   0,0008\\
-                \textcolor{Goldenrod}{Giallo int.}      &   1,159	&	0,003	&	1,7847 &   0,0014\\
+                \textcolor{Goldenrod}{Giallo int.}      &   1,159	&	0,003	&	1,785  &   0,001 \\
                 \textcolor{green}{Verde}                &   1,1741	&	0,0005	&	1,7915 &   0,0007\\
                 \textcolor{Emerald}{Verde acqua est.}	&   1,2041	&	0,0007	&	1,8046 &	  0,0007\\
                 \textcolor{cyan}{blu}                   &   1,2524	&	0,0008	&	 1,8248 &	  0,0007\\
@@ -276,35 +277,37 @@
 
         \end{table}
 
-        A questo punto è stato possibile verificare la validità delle relazioni di Cauchy \ref{eq:cauchy1} e \ref{eq:cauchy2}.
+
+    \section{Analisi dei dati}
+
+        A questo punto è stato possibile verificare la validità delle relazioni di Cauchy, eq. \ref{eq:cauchy1} e \ref{eq:cauchy2}.
         Sono quindi state fatte due regressioni lineari con i valori delle lunghezze d'onda tabulate in modo da ottenere i coefficienti angolari $a_1$ e $a_2$
-        delle rette per poter trasferire l'incertezza delle lunghezze d'onda misurate con lo spettrometro a reticolo sull'asse y. 
-        In questo modo sono state effettuate di nuovo le due regressioni lineari pesate, utilizzando come lunghezze d'onda quelle precedentemente misurate. 
-        Sono stati trovati i seguenti coefficienti:
+        delle rette e poter trasferire l'incertezza relativa alle lunghezze d'onda misurate con lo spettrometro a reticolo sull'asse y. 
+        Sono dunque state effettuate di nuovo le due regressioni lineari pesate, utilizzando come lunghezze d'onda quelle precedentemente misurate e 
+        sono stati trovati i seguenti coefficienti:
         \[a_1 = (6,56 \pm 0,08 )10^{-14}\ m^2\ \ \ \ b_1 = (2,990\pm 0,004)\]
         \[a_2 = (1,81 \pm 0,02 )10^{-14}\ m^2\ \ \ \ b_2 = (1,731\pm 0,001)\]
 
-        Per entrambe le regressioni è stato effettuato un test di $\chi^2$ che ha dato come livello di confidenza per le relazioni 
-        \ref{fig:Cauchy_1} e \ref{fig:Caychy_2} rispettivamente il $30\%$ e il $34\%$. 
-        In Figura IWIBVIURBV sono riportati i grafici delle due regressioni. 
+        Per entrambe le regressioni è stato effettuato un test di $\chi^2$, che ha dato un livello di confidenza per le relazioni di Cauchy, rispettivamente, 
+        del $30\%$ e del $34\%$. I grafici delle regressioni sono riportati nelle figure \ref{figure:Cauchy_1} e \ref{figure:Cauchy_2}. 
 
-        \begin{figure}
+        \begin{figure} [H]
 
             \centering
             \includegraphics{../images/Cauchy_1.png}
             \caption{Relazione di Cauchy $n^2$}
-            \label{fig:Cauchy_1}
+            \label{figure:Cauchy_1}
 
         \end{figure}
 
-        \begin{figure}
+        \begin{figure} [H]
 
             \centering
             \includegraphics{../images/Cauchy_2.png}
             \caption{Relazione di Cauchy n}
-            \label{fig:Cauchy_2}
+            \label{figure:Cauchy_2}
 
         \end{figure}
-
+        
 
 \end{document}
