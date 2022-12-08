@@ -1,10 +1,10 @@
 # Fdb version 3
-["pdflatex"] 1670504902 "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/spettrometro_prisma/latex/relazione.tex" "relazione.pdf" "relazione" 1670504905
+["pdflatex"] 1670506126 "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/spettrometro_prisma/latex/relazione.tex" "relazione.pdf" "relazione" 1670506129
   "../../../tools/images/logo.jpg" 1669298064 152030 4d422880613ec11a4138d0ec17b4efca ""
   "../images/Cauchy_1.png" 1670504664 22794 2412274e06942b67d0873e5b97d0f8b0 ""
   "../images/Cauchy_2.png" 1670504632 19417 f7b09df3697ea5171f5f9d419f3e8b8b ""
   "/etc/texmf/web2c/texmf.cnf" 1664214697 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/spettrometro_prisma/latex/relazione.tex" 1670504901 14069 0bd2126d27d7b1fda6dd1ecf567cea6d ""
+  "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/spettrometro_prisma/latex/relazione.tex" 1670506126 14067 63ed2ce87fb33ec6b50820e3648fcff6 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
@@ -119,10 +119,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1669371209 362444 d082a522277925383c40fd9e80e279fd ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1669371221 1435941 1eb0993a5d3951ca68670ac0b3bc7edf ""
-  "relazione.aux" 1670504904 3649 4de42eca907ed38bd3c25c124529544b "pdflatex"
-  "relazione.out" 1670504904 737 3855056f15a73655d212bf65853174c9 "pdflatex"
-  "relazione.tex" 1670504901 14069 0bd2126d27d7b1fda6dd1ecf567cea6d ""
-  "relazione.toc" 1670504904 357 40dcf41a71ef41774b1510114976843b "pdflatex"
+  "relazione.aux" 1670506129 3649 4de42eca907ed38bd3c25c124529544b "pdflatex"
+  "relazione.out" 1670506129 737 3855056f15a73655d212bf65853174c9 "pdflatex"
+  "relazione.tex" 1670506126 14067 63ed2ce87fb33ec6b50820e3648fcff6 ""
+  "relazione.toc" 1670506129 357 40dcf41a71ef41774b1510114976843b "pdflatex"
   (generated)
   "relazione.aux"
   "relazione.log"
