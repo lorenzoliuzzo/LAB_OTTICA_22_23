@@ -533,14 +533,14 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 43.
-<../../../tools/images/logo.jpg, id=28, 355.5684pt x 113.7048pt>
-File: ../../../tools/images/logo.jpg Graphic file (type jpg)
-<use ../../../tools/images/logo.jpg>
-Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 51.
+<../../tools/images/logo.jpg, id=28, 355.5684pt x 113.7048pt>
+File: ../../tools/images/logo.jpg Graphic file (type jpg)
+<use ../../tools/images/logo.jpg>
+Package pdftex.def Info: ../../tools/images/logo.jpg  used on input line 51.
 (pdftex.def)             Requested size: 435.32724pt x 139.21065pt.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/images/logo.jpg>] (./relazione.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../tools/images/logo.jpg>] (./relazione.toc)
 \tf@toc=\write4
 \openout4 = `relazione.toc'.
 

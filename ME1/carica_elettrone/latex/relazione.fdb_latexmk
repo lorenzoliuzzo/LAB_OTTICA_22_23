@@ -1,6 +1,6 @@
 # Fdb version 3
 ["pdflatex"] 1669981843 "/home/lorenzoliuzzo/Desktop/codes/LAB_OTTICA_22_23/ME1/carica_elettrone/latex/relazione.tex" "relazione.pdf" "relazione" 1669981847
-  "../../../tools/images/logo.jpg" 1669298064 152030 4d422880613ec11a4138d0ec17b4efca ""
+  "../../tools/images/logo.jpg" 1669298064 152030 4d422880613ec11a4138d0ec17b4efca ""
   "../images/100_distribution.png" 1669386704 10525 3c0db5924a95027915514808efd84508 ""
   "../images/Charge_distribution.png" 1669386686 10254 2ef44b7fbe77475f2b9cdbeec7378f58 ""
   "../images/Least_Deviation_Squared.png" 1669386696 11818 b3ab064fd7e1f4ccf97bcacc12bd2120 ""

@@ -803,11 +803,11 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/translations/translations-basic-di
 INPUT /usr/share/texlive/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 INPUT /usr/share/texlive/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 INPUT /usr/share/texlive/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
-INPUT ../../../tools/images/logo.jpg
-INPUT ../../../tools/images/logo.jpg
-INPUT ../../../tools/images/logo.jpg
-INPUT ../../../tools/images/logo.jpg
-INPUT ../../../tools/images/logo.jpg
+INPUT ../../tools/images/logo.jpg
+INPUT ../../tools/images/logo.jpg
+INPUT ../../tools/images/logo.jpg
+INPUT ../../tools/images/logo.jpg
+INPUT ../../tools/images/logo.jpg
 INPUT /usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
