@@ -25,7 +25,7 @@ uncertain_measurement calculate_c_speed(const measurement& f,
 }
 
 
-int main(int argc, char* argv[]) {
+int main() {
 
 
     uncertain_measurement a; ///< distanza tra lente e specchio rotante
