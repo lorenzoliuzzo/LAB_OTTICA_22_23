@@ -524,14 +524,14 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 40.
-<../../../tools/images/logo.jpg, id=28, 355.5684pt x 113.7048pt>
-File: ../../../tools/images/logo.jpg Graphic file (type jpg)
-<use ../../../tools/images/logo.jpg>
-Package pdftex.def Info: ../../../tools/images/logo.jpg  used on input line 47.
+<../../../tools/logo.jpg, id=28, 355.5684pt x 113.7048pt>
+File: ../../../tools/logo.jpg Graphic file (type jpg)
+<use ../../../tools/logo.jpg>
+Package pdftex.def Info: ../../../tools/logo.jpg  used on input line 47.
 (pdftex.def)             Requested size: 435.32724pt x 139.21065pt.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/images/logo.jpg>] (./relazione.toc
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <../../../tools/logo.jpg>] (./relazione.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
