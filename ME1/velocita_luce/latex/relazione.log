@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  9 DEC 2022 18:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  9 DEC 2022 18:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -579,31 +579,31 @@ Underfull \hbox (badness 10000) in paragraph at lines 212--213
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 258.
+(caption)                particular \caption on input line 259.
 See the caption package documentation for explanation.
 
 <../images/CW.png, id=90, 230.68584pt x 175.18248pt>
 File: ../images/CW.png Graphic file (type png)
 <use ../images/CW.png>
-Package pdftex.def Info: ../images/CW.png  used on input line 265.
+Package pdftex.def Info: ../images/CW.png  used on input line 266.
 (pdftex.def)             Requested size: 284.52756pt x 216.09598pt.
 
-Overfull \hbox (1.56752pt too wide) in paragraph at lines 265--266
+Overfull \hbox (1.56752pt too wide) in paragraph at lines 266--267
  [][] 
  []
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 267.
+(caption)                particular \caption on input line 268.
 See the caption package documentation for explanation.
 
 
-Overfull \hbox (2.2222pt too wide) in paragraph at lines 226--271
+Overfull \hbox (2.2222pt too wide) in paragraph at lines 226--272
 [][] [] 
  []
 
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 224--273
+Overfull \hbox (15.0pt too wide) in paragraph at lines 224--274
 []$[]$ 
  []
 
@@ -611,15 +611,15 @@ Overfull \hbox (15.0pt too wide) in paragraph at lines 224--273
 <../images/CCW.png, id=105, 238.491pt x 175.18248pt>
 File: ../images/CCW.png Graphic file (type png)
 <use ../images/CCW.png>
-Package pdftex.def Info: ../images/CCW.png  used on input line 353.
+Package pdftex.def Info: ../images/CCW.png  used on input line 354.
 (pdftex.def)             Requested size: 284.52756pt x 209.01503pt.
 
-Overfull \hbox (1.56752pt too wide) in paragraph at lines 353--354
+Overfull \hbox (1.56752pt too wide) in paragraph at lines 354--355
  [][] 
  []
 
 
-Overfull \hbox (2.2222pt too wide) in paragraph at lines 320--358
+Overfull \hbox (2.2222pt too wide) in paragraph at lines 321--359
 []$[]$ $[]$ 
  []
 
@@ -627,41 +627,41 @@ Overfull \hbox (2.2222pt too wide) in paragraph at lines 320--358
 <../images/CW_CCW.png, id=114, 238.491pt x 175.18248pt>
 File: ../images/CW_CCW.png Graphic file (type png)
 <use ../images/CW_CCW.png>
-Package pdftex.def Info: ../images/CW_CCW.png  used on input line 418.
+Package pdftex.def Info: ../images/CW_CCW.png  used on input line 419.
 (pdftex.def)             Requested size: 284.52756pt x 209.01503pt.
 
-Overfull \hbox (23.32857pt too wide) in paragraph at lines 418--419
+Overfull \hbox (23.32857pt too wide) in paragraph at lines 419--420
  [][] 
  []
 
 [6 <../images/CW_CCW.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 433--443
+Underfull \hbox (badness 10000) in paragraph at lines 434--444
 
  []
 
 <../images/results.png, id=125, 238.491pt x 175.18248pt>
 File: ../images/results.png Graphic file (type png)
 <use ../images/results.png>
-Package pdftex.def Info: ../images/results.png  used on input line 450.
+Package pdftex.def Info: ../images/results.png  used on input line 451.
 (pdftex.def)             Requested size: 284.52756pt x 209.01503pt.
 [7 <../images/results.png>]
 <../images/omega_delta1.png, id=133, 1465.475pt x 778.91pt>
 File: ../images/omega_delta1.png Graphic file (type png)
 <use ../images/omega_delta1.png>
-Package pdftex.def Info: ../images/omega_delta1.png  used on input line 472.
+Package pdftex.def Info: ../images/omega_delta1.png  used on input line 473.
 (pdftex.def)             Requested size: 468.96158pt x 249.25629pt.
 
-Overfull \hbox (33.63434pt too wide) in paragraph at lines 472--473
+Overfull \hbox (33.63434pt too wide) in paragraph at lines 473--474
  [][] 
  []
 
 <../images/omega_delta2.png, id=135, 1465.475pt x 778.91pt>
 File: ../images/omega_delta2.png Graphic file (type png)
 <use ../images/omega_delta2.png>
-Package pdftex.def Info: ../images/omega_delta2.png  used on input line 492.
+Package pdftex.def Info: ../images/omega_delta2.png  used on input line 493.
 (pdftex.def)             Requested size: 468.96158pt x 249.25629pt.
 
-Overfull \hbox (33.63434pt too wide) in paragraph at lines 492--493
+Overfull \hbox (33.63434pt too wide) in paragraph at lines 493--494
  [][] 
  []
 
@@ -678,7 +678,7 @@ Here is how much of TeX's memory you used:
  59 hyphenation exceptions out of 8191
  68i,11n,77p,403b,775s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on relazione.pdf (11 pages, 479685 bytes).
+Output written on relazione.pdf (11 pages, 479678 bytes).
 PDF statistics:
  207 PDF objects out of 1000 (max. 8388607)
  151 compressed objects within 2 object streams
