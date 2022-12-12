@@ -1,22 +1,29 @@
-#include "physim.hpp"
+/**
+ * @file main.cpp
+ * @author Lorenzo Liuzzo (lorenzoliuzzo@outlook.com)
+ * @brief A program to calculate the speed of light from experiment of Focault
+ * @date 2022-12-09
+ * 
+ * @copyright Copyright (c) 2022
+ */
 
 
-using namespace physics::measurements; 
-using namespace math::tools::descriptive_statistics;
+#include "measurements.hpp"
 
 
-constexpr double radians(double degrees) 
-{
+using namespace measurements; 
 
-    return degrees * math::constants::pi / 180.0;
+
+constexpr double radians(double degrees) {
+
+    return degrees * constants::math::pi / 180.0;
 
 }
     
 
 uncertain_measurement calculate_theta(int32_t gradi,
                                       int32_t primi, 
-                                      const measurement& beta) 
-{
+                                      const measurement& beta) {
 
     double theta = radians(gradi + primi / 60.);
     double theta_uncertainty = radians(1. / 60.);
@@ -31,12 +38,7 @@ uncertain_measurement calculate_theta(int32_t gradi,
 
 uncertain_measurement calculate_d(const measurement& lambda,
                                   const uncertain_measurement& delta_theta,
-                                  const int32_t& k) 
-{
-
-    assert(lambda >= 0.0 * m);
-    assert(delta_theta.units() == rad);
-    assert(k > 0);
+                                  const int32_t& k) {
 
     return k * lambda / sin(delta_theta); 
 
@@ -44,10 +46,7 @@ uncertain_measurement calculate_d(const measurement& lambda,
 
 
 uncertain_measurement calculate_N(const uncertain_measurement& L, 
-                                  const uncertain_measurement& d) {
-
-    assert(L >= 0.0 * m);
-    assert(d >= 0.0 * m);
+                                  const uncertain_measurement& d){
 
     return L / d.convert_to(L.units());
 
@@ -56,12 +55,7 @@ uncertain_measurement calculate_N(const uncertain_measurement& L,
 
 uncertain_measurement calculate_D(const uncertain_measurement& d,
                                   const uncertain_measurement& delta_theta,
-                                  const int32_t& k) 
-{
-
-    assert(d >= 0.0 * m);
-    assert(delta_theta.units() == rad);
-    assert(k > 0);
+                                  const int32_t& k) {
 
     return k / (d * cos(delta_theta));
 
@@ -69,11 +63,7 @@ uncertain_measurement calculate_D(const uncertain_measurement& d,
 
 
 uncertain_measurement calculate_R(const uncertain_measurement& N,
-                                  const int32_t& k) 
-{
-
-    assert(N > 0.0);
-    assert(k > 0);
+                                  const int32_t& k) {
 
     return k * N; 
 
@@ -82,12 +72,7 @@ uncertain_measurement calculate_R(const uncertain_measurement& N,
 
 uncertain_measurement calculate_lambda(const uncertain_measurement& d, 
                                        const uncertain_measurement& delta_theta,
-                                       const int32_t& k) 
-{
-
-    assert(d.units().base() == base::metre && d.value() > 0.0);
-    assert(delta_theta.units() == rad);
-    assert(k > 0);
+                                       const int32_t& k) {
 
     return d * sin(delta_theta) / k; 
 
@@ -95,8 +80,7 @@ uncertain_measurement calculate_lambda(const uncertain_measurement& d,
 
 
 uncertain_measurement get_theta0_from_data(const std::string& data_file, 
-                                           const measurement& beta) 
-{
+                                           const measurement& beta) {
 
     std::ifstream data_flow(data_file);
     int32_t gradi, primi;
@@ -105,14 +89,14 @@ uncertain_measurement get_theta0_from_data(const std::string& data_file,
     if (!data_flow.is_open()) 
         throw std::runtime_error("Cannot open file: '" + data_file + "'"); 
 
-    while (!data_flow.eof()) {
+    while (!data_flow.eof()){
         
         data_flow >> gradi >> primi;
         theta0_data.emplace_back(radians(gradi + primi / 60.), rad);
     
     }
 
-    return uncertain_measurement(mean(theta0_data).value(), radians(1. / 60.), rad);    
+    return uncertain_measurement(statistics::mean(theta0_data).value(), radians(1. / 60.), rad);    
 
 }
 
@@ -120,8 +104,7 @@ uncertain_measurement get_theta0_from_data(const std::string& data_file,
 uncertain_measurement get_lambda_from_data(const std::string& data_file, 
                                            const uncertain_measurement& passo_reticolo, 
                                            const uncertain_measurement& theta0,
-                                           const measurement& beta) 
-{
+                                           const measurement& beta) {
 
     std::vector<uncertain_measurement> lambda_data; 
     uncertain_measurement delta; 
@@ -131,7 +114,7 @@ uncertain_measurement get_lambda_from_data(const std::string& data_file,
     if (!data_flow.is_open()) 
         throw std::runtime_error("Cannot open file: '" + data_file + "'"); 
     
-    while (!data_flow.eof()) {
+    while (!data_flow.eof()){
         
         data_flow >> gradi >> primi >> k;
         delta = calculate_theta(gradi, primi, beta) - theta0;
@@ -139,7 +122,7 @@ uncertain_measurement get_lambda_from_data(const std::string& data_file,
 
     }
 
-    return wmean(lambda_data);
+    return statistics::weighted_mean(lambda_data);
 
 }
 
@@ -147,22 +130,22 @@ uncertain_measurement get_lambda_from_data(const std::string& data_file,
 int main() {
     
 
-    measurement lambda1_sodio(589.0e-9, m); // prima lunghezza d'onda sodio
-    uncertain_measurement lunghezza_reticolo(0.025, 0.001, m); // lunghezza reticolo
+    measurement lambda1_sodio(589.0e-9, m); ///< prima lunghezza d'onda sodio
+    uncertain_measurement lunghezza_reticolo(0.025, 0.001, m); ///< lunghezza reticolo
 
-    uncertain_measurement theta0; // posizione angolare del primo ordine
-    measurement beta(radians(0.22), rad); // fattore di correzione inclinazione del reticolo
-    uncertain_measurement d; // passo reticolo
-    uncertain_measurement D; // potere dispersivo
-    uncertain_measurement N; // numero di fenditure
-    uncertain_measurement R; // potere risolutivo
+    uncertain_measurement theta0;  ///< posizione angolare del primo ordine
+    measurement beta(radians(0.22), rad); ///< fattore di correzione inclinazione del reticolo
+    uncertain_measurement d; ///< passo reticolo
+    uncertain_measurement D; ///< potere dispersivo
+    uncertain_measurement N; ///< numero di fenditure
+    uncertain_measurement R; ///< potere risolutivo
 
     
-    std::vector<uncertain_measurement> d_data; // dati per il calcolo di d
-    std::vector<uncertain_measurement> D_data; // dati per il calcolo di D
-    std::vector<uncertain_measurement> N_data; // dati per il calcolo di N
-    std::vector<uncertain_measurement> R_data; // dati per il calcolo di R
-    std::vector<uncertain_measurement> lambda_data; // dati per la media di lambda
+    std::vector<uncertain_measurement> d_data; ///< dati per il calcolo di d
+    std::vector<uncertain_measurement> D_data; ///< dati per il calcolo di D
+    std::vector<uncertain_measurement> N_data; ///< dati per il calcolo di N
+    std::vector<uncertain_measurement> R_data; ///< dati per il calcolo di R
+    std::vector<uncertain_measurement> lambda_data; ///< dati per la media di lambda
 
     std::vector<std::string> colors = { "viola_int", 
                                         "viola_est", 
@@ -173,7 +156,7 @@ int main() {
                                         "giallo_int", 
                                         "giallo_est", 
                                         "rosso_int", 
-                                        "rosso_est" }; // spettro del mercurio
+                                        "rosso_est" }; ///< spettro del mercurio
 
 
     // misura posizione angolare del primo minimo
@@ -200,11 +183,11 @@ int main() {
     }
     data_flow.close();
 
-    // d = wmean(d_data);
+    // d = statistics::weighted_mean(d_data);
     d = uncertain_measurement(3.37E-06,	2.4E-09, m);
-    N = wmean(N_data);
-    D = wmean(D_data);
-    R = wmean(R_data);
+    N = statistics::weighted_mean(N_data);
+    D = statistics::weighted_mean(D_data);
+    R = statistics::weighted_mean(R_data);
 
 
     // calcolo delle lunghezze d'onda

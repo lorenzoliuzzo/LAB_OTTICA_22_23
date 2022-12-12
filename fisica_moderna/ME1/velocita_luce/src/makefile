@@ -10,7 +10,7 @@ clean:
 	rm -f main ../data/*/c.dat 
 
 main: main.cpp
-	$(CXX) $(CXXFLAGS) $(MEASUREMENT_PATH) -o $< $@
+	$(CXX) $(CXXFLAGS) $(MEASUREMENT_PATH) -o $@ $< 
 
 plot_CW:
 	python3 $(PLOT_PATH)/measurements_error_bars.py $(DATA_PATH)/CW.txt $(IMAGE_PATH)/CW.png \
