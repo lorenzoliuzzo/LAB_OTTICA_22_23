@@ -212,6 +212,7 @@
         Osservando una particolare riga dello spettro, è stata fatta ruotare la piattaforma contenete il prisma seguendo la riga col cannocchiale 
         fino a che questa non invertiva il senso dello spostamento. È stata quindi segnata la posizione angolare $\theta(\lambda)$ corrispondente 
         al punto in cui avveniva l'inversione. La misura è stata ripetuta 5 volte per ogni lunghezza d'onda. 
+
         In tabella \ref{tabular:theta misure} sono riportate per ogni colore dello spettro i valori raccolti in questa fase espressi in gradi.
 
         \begin{table}[H]
@@ -242,12 +243,18 @@
         è stata stimata attraverso la deviazione standard della media delle misure. L'angolo di deviazione minima $\delta$ è stato trovato sottraendo 
         alla posizione relativa la posizione di zero $\theta_0$. L'incertezza su $\delta_m(\lambda)$, $\sigma_{\delta_m(\lambda)}$, è stata ottenuta sommando 
         in quadratura i singoli errori dei due addendi. Tramite la relazione:
-        \[n(\lambda) = \frac{sin(\frac{\delta_m(\lambda) + \alpha}{2})}{sin(\frac{\alpha}{2})}\]
+        \begin{equation}\label{eq:indice rifrazione}
+            n(\lambda) = \frac{sin(\frac{\delta_m(\lambda) + \alpha}{2})}{sin(\frac{\alpha}{2})}
+        \end{equation}
         è stato ricavato l'indice di rifrazione del prisma per ogni lunghezza d'onda, con errore associato $\sigma_n$ pari alla somma in quadratura 
         dei due errori $\sigma_1$ e $\sigma_2$:
         \[\sigma_1 = \sigma_{\delta} \cdot \frac{\cos(\frac{\alpha + \delta}{2})}{2\sin(\frac{\alpha}{2})} \]
         \[\sigma_2 = \sigma_{\alpha}\cdot \frac{\cos(\frac{\alpha + \delta}{2})\sin(\frac{\alpha}{2}) - 
                     \sin(\frac{\alpha + \delta}{2})\cos(\frac{\alpha}{2})}{2\sin^2(\frac{\alpha}{2})} \]
+        Formula che può essere ulteriormente semplificata raccogliendo l'espressione di $n(\lambda)$ (vedi \ref{eq:indice rifrazione}):
+        \[
+        \sigma_{n(\lambda)}= \frac{n(\lambda)}{2} \cdot \sqrt{[\cot(\frac{\alpha + \delta}{2})\sigma_{delta}]^2 + [(\cot(\frac{\alpha + \delta}{2})-\cot(\frac{\alpha}{2}))\sigma_{\alpha}]^2}
+        \]
         In tabella \ref{tabular:misure delta e n} sono riportate per ogni colore le misure dell'angolo di deviazione minima e dell'indice di rifrazione, con le loro incertezze.    
 
 
@@ -284,8 +291,8 @@
         delle rette e poter trasferire l'incertezza relativa alle lunghezze d'onda misurate con lo spettrometro a reticolo sull'asse y. 
         Sono dunque state effettuate di nuovo le due regressioni lineari pesate, utilizzando come lunghezze d'onda quelle precedentemente misurate e 
         sono stati trovati i seguenti coefficienti:
-        \[a_1 = (6,56 \pm 0,08 )10^{-14}\ m^2\ \ \ \ b_1 = (2,990\pm 0,004)\]
-        \[a_2 = (1,81 \pm 0,02 )10^{-14}\ m^2\ \ \ \ b_2 = (1,731\pm 0,001)\]
+        \[a_1 = (6,6 \pm 0,1) \cdot 10^{-14}\ m^2\ \ \ \ b_1 = (2,990 \pm 0,004)\]
+        \[a_2 = (1,81 \pm 0,02) \cdot 10^{-14}\ m^2\ \ \ \ b_2 = (1,731 \pm 0,001)\]
 
         Per entrambe le regressioni è stato effettuato un test di $\chi^2$, che ha dato un livello di confidenza per le relazioni di Cauchy, rispettivamente, 
         del $30\%$ e del $34\%$. I grafici delle regressioni sono riportati nelle figure \ref{figure:Cauchy_1} e \ref{figure:Cauchy_2}. 
@@ -294,7 +301,7 @@
 
             \centering
             \includegraphics{../images/Cauchy_1.png}
-            \caption{Relazione di Cauchy $n^2$}
+            \caption{Relazione di Cauchy \ref{eq:cauchy1}}
             \label{figure:Cauchy_1}
 
         \end{figure}
@@ -303,7 +310,7 @@
 
             \centering
             \includegraphics{../images/Cauchy_2.png}
-            \caption{Relazione di Cauchy n}
+            \caption{Relazione di Cauchy \ref{eq:cauchy2}}
             \label{figure:Cauchy_2}
 
         \end{figure}
