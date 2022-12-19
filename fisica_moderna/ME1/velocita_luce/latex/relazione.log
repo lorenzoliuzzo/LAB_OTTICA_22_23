@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  9 DEC 2022 19:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.11.25)  19 DEC 2022 14:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/fisica_moderna/velocita_luce/latex/relazione.tex
-(/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/fisica_moderna/velocita_luce/latex/relazione.tex
+**/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/fisica_moderna/ME1/velocita_luce/latex/relazione.tex
+(/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/fisica_moderna/ME1/velocita_luce/latex/relazione.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
@@ -671,14 +671,14 @@ Package rerunfilecheck Info: File `relazione.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  17241 strings out of 480171
- 319641 string characters out of 5894488
+ 319592 string characters out of 5894488
  603382 words of memory out of 5000000
  34945 multiletter control sequences out of 15000+600000
  472476 words of font info for 41 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  68i,11n,77p,418b,775s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on relazione.pdf (11 pages, 479678 bytes).
+Output written on relazione.pdf (11 pages, 479684 bytes).
 PDF statistics:
  207 PDF objects out of 1000 (max. 8388607)
  151 compressed objects within 2 object streams

@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1670609002 "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/fisica_moderna/velocita_luce/latex/relazione.tex" "relazione.pdf" "relazione" 1670609007
+["pdflatex"] 1671456988 "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/fisica_moderna/ME1/velocita_luce/latex/relazione.tex" "relazione.pdf" "relazione" 1671456989
   "../../../tools/logo.jpg" 1669298064 152030 4d422880613ec11a4138d0ec17b4efca ""
   "../images/CCW.png" 1669246863 25835 1d34d407b37ddc468623e484e559aa42 ""
   "../images/CW.png" 1669246861 20831 e7d06a17781ac43ac8749c6a3364b0d3 ""
@@ -9,7 +9,7 @@
   "../images/omega_delta2.png" 1669304138 24062 2a64cb10f869ef276b5f08362d03b958 ""
   "../images/results.png" 1669246865 19418 80cbd6baec187240b6dbec0f6c877aee ""
   "/etc/texmf/web2c/texmf.cnf" 1664214697 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/ME1/fisica_moderna/velocita_luce/latex/relazione.tex" 1670608999 25435 106b98aa945a25deec2ba7694785a7f7 ""
+  "/home/lorenzoliuzzo/Desktop/codes/LAB_22_23/fisica_moderna/ME1/velocita_luce/latex/relazione.tex" 1671456988 25428 a2f4a47598fde007977a87df0dd392be ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -118,10 +118,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1669371209 362444 d082a522277925383c40fd9e80e279fd ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1669371221 1435941 1eb0993a5d3951ca68670ac0b3bc7edf ""
-  "relazione.aux" 1670609007 4750 6ae0d9de7a0a4632164cd49573f84d83 "pdflatex"
-  "relazione.out" 1670609007 1236 ed017cfb813bec9d6fc535cebae3fa0a "pdflatex"
-  "relazione.tex" 1670608999 25435 106b98aa945a25deec2ba7694785a7f7 ""
-  "relazione.toc" 1670609007 722 8a82591578d387a0695f2112746d28bc "pdflatex"
+  "relazione.aux" 1671456989 4750 6ae0d9de7a0a4632164cd49573f84d83 "pdflatex"
+  "relazione.out" 1671456989 1236 ed017cfb813bec9d6fc535cebae3fa0a "pdflatex"
+  "relazione.tex" 1671456988 25428 a2f4a47598fde007977a87df0dd392be ""
+  "relazione.toc" 1671456989 722 8a82591578d387a0695f2112746d28bc "pdflatex"
   (generated)
   "relazione.aux"
   "relazione.log"
