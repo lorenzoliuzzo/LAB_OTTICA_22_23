@@ -1,0 +1,251 @@
+This is TeX, Version 3.141592653 (TeX Live 2022/dev/Debian) (preloaded format=tex 2022.11.25)  24 DEC 2022 15:25
+**relazione.tex
+(./fisica_moderna/velocit^^c3^^a0_luce/latex/relazione.tex
+! Undefined control sequence.
+l.2 \documentclass
+                  {article}
+? 
+! Undefined control sequence.
+l.4 \usepackage
+               [utf8]{inputenc}
+? 
+! Undefined control sequence.
+l.5 \usepackage
+               [a4paper, total={15.3 cm, 21.3 cm}]{geometry}
+? 
+! Undefined control sequence.
+l.6 \usepackage
+               {amsmath}
+? 
+! Undefined control sequence.
+l.7 \usepackage
+               {amssymb}
+? 
+! Undefined control sequence.
+l.8 \usepackage
+               {gensymb}
+? 
+! Undefined control sequence.
+l.9 \usepackage
+               {booktabs}
+? 
+! Undefined control sequence.
+l.10 \usepackage
+                {hyperref}
+? 
+! Undefined control sequence.
+l.11 \usepackage
+                {caption}
+? 
+! Undefined control sequence.
+l.12 \usepackage
+                {float}
+? 
+! Undefined control sequence.
+l.13 \usepackage
+                {graphicx}
+? 
+! Undefined control sequence.
+l.14 \usepackage
+                {subfig}
+? 
+! Undefined control sequence.
+l.15 \usepackage
+                {titlesec}
+? 
+! Undefined control sequence.
+l.16 \usepackage
+                {titletoc}
+? 
+! Undefined control sequence.
+l.17 \usepackage
+                {physics}
+? 
+! Undefined control sequence.
+l.18 \usepackage
+                {siunitx}
+? 
+! Undefined control sequence.
+l.19 \usepackage
+                [dvipsnames]{xcolor}
+? 
+! Undefined control sequence.
+l.20 \usepackage
+                [italian]{babel}
+? 
+! Undefined control sequence.
+l.21 \usepackage
+                {longtable}
+? 
+! Undefined control sequence.
+l.22 \usepackage
+                {tabularx}
+? 
+! Undefined control sequence.
+l.23 \usepackage
+                {calc}
+? 
+! Undefined control sequence.
+l.24 \usepackage
+                {array}
+? 
+! Undefined control sequence.
+l.25 \usepackage
+                {subfiles}
+? 
+! Undefined control sequence.
+l.26 \usepackage
+                {etoolbox}
+? 
+! Undefined control sequence.
+l.27 \usepackage
+                {xparse}
+? 
+! Undefined control sequence.
+l.30 \hypersetup
+                {colorlinks=true,linkcolor=black}
+? 
+! Undefined control sequence.
+l.31 \renewcommand
+                  \thesection{\arabic{section}}
+? 
+! Undefined control sequence.
+l.31 \renewcommand\thesection
+                             {\arabic{section}}
+? 
+! Undefined control sequence.
+l.31 \renewcommand\thesection{\arabic
+                                     {section}}
+? 
+! Undefined control sequence.
+l.32 \titlecontents
+                   {chapter}[1.05em]{\bigskip}
+? 
+! Undefined control sequence.
+l.33 {\contentslabel
+                    [\MakeUppercase{\romannumeral\thecontentslabel}]{1em}\en...
+
+? 
+! Undefined control sequence.
+l.33 {\contentslabel[\MakeUppercase
+                                   {\romannumeral\thecontentslabel}]{1em}\en...
+
+? 
+! Undefined control sequence.
+l.33 ...keUppercase{\romannumeral\thecontentslabel
+                                                  }]{1em}\enspace\textsc}
+? 
+! Missing number, treated as zero.
+<to be read again> 
+                   }
+l.33 ...eUppercase{\romannumeral\thecontentslabel}
+                                                  ]{1em}\enspace\textsc}
+? 
+! Undefined control sequence.
+l.33 ...ral\thecontentslabel}]{1em}\enspace\textsc
+                                                  }
+? 
+! Undefined control sequence.
+l.34 {\hspace
+             *{-1em}\textsc}
+? 
+! Undefined control sequence.
+l.34 {\hspace*{-1em}\textsc
+                           }
+? 
+! Undefined control sequence.
+l.35 {\hfill\contentspage
+                         }
+? 
+! Undefined control sequence.
+l.36 \titlecontents
+                   {section}[1.6em]{\smallskip}
+? 
+! Undefined control sequence.
+l.37 {\thecontentslabel
+                       .\enspace}
+? 
+! Undefined control sequence.
+l.39 {\titlerule
+                *[1pc]{.}\contentspage}
+? 
+! Undefined control sequence.
+l.39 {\titlerule*[1pc]{.}\contentspage
+                                      }
+? 
+! Undefined control sequence.
+l.40 \setcounter
+                {tocdepth}{2}
+? 
+! Undefined control sequence.
+l.43 \begin
+           {document}
+? 
+! Undefined control sequence.
+l.45     \pagenumbering
+                       {roman}
+? 
+! Undefined control sequence.
+l.46     \thispagestyle
+                       {empty}
+? 
+! Undefined control sequence.
+l.49     \begin
+               {center}
+? 
+! Undefined control sequence.
+l.51         \includegraphics
+                             [width=1.\linewidth]{../../../tools/logo.jpg}
+? 
+! Undefined control sequence.
+l.51         \includegraphics[width=1.\linewidth
+                                                ]{../../../tools/logo.jpg}
+? 
+! Undefined control sequence.
+l.53         \vspace
+                    {3cm}
+? 
+! Missing number, treated as zero.
+<to be read again> 
+                   {
+l.53         \vspace{
+                     3cm}
+? 
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   {
+l.53         \vspace{
+                     3cm}
+? 
+! Undefined control sequence.
+<to be read again> \Large 
+                          RELAZIONE DI LABORATORIO:\\ MISURA DELLA VELOCIT^^...
+l.55 ...ura della velocit^^c3^^a0 della luce \par}
+                                                  
+? 
+Runaway argument?
+ MISURA DELLA VELOCIT^^c3^^a0 DELLA LUCE 
+! Paragraph ended before \\ was complete.
+<to be read again> 
+                   \par 
+l.55 ...ura della velocit^^c3^^a0 della luce \par}
+                                                  
+? 
+! Undefined control sequence.
+l.56         \vspace
+                    {3cm}
+? 
+! Undefined control sequence.
+l.58         \Large
+                    Lorenzo Liuzzo, Jiahao Miao, Riccardo Salto\par
+? 
+! Undefined control sequence.
+l.59         \vspace
+                    {1.5cm}
+? 
+! Undefined control sequence.
+l.61         \Large
+                    Ottobre 26, 2022
+? 
+[1] )
+Output written on relazione.dvi (1 page, 936 bytes).

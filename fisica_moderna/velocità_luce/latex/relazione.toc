@@ -1,0 +1,11 @@
+\babel@toc {nil}{}\relax 
+\contentsline {section}{\numberline {1}Abstract}{1}{section.1}%
+\contentsline {section}{\numberline {2}Metodi}{1}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Calibrazione dell'apparato}{1}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Misure distanze specchi}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Misure con rotazione dello specchio in senso orario}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Misure con rotazione dello specchio in senso antiorario}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Misure con rotazione alternata dello specchio}{7}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Analisi dati}{7}{section.3}%
+\contentsline {section}{\numberline {4}Considerazioni finali}{9}{section.4}%
+\contentsfinish 
