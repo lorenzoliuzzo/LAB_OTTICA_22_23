@@ -14,7 +14,7 @@ plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0.0))
 
 ax.errorbar(x_data[0], y_data[0], xerr=x_data[1], yerr=y_data[1], fmt='.', color='blue')
 m, b = np.polyfit(x_data[0], y_data[0], 1)
-ax.plot(x_data[0], m * x_data[0] + b, ':r', label=f'$y = ({m:.2e})x + {b:.3f}$')
+ax.plot(x_data[0], m * x_data[0] + b, ':r', label=f'$y = ({m:.3e})x + {b:.3e}$')
 
 ax.set_xlabel(names[4])
 ax.set_ylabel(names[5])
