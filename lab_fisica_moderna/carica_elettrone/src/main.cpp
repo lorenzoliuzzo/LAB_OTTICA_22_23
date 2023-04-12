@@ -8,13 +8,17 @@
  */
 
 
-#include "measurements.hpp"
+#include "sci++.hpp"
 
 
-using namespace measurements; 
+using namespace scipp; 
+using namespace tools; 
 
 
 int main() {
+
+
+    print("hello!");
 
 
 
